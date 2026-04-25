@@ -96,7 +96,7 @@
     "रेकृ": { "label": "रेकृ (शङ्कायाम् - शंका करना | to doubt, to suspect)", "clean": "रेक्", "anubandha": "ऋ", "isSet": true, "guna": "रेक्", "vriddhi": "रेक्" },
     "सेकृ": { "label": "सेकृ (गतौ - जाना | to go, to move)", "clean": "सेक्", "anubandha": "ऋ", "isSet": true, "guna": "सेक्", "vriddhi": "सेक्" },
     "स्रेकृ": { "label": "स्रेकृ (गतौ - जाना | to go, to move)", "clean": "स्रेक्", "anubandha": "ऋ", "isSet": true, "guna": "स्रेक्", "vriddhi": "स्रेक्" },
-    "स्रकि": { "label": "स्रकि (गतौ - जाना | to go, to move)", "clean": "स्रङ्क्", "anubandha": "इ (नुम्)", "isSet": true, "guna": "स्
+    "स्रकि": { "label": "स्रकि (गतौ - जाना | to go, to move)", "clean": "स्रङ्क्", "anubandha": "इ (नुम्)", "isSet": true, "guna": "स्रकि" },
     "रुठँ२": { "label": "रुठँ (भाषायाम् - बोलना | to speak, to talk)", "clean": "रुठ्", "anubandha": "अँ", "isSet": true, "guna": "रोठ्", "vriddhi": "रौठ्" },
     "धेक": { "label": "धेक (दर्शने - देखना | to see)", "clean": "धेक्", "anubandha": "none", "isSet": true, "guna": "धेक्", "vriddhi": "धैक्" }
   }
