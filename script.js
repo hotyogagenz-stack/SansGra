@@ -2,6 +2,142 @@ let sanskritDatabase = {};
 let pratyayaDB = {}; 
 
 // ==================================================
+// 0. i18n (Language switcher)
+// ==================================================
+const SUPPORTED_LANGS = ['en', 'hi', 'sa'];
+let currentLang = 'hi';
+
+// Simple translations for static UI text.
+// Note: This only changes page chrome/UI copy. It doesn't translate Sanskrit grammatical
+// data coming from JSON (dhatus/sutras/examples), which is currently Hindi/Sanskrit-heavy.
+const UI_TEXT = {
+    en: {
+        logo: 'Sanskrit',
+        nav_home: 'Home',
+        nav_grammar: 'Grammar Check',
+        nav_qna: 'Q&A',
+        nav_about: 'About',
+
+        hero_title: 'Word formation process! ✨',
+        hero_subtitle: 'Get correct forms using Ashtadhyayi rules (1.1.1 – 1.1.75)!',
+
+        tool_title: 'Word Builder',
+        search_examples: 'Search examples',
+        label_upasarga: 'Prefix (Upasarga)',
+        label_dhatu: 'Dhatu (root)',
+        label_pratyaya: 'Suffix (Pratyaya)',
+        placeholder_upasarga: 'Select or type…',
+        placeholder_dhatu: 'e.g. कृ, पठ्, लिख्…',
+        placeholder_pratyaya: 'e.g. तव्यत्, क्त्वा…',
+        btn_generate: 'Build word!',
+        hint_prakriya: 'How was this formed? (tap to see steps)',
+        modal_title: 'Search examples',
+        modal_subtitle: 'Search by dhatu, pratyaya, or sutra number (e.g. 1.1.1)',
+        modal_placeholder: 'Search…',
+
+        footer_title: 'Paninian Grammar Tool v2.0',
+        footer_desc: 'This tool builds kridanta words based on Ashtadhyayi sutras.'
+    },
+    hi: {
+        logo: 'संस्कृत',
+        nav_home: 'होम',
+        nav_grammar: 'व्याकरण जाँच',
+        nav_qna: 'प्रश्न-उत्तर',
+        nav_about: 'परिचय',
+
+        hero_title: 'शब्द निर्माण की प्रक्रिया! ✨',
+        hero_subtitle: 'अष्टाध्यायी के नियमों (१.१.१ - १.१.७५) के साथ शुद्ध रूप सिद्धि!',
+
+        tool_title: 'शब्द निर्माण',
+        search_examples: 'उदाहरण खोजें',
+        label_upasarga: 'उपसर्ग',
+        label_dhatu: 'धातु (मूल)',
+        label_pratyaya: 'प्रत्यय',
+        placeholder_upasarga: 'चुनें या टाइप करें...',
+        placeholder_dhatu: 'उदा. कृ, पठ्, लिख्...',
+        placeholder_pratyaya: 'उदा. तव्यत्, क्त्वा...',
+        btn_generate: 'शब्द बनाओ!',
+        hint_prakriya: 'यह कैसे बना? (प्रक्रिया देखने के लिए टैप करें)',
+        modal_title: 'उदाहरण खोजें',
+        modal_subtitle: 'धातु, प्रत्यय या सूत्र संख्या से खोजें (उदा: 1.1.1)',
+        modal_placeholder: 'खोजें...',
+
+        footer_title: 'पाणिनीय व्याकरण यन्त्र v2.0',
+        footer_desc: 'यह यन्त्र अष्टाध्यायी के सूत्रों के आधार पर कृदन्त शब्दों की रचना करता है।'
+    },
+    sa: {
+        logo: 'संस्कृतम्',
+        nav_home: 'गृहम्',
+        nav_grammar: 'व्याकरण-परीक्षा',
+        nav_qna: 'प्रश्नोत्तरम्',
+        nav_about: 'परिचयः',
+
+        hero_title: 'शब्द-निर्माण-प्रक्रिया ✨',
+        hero_subtitle: 'अष्टाध्यायी-नियमैः (१.१.१ – १.१.७५) शुद्ध-रूप-सिद्धिः।',
+
+        tool_title: 'शब्द-निर्माणम्',
+        search_examples: 'उदाहरण-अन्वेषणम्',
+        label_upasarga: 'उपसर्गः',
+        label_dhatu: 'धातुः (मूलम्)',
+        label_pratyaya: 'प्रत्ययः',
+        placeholder_upasarga: 'चिनुत वा लिख...',
+        placeholder_dhatu: 'उदा. कृ, पठ्, लिख्...',
+        placeholder_pratyaya: 'उदा. तव्यत्, क्त्वा...',
+        btn_generate: 'शब्दं रचय!',
+        hint_prakriya: 'कथं जातम्? (प्रक्रियां द्रष्टुं स्पृश)',
+        modal_title: 'उदाहरण-अन्वेषणम्',
+        modal_subtitle: 'धातु/प्रत्यय/सूत्र-सङ्ख्यया अन्वेषणम् (उदा: 1.1.1)',
+        modal_placeholder: 'अन्वेष्यताम्...',
+
+        footer_title: 'पाणिनीय-व्याकरण-यन्त्रं v2.0',
+        footer_desc: 'एतत् यन्त्रं अष्टाध्यायी-सूत्राधारेण कृदन्त-शब्दान् रचयति।'
+    }
+};
+
+function normalizeLang(lang) {
+    if (!lang) return 'hi';
+    const l = String(lang).toLowerCase();
+    return SUPPORTED_LANGS.includes(l) ? l : 'hi';
+}
+
+function t(key) {
+    return (UI_TEXT[currentLang] && UI_TEXT[currentLang][key]) || (UI_TEXT.hi && UI_TEXT.hi[key]) || '';
+}
+
+function applyLanguageToDOM() {
+    document.documentElement.lang = currentLang;
+
+    // Update active state on the language buttons.
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        const btnLang = btn.dataset.lang;
+        btn.classList.toggle('active', btnLang === currentLang);
+    });
+
+    const nodes = document.querySelectorAll('[data-i18n]');
+    nodes.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const value = t(key);
+        if (value) el.textContent = value;
+    });
+
+    const placeholderNodes = document.querySelectorAll('[data-i18n-placeholder]');
+    placeholderNodes.forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        const value = t(key);
+        if (value) el.setAttribute('placeholder', value);
+    });
+}
+
+function initLanguage() {
+    // 1) saved preference
+    const saved = normalizeLang(localStorage.getItem('lang'));
+    // 2) fallback to initial document lang if no saved
+    const docLang = normalizeLang(document.documentElement.lang);
+    currentLang = saved || docLang || 'hi';
+    applyLanguageToDOM();
+}
+
+// ==================================================
 // 1. वर्ण संयोजन और सन्धि (Halant + Vowel Joiner & Sandhi)
 // ==================================================
 function joinSanskrit(text) {
@@ -105,6 +241,17 @@ async function loadDatabase() {
     }
 }
 
+// Restore dark mode preference on page load
+function initDarkMode() {
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark');
+        const themeIcon = document.getElementById('theme-icon');
+        if (themeIcon) {
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+    }
+}
+
 function initializeUI() {
     let upaList = document.getElementById("upaList");
     if (upaList && sanskritDatabase.upasargas) {
@@ -150,7 +297,11 @@ function initializeUI() {
         });
     }
 }
-window.onload = loadDatabase;
+window.onload = function() {
+    initLanguage();
+    initDarkMode();
+    loadDatabase();
+};
 
 // ==================================================
 // 🛠️ 3. DYNAMIC PANINIAN ENGINE 🛠️
@@ -295,13 +446,25 @@ function toggleMobileMenu() {
     if(nav.classList.contains("active")) { icon.classList.replace("fa-bars", "fa-xmark"); document.body.style.overflow = "hidden"; } 
     else { icon.classList.replace("fa-xmark", "fa-bars"); document.body.style.overflow = "auto"; }
 }
-function closeMobileMenu() { if(window.innerWidth <= 768) toggleMobileMenu(); }
+function closeMobileMenu() { 
+    if(window.innerWidth <= 768) {
+        const nav = document.getElementById("nav-menu");
+        if(nav.classList.contains("active")) toggleMobileMenu();
+    }
+}
 function toggleSutraDropdown(event) { event.stopPropagation(); document.getElementById("sutraDropdown").classList.toggle("show"); }
 function toggleAccordion(event, element) { event.stopPropagation(); element.parentElement.classList.toggle("active"); }
 window.onclick = function(event) { if (!event.target.closest('.nav-dropdown')) document.querySelectorAll(".dropdown-content.show").forEach(el => el.classList.remove('show')); }
 function toggleDark() {
-    document.body.classList.toggle("dark");
-    document.getElementById("theme-icon").classList.replace(document.body.classList.contains("dark") ? "fa-moon" : "fa-sun", document.body.classList.contains("dark") ? "fa-sun" : "fa-moon");
+    const isDark = document.body.classList.toggle("dark");
+    document.getElementById("theme-icon").classList.replace(isDark ? "fa-moon" : "fa-sun", isDark ? "fa-sun" : "fa-moon");
+    localStorage.setItem('darkMode', isDark);
+    closeMobileMenu();
+}
+function setLanguage(lang) {
+    currentLang = normalizeLang(lang);
+    localStorage.setItem('lang', currentLang);
+    applyLanguageToDOM();
     closeMobileMenu();
 }
 function openSearchModal() { document.getElementById("searchModal").style.display = "block"; document.getElementById("searchInput").focus(); }
@@ -342,3 +505,108 @@ function performSearch() {
     });
     resultsDiv.innerHTML = htmlOutput;
 }
+
+// ==================================================
+// Homepage interactions: Live demo + FAQ accordion
+// ==================================================
+let demoLang = 'en';
+
+function setDemoLanguage(lang) {
+    demoLang = normalizeLang(lang);
+    document.querySelectorAll('.demo-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.demoLang === demoLang);
+    });
+
+    const demoInput = document.getElementById('demoInput');
+    const demoResult = document.getElementById('demoResult');
+    if (!demoInput || !demoResult) return;
+
+    const presets = {
+        en: {
+            input: "He don't know the answer.",
+            mistake: "He don't",
+            suggestion: "He doesn't",
+            tag: "Subject-Verb Agreement"
+        },
+        hi: {
+            input: "मैं जाता है।",
+            mistake: "जाता है",
+            suggestion: "जाता हूँ",
+            tag: "क्रिया-कारक मेल"
+        },
+        sa: {
+            input: "पठ् + क्त",
+            mistake: "पठ् + क्त",
+            suggestion: "पठितः",
+            tag: "Ashtadhyayi 1.1.26"
+        }
+    };
+
+    const p = presets[demoLang] || presets.en;
+    demoInput.value = p.input;
+    demoResult.innerHTML = `
+        <div class="demo-result-line"><span class="mistake">${escapeHtml(p.mistake)}</span> ${escapeHtml(p.input).replace(escapeRegExp(p.mistake), '').trimStart()}</div>
+        <div class="demo-suggestion">Suggestion: <span class="suggestion">${escapeHtml(p.suggestion)}</span> <span class="tag">${escapeHtml(p.tag)}</span></div>
+    `;
+}
+
+function runDemoCheck() {
+    const demoInput = document.getElementById('demoInput');
+    const demoResult = document.getElementById('demoResult');
+    if (!demoInput || !demoResult) return;
+
+    const text = demoInput.value.trim();
+    if (!text) {
+        demoResult.innerHTML = `<div class="demo-suggestion">Please type something first.</div>`;
+        return;
+    }
+
+    // Lightweight demo: show a canned correction for known sample strings.
+    // (Full grammar checking is a larger feature; this is just a homepage trust-builder.)
+    const cases = [
+        { lang: 'en', match: /\bhe\s+don't\b/i, mistake: "He don't", suggestion: "He doesn't", tag: "Subject-Verb Agreement" },
+        { lang: 'hi', match: /मैं\s+जाता\s+है/iu, mistake: "जाता है", suggestion: "जाता हूँ", tag: "क्रिया-कारक मेल" },
+        { lang: 'sa', match: /पठ्\s*\+\s*क्त/iu, mistake: "पठ् + क्त", suggestion: "पठितः", tag: "Ashtadhyayi 1.1.26" }
+    ];
+
+    const hit = cases.find(c => c.lang === demoLang && c.match.test(text));
+    if (!hit) {
+        demoResult.innerHTML = `<div class="demo-suggestion">No demo issues detected. (Full checker coming here soon.)</div>`;
+        return;
+    }
+
+    const underlined = escapeHtml(text).replace(new RegExp(escapeRegExp(hit.mistake), 'g'), `<span class="mistake">${escapeHtml(hit.mistake)}</span>`);
+    demoResult.innerHTML = `
+        <div class="demo-result-line">${underlined}</div>
+        <div class="demo-suggestion">Suggestion: <span class="suggestion">${escapeHtml(hit.suggestion)}</span> <span class="tag">${escapeHtml(hit.tag)}</span></div>
+    `;
+}
+
+function toggleFaq(btn) {
+    const answer = btn && btn.nextElementSibling;
+    if (!answer || !answer.classList.contains('faq-a')) return;
+    answer.classList.toggle('show');
+    const ico = btn.querySelector('.faq-ico');
+    if (ico) ico.textContent = answer.classList.contains('show') ? '▴' : '▾';
+}
+
+function escapeHtml(str) {
+    return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+}
+
+function escapeRegExp(str) {
+    return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// If homepage elements exist, initialize demo defaults.
+document.addEventListener('DOMContentLoaded', () => {
+    const demoInput = document.getElementById('demoInput');
+    if (demoInput) {
+        setDemoLanguage(demoLang);
+    }
+});

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="sa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>प्रश्न-उत्तर | व्याकरण सूत्र</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .page-hero { margin-top: 90px; padding: 30px 20px; text-align: center; background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1)); border-bottom: 2px solid var(--border-light); }
+        .page-hero h1 { font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 800; margin-bottom: 8px; background: var(--gradient-text); -webkit-background-clip: text; color: transparent; }
+        .page-hero p { font-size: clamp(1rem, 2.5vw, 1.2rem); opacity: 0.8; }
+        
+        .sutras-section { padding: 40px 5%; max-width: 1000px; margin: 0 auto; }
+        .sutras-section h2 { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 800; color: #8b5cf6; margin-bottom: 30px; display: flex; align-items: center; gap: 12px; }
+        .sutras-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        
+        .sutra-card { background: var(--card-light); border-radius: 16px; border: 2px solid var(--border-light); overflow: hidden; transition: 0.3s; }
+        .sutra-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: #ec4899; }
+        .sutra-card-header { padding: 18px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 18px; color: #8b5cf6; border-bottom: 2px solid var(--border-light); }
+        .sutra-card-header:hover { background: var(--bg-light); }
+        .sutra-card-body { padding: 20px; font-size: 15px; line-height: 1.7; max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.4s ease; }
+        .sutra-card.active .sutra-card-body { max-height: 500px; padding: 20px; }
+        .sutra-id { font-size: 12px; color: #ec4899; font-weight: 700; margin-bottom: 8px; display: block; }
+        
+        .qa-section { padding: 40px 5%; max-width: 800px; margin: 40px auto; background: var(--card-light); border-radius: 20px; border: 2px solid var(--border-light); }
+        .qa-section h2 { font-size: 1.8rem; font-weight: 800; color: #8b5cf6; margin-bottom: 20px; text-align: center; }
+        .qa-item { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px dashed var(--border-light); }
+        .qa-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .qa-question { font-weight: 700; font-size: 18px; color: #ec4899; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .qa-answer { font-size: 16px; line-height: 1.6; color: var(--text-light); }
+        
+        @media (max-width: 768px) {
+            .sutras-grid { grid-template-columns: 1fr; }
+            .sutra-card-header { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo" onclick="location.href='index.html'" style="cursor:pointer;">
+    <i class="fa-solid fa-wand-magic-sparkles" style="color:#ec4899;"></i> <span data-i18n="logo">संस्कृत</span>
+    </div>
+    <button class="hamburger" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars" id="menu-icon"></i></button>
+
+    <nav id="nav-menu">
+        <a href="index.html" onclick="closeMobileMenu()"><i class="fa-solid fa-house"></i> <span data-i18n="nav_home">होम</span></a>
+    <a href="grammar.html" onclick="closeMobileMenu()"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_grammar">व्याकरण जाँच</span></a>
+        <a href="qna.html" class="active" onclick="closeMobileMenu()"><i class="fa-solid fa-book-open"></i> <span data-i18n="nav_qna">प्रश्न-उत्तर</span></a>
+        <a href="about.html" onclick="closeMobileMenu()"><i class="fa-solid fa-circle-info"></i> <span data-i18n="nav_about">परिचय</span></a>
+        
+        <div class="nav-lang-switcher">
+            <button class="lang-btn" data-lang="en" onclick="setLanguage('en'); closeMobileMenu()">EN</button>
+            <span class="lang-divider">|</span>
+            <button class="lang-btn active" data-lang="hi" onclick="setLanguage('hi'); closeMobileMenu()">हि</button>
+            <span class="lang-divider">|</span>
+            <button class="lang-btn" data-lang="sa" onclick="setLanguage('sa'); closeMobileMenu()">𑌸</button>
+        </div>
+        
+        <button onclick="toggleDark(); closeMobileMenu()" class="dark-mode-btn" aria-label="Toggle dark mode"><i class="fa-solid fa-moon" id="theme-icon"></i></button>
+    </nav>
+</header>
+
+<section class="page-hero">
+    <h1>प्रश्न-उत्तर एवं सूत्र संग्रह</h1>
+    <p>अष्टाध्यायी के सभी ७५ सूत्रों के साथ उनके विवरण</p>
+</section>
+
+<section class="sutras-section">
+    <h2><i class="fa-solid fa-book-open"></i> सूत्र ब्राउज़ करें</h2>
+    <div class="sutras-grid" id="sutrasGrid">
+    </div>
+</section>
+
+<section class="qa-section">
+    <h2><i class="fa-solid fa-question-circle"></i> अक्सर पूछे जाने वाले प्रश्न</h2>
+    
+    <div class="qa-item">
+        <div class="qa-question"><i class="fa-solid fa-circle-question"></i> अष्टाध्यायी क्या है?</div>
+        <div class="qa-answer">अष्टाध्यायी महर्षि पाणिनि द्वारा रचित संस्कृत व्याकरण की मूल शास्त्र ग्रंथ है। यह ८ अध्यायों (पादों) में विभाजित है और ३,९५९ सूत्रों से युक्त है।</div>
+    </div>
+    
+    <div class="qa-item">
+        <div class="qa-question"><i class="fa-solid fa-circle-question"></i> यह यंत्र कैसे काम करता है?</div>
+        <div class="qa-answer">यह यंत्र पाणिनीय नियमों (सूत्रों) के आधार पर धातु और प्रत्यय से कृदन्त शब्द बनाता है। यह सीधे अष्टाध्यायी के सूत्रों को लागू करके प्रक्रिया दिखाता है।</div>
+    </div>
+    
+    <div class="qa-item">
+        <div class="qa-question"><i class="fa-solid fa-circle-question"></i> उपसर्ग क्या हैं?</div>
+        <div class="qa-answer">उपसर्ग संस्कृत शब्दों के पूर्व में जुड़ने वाले प्रत्यय हैं। जैसे: प्र, पर, आङ्, नि, दु, अति, अधि, अप, सु, उत, आदि।</div>
+    </div>
+    
+    <div class="qa-item">
+        <div class="qa-question"><i class="fa-solid fa-circle-question"></i> धातु कैसे चुनें?</div>
+        <div class="qa-answer">डेटाबेस में १००+ धातुएँ उपलब्ध हैं। आप धातु का नाम टाइप करें या ड्रॉपडाउन से चुनें। कस्टम धातुओं के लिए सीधे टाइप करें।</div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h3>पाणिनीय व्याकरण यन्त्र v2.0</h3>
+            <p>यह यंत्र अष्टाध्यायी के सूत्रों के आधार पर कृदन्त शब्दों की रचना करता है।</p>
+            <p style="margin-top:10px; font-size: 0.8em; opacity: 0.7;">© 2026 Hotyoga द्वारा निर्मित</p>
+        </div>
+    </div>
+</footer>
+
+<script src="ashtadhyayi_engine.js"></script>
+<script src="script.js"></script>
+<script>
+    async function loadSutrasForPage() {
+        try {
+            const timestamp = new Date().getTime();
+            const response = await fetch(`sutras.json?v=${timestamp}`);
+            if (!response.ok) throw new Error("Failed to load sutras");
+            const sutrasData = await response.json();
+            
+            const grid = document.getElementById('sutrasGrid');
+            const padaConfig = [
+                { key: 'samjnaSutras', color: '#10b981', name: 'सञ्ज्ञा सूत्र' },
+                { key: 'pada_1_2', color: '#3b82f6', name: 'पाद १.२' },
+                { key: 'pada_1_3', color: '#ec4899', name: 'पाद १.३' },
+                { key: 'pada_1_4', color: '#eab308', name: 'पाद १.४' },
+                { key: 'pada_2_1', color: '#b91c1c', name: 'पाद २.१' },
+                { key: 'pada_2_2', color: '#f97316', name: 'पाद २.२' },
+                { key: 'pada_2_3', color: '#d946ef', name: 'पाद २.३' },
+                { key: 'pada_2_4', color: '#06b6d4', name: 'पाद २.४' },
+                { key: 'pada_3_1', color: '#8b5cf6', name: 'पाद ३.१' },
+                { key: 'pada_3_2', color: '#14b8a6', name: 'पाद ३.२' },
+                { key: 'pada_3_3', color: '#6366f1', name: 'पाद ३.३' },
+                { key: 'pada_3_4', color: '#dc2626', name: 'पाद ३.४' },
+                { key: 'pada_4_1', color: '#f472b6', name: 'पाद ४.१' },
+                { key: 'pada_4_2', color: '#9333ea', name: 'पाद ४.२' },
+                { key: 'pada_4_3', color: '#e11d48', name: 'पाद ४.३' },
+                { key: 'pada_4_4', color: '#10b981', name: 'पाद ४.४' },
+                { key: 'pada_5_1', color: '#4f46e5', name: 'पाद ५.१' },
+                { key: 'pada_5_2', color: '#ea580c', name: 'पाद ५.२' },
+                { key: 'pada_5_3', color: '#14b8a6', name: 'पाद ५.३' },
+                { key: 'pada_5_4', color: '#0ea5e9', name: 'पाद ५.४' },
+                { key: 'pada_6_1', color: '#78350f', name: 'पाद ६.१' },
+                { key: 'pada_6_2', color: '#475569', name: 'पाद ६.२' },
+                { key: 'pada_6_3', color: '#3b82f6', name: 'पाद ६.३' },
+                { key: 'pada_6_4', color: '#f59e0b', name: 'पाद ६.४' },
+                { key: 'pada_7_1', color: '#8b5cf6', name: 'पाद ७.१' },
+                { key: 'pada_7_2', color: '#db2777', name: 'पाद ७.२' },
+                { key: 'pada_7_3', color: '#0284c7', name: 'पाद ७.३' },
+                { key: 'pada_7_4', color: '#84cc16', name: 'पाद ७.४' },
+                { key: 'pada_8_1', color: '#dc2626', name: 'पाद ८.१' },
+                { key: 'pada_8_2', color: '#f97316', name: 'पाद ८.२' },
+                { key: 'pada_8_3', color: '#eab308', name: 'पाद ८.३' },
+                { key: 'pada_8_4', color: '#ec4899', name: 'पाद ८.४' }
+            ];
+            
+            padaConfig.forEach(config => {
+                if (sutrasData[config.key]) {
+                    sutrasData[config.key].forEach(s => {
+                        const card = document.createElement('div');
+                        card.className = 'sutra-card';
+                        card.innerHTML = `
+                            <div class="sutra-card-header" onclick="this.parentElement.classList.toggle('active')">
+                                <span>[${s.id}] ${s.name}</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="sutra-card-body">
+                                <span class="sutra-id">${config.name}</span>
+                                <p>${s.desc}</p>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                }
+            });
+        } catch (error) {
+            console.error('Error loading sutras:', error);
+            document.getElementById('sutrasGrid').innerHTML = '<p style="color:red; text-align:center; grid-column: 1/-1;">सूत्र लोड नहीं हो सके।</p>';
+        }
+    }
+    
+    window.onload = function() {
+        loadSutrasForPage();
+        if(localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark');
+            document.getElementById('theme-icon').classList.replace('fa-moon', 'fa-sun');
+        }
+    };
+</script>
+
+</body>
+</html>
