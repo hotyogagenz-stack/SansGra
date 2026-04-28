@@ -578,16 +578,91 @@ body.dark .lang-example { background: rgba(0,0,0,0.2); border-color: rgba(255,25
 .lang-hi { border-left: 4px solid #3b82f6; }
 .lang-sa { border-left: 4px solid #f59e0b; }
 
-/* --- Dark highlight (Ashtadhyayi) --- */
-.section-dark { background: #111827; color: white; }
-body.dark .section-dark { background: #0b1220; }
-.section-dark .section-title { color: white; }
-.highlight { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 22px; align-items: center; }
-.highlight-title { font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 10px 0 10px; font-weight: 950; }
-.highlight-sub { opacity: 0.9; font-weight: 600; line-height: 1.7; }
-.highlight-card { border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); border-radius: 20px; padding: 18px; }
-.sutra-pill { font-weight: 950; color: #f472b6; background: rgba(236, 72, 153, 0.12); border: 1px solid rgba(236, 72, 153, 0.25); padding: 10px 12px; border-radius: 14px; }
-.sutra-meaning { margin-top: 12px; font-weight: 700; opacity: 0.92; line-height: 1.7; }
+/* --- Ashtadhyayi highlight (improved for light & dark modes) --- */
+/* Use a soft tint in light mode instead of a full black block, and keep the strong dark look for dark mode */
+.section-dark {
+    background: linear-gradient(180deg, rgba(139,92,246,0.06), rgba(236,72,153,0.03));
+    color: var(--text-strong);
+    padding-top: 70px;
+    padding-bottom: 70px;
+}
+body.dark .section-dark {
+    background: #0b1220;
+    color: var(--text-dark);
+}
+.section-dark .section-title { color: var(--text-strong); }
+
+/* Layout specific to the Ashtadhyayi highlight area */
+.ashtadhyayi-highlight, .section-dark .ashtadhyayi-highlight {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 28px;
+    align-items: center;
+}
+
+.ashtadhyayi-text {
+    padding: 8px 6px;
+}
+.ashtadhyayi-title {
+    font-size: clamp(1.8rem, 3.6vw, 2.4rem);
+    margin: 6px 0 10px;
+    font-weight: 900;
+    line-height: 1.35;
+    color: var(--text-strong);
+}
+.ashtadhyayi-sub {
+    margin-top: 8px;
+    font-size: 1rem;
+    color: var(--muted);
+    line-height: 1.75;
+    max-width: 66ch;
+}
+
+.ashtadhyayi-card-area { display: flex; justify-content: center; }
+.ashtadhyayi-card {
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 18px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 220px;
+}
+
+.sutra-pill {
+    font-weight: 800;
+    color: #be185d; /* darker pink for contrast */
+    background: rgba(190,24,93,0.06);
+    border: 1px solid rgba(190,24,93,0.12);
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-size: 0.98rem;
+}
+.sutra-meaning {
+    margin-top: 8px;
+    font-weight: 700;
+    opacity: 0.95;
+    line-height: 1.6;
+    color: var(--text-strong);
+}
+
+/* Button inside this section: make it adapt to light background */
+.section-dark .btn-outline-light {
+    border-color: rgba(0,0,0,0.08);
+    color: var(--brand-accent);
+    background: transparent;
+}
+body.dark .section-dark .btn-outline-light {
+    border-color: rgba(255,255,255,0.7);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .ashtadhyayi-highlight { grid-template-columns: 1fr; }
+    .ashtadhyayi-card { width: 100%; }
+    .ashtadhyayi-text { text-align: left; }
+}
 
 /* --- CTA --- */
 .cta {
