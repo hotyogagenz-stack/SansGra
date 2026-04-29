@@ -90,10 +90,13 @@ async function loadDatabase() {
             throw new Error("JSON files missing or broken.");
         }
 
-        const dhatusData = await dhatusRes.json();
-        const sutrasData = await sutrasRes.json();
-        const examplesData = await examplesRes.json();
-        const pratyayasData = await pratyayasRes.json();
+    const dhatusData = await dhatusRes.json();
+    const sutrasData = await sutrasRes.json();
+    const examplesData = await examplesRes.json();
+    const pratyayasData = await pratyayasRes.json();
+
+    // expose sutras data globally for pages like sutras.html that render the lists
+    try { window.sutrasData = sutrasData; } catch (e) { /* ignore */ }
 
         sanskritDatabase = { ...dhatusData, ...sutrasData, ...examplesData };
         pratyayaDB = pratyayasData.pratyayaDB;
@@ -129,7 +132,9 @@ function initializeUI() {
     }
 
     let dropdownContainer = document.getElementById("sutraDropdown");
-    if (dropdownContainer) {
+    // Only populate the inline dropdown if the element explicitly opts-in via data-render="dropdown".
+    // This avoids injecting large content into pages that don't want the dropdown (prevents displacement).
+    if (dropdownContainer && dropdownContainer.getAttribute('data-render') === 'dropdown') {
         dropdownContainer.innerHTML = "";
         const padaConfig = [
             { key: 'samjnaSutras', color: '#10b981' }, { key: 'pada_1_2', color: '#3b82f6' }, { key: 'pada_1_3', color: '#ec4899' }, { key: 'pada_1_4', color: '#eab308' },
@@ -299,14 +304,456 @@ function closeMobileMenu() { if(window.innerWidth <= 768) toggleMobileMenu(); }
 function toggleSutraDropdown(event) { event.stopPropagation(); document.getElementById("sutraDropdown").classList.toggle("show"); }
 function toggleAccordion(event, element) { event.stopPropagation(); element.parentElement.classList.toggle("active"); }
 window.onclick = function(event) { if (!event.target.closest('.nav-dropdown')) document.querySelectorAll(".dropdown-content.show").forEach(el => el.classList.remove('show')); }
-function toggleDark() {
-    document.body.classList.toggle("dark");
-    document.getElementById("theme-icon").classList.replace(document.body.classList.contains("dark") ? "fa-moon" : "fa-sun", document.body.classList.contains("dark") ? "fa-sun" : "fa-moon");
-    closeMobileMenu();
+// mini menu toggle and outside click close
+function toggleMiniMenu(event) {
+    event.stopPropagation();
+    const btn = document.getElementById('miniMenuBtn');
+    const dd = document.getElementById('miniMenuDropdown');
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+    dd.classList.toggle('show');
+    dd.setAttribute('aria-hidden', expanded ? 'true' : 'false');
 }
+// close mini menu on outside click
+document.addEventListener('click', function(e) {
+    const dd = document.getElementById('miniMenuDropdown');
+    const btn = document.getElementById('miniMenuBtn');
+    if (!dd || !btn) return;
+    if (!e.target.closest('.mini-menu')) {
+        dd.classList.remove('show'); btn.setAttribute('aria-expanded', 'false'); dd.setAttribute('aria-hidden', 'true');
+    }
+});
+function toggleDark() {
+    const willDark = !document.body.classList.contains('dark');
+    if (willDark) document.body.classList.add('dark'); else document.body.classList.remove('dark');
+    // update theme icon if present (some pages have a different id)
+    const icon = document.getElementById("theme-icon") || document.getElementById("theme-icon-mini");
+    if (icon && icon.classList) {
+        const toRemove = document.body.classList.contains("dark") ? "fa-moon" : "fa-sun";
+        const toAdd = document.body.classList.contains("dark") ? "fa-sun" : "fa-moon";
+        icon.classList.replace(toRemove, toAdd);
+    }
+    closeMobileMenu();
+    try { localStorage.setItem('siteDark', document.body.classList.contains('dark') ? '1' : '0'); } catch(e){}
+}
+
+// Persist theme selection and helper to apply saved theme on load
+function applySavedTheme() {
+    const saved = localStorage.getItem('siteDark');
+    const shouldDark = saved === '1';
+    if (shouldDark) document.body.classList.add('dark'); else document.body.classList.remove('dark');
+    // sync icon(s)
+    const icons = [document.getElementById('theme-icon'), document.getElementById('theme-icon-mini')];
+    icons.forEach(icon => {
+        if (!icon || !icon.classList) return;
+        if (document.body.classList.contains('dark')) {
+            icon.classList.remove('fa-moon'); icon.classList.add('fa-sun');
+        } else {
+            icon.classList.remove('fa-sun'); icon.classList.add('fa-moon');
+        }
+    });
+}
+
+// Simple language switcher stub (expand as needed)
+function setLang(lang) {
+    // lang: 'hi' | 'en' | 'sa'
+    try {
+        localStorage.setItem('siteLang', lang);
+        applyTranslations(lang);
+        console.log('Language set to', lang);
+    } catch (e) { console.warn('Could not set language', e); }
+}
+
+// Comprehensive translations for all pages
+const TRANSLATIONS = {
+    en: {
+        // Brand & basic nav
+        brand: 'Sanskrit',
+        home: 'Home',
+        search_examples: 'Search Examples',
+        builder: 'Builder',
+        sutra: 'Grammar Rules',
+        dark_mode: 'Dark Mode',
+        
+        // Builder page labels
+        label_upa: 'Upasarga',
+        label_dhatu: 'Dhatu (Root)',
+        label_prat: 'Pratyaya',
+        placeholder_upa: 'Select or type...',
+        placeholder_dhatu: 'e.g. kṛ, paṭh, likh...',
+        placeholder_prat: 'e.g. tavya, ktva...',
+        no_upasarga: 'No Upasarga',
+        select_dhatu: 'Select Dhatu...',
+        select_pratyaya: 'Select Pratyaya...',
+        
+        // Buttons
+        generate_word: 'Generate Word!',
+        dummy1: 'Dummy Item 1',
+        dummy2: 'Dummy Item 2',
+        dummy3: 'Dummy Item 3',
+        
+        // Hero text
+        hero_title: 'Word Formation Process! ✨',
+        hero_subtitle: 'Pure derivation using Ashtadhyayi rules (1.1.1 - 1.1.75)!',
+        
+        // Scroll overlay (index page)
+        scroll_title: '॥ तस्मै पाऽणिनये नमः ॥',
+        scroll_line1: 'येनाक्षरसमान्याभिषङ्ग्य महेशरात् | कृत्स्नं व्याकरणं प्रोतं तस्मै पाणिनये नमः ||',
+        scroll_line2: 'येन धौत गिरः पुंसां विमलेः शब्दवारिधि: । तमश्रज्ञानंज भिन्नं तस्मै पाणिनये नमः ॥',
+        scroll_line3: 'अज्ञानन्धस्य लोकस्य ज्ञानान्शश्लाकया चदुःक्ष्मीलितेन येन तस्मै पाणिनये नमः ।',
+        scroll_line4: 'वाक्यकारं वररुचं भाष्कारं पतञ्जलिम् । पाणिनि सूत्रकारं च प्रणतोऽस्मि मुनीन्यम् ॥',
+        
+        // Mini menu items
+        mini_dummy1: 'Dummy Item 1',
+        mini_dummy2: 'Dummy Item 2',
+        mini_dummy3: 'Dummy Item 3',
+        
+        // Result section
+        result_hint: 'How was this formed? (Tap to see process)',
+        
+        // Prakriya (steps)
+        prakriya_title: 'Paninian Derivation Process:',
+        
+        // Search modal
+        search_title: 'Search Examples',
+        search_placeholder: 'Search by dhatu, pratyaya or rule no. (e.g. 1.1.1)',
+        search_no_results: 'No results found.',
+        search_loading: 'Database loading...',
+        
+        // Footer
+        footer_title: 'Paninian Grammar Engine v2.0',
+        footer_desc: 'This engine creates derived words based on Ashtadhyayi sutras.',
+        footer_copyright: '© 2026 Created by Hotyoga',
+        
+        // Sutra dropdown
+        sutra_samjna: 'Lakaras',
+        sutra_pada1_2: '1.2 - Samjna Sutras',
+        sutra_pada1_3: '1.3 - Miscellaneous',
+        sutra_pada1_4: '1.4 - Git',
+        sutra_pada2_1: '2.1 - Atmanepada',
+        sutra_pada2_2: '2.2 - Parasmaipada',
+        sutra_pada2_3: '2.3 - Ardhadhatuka',
+        sutra_pada2_4: '2.4 - Sarvadhatuka',
+        sutra_pada3_1: '3.1 - Krt',
+        sutra_pada3_2: '3.2 - Krt',
+        sutra_pada3_3: '3.3 - Krt',
+        sutra_pada3_4: '3.4 - Krt',
+        sutra_pada4_1: '4.1 - Krt',
+        sutra_pada4_2: '4.2 - Krt',
+        sutra_pada4_3: '4.3 - Krt',
+        sutra_pada4_4: '4.4 - Krt',
+        sutra_pada5_1: '5.1 - Krt',
+        sutra_pada5_2: '5.2 - Krt',
+        sutra_pada5_3: '5.3 - Krt',
+        sutra_pada5_4: '5.4 - Krt',
+        sutra_pada6_1: '6.1 - Krt',
+        sutra_pada6_2: '6.2 - Krt',
+        sutra_pada6_3: '6.3 - Krt',
+        sutra_pada6_4: '6.4 - Krt',
+        sutra_pada7_1: '7.1 - Krt',
+        sutra_pada7_2: '7.2 - Krt',
+        sutra_pada7_3: '7.3 - Krt',
+        sutra_pada7_4: '7.4 - Krt',
+        sutra_pada8_1: '8.1 - Krt',
+        sutra_pada8_2: '8.2 - Krt',
+        sutra_pada8_3: '8.3 - Krt',
+        sutra_pada8_4: '8.4 - Krt',
+        
+        // Engine messages
+        msg_select_dhatu_prat: 'Please enter at least one dhatu and pratyaya!',
+        msg_database_missing: 'Data could not be loaded. Please check JSON files.',
+        msg_custom_dhatu: '(Note: Custom dhatu, system working with general rules)',
+        msg_it_agama: '(Note: Dhatu \'set\' is and pratyaya is valadi, \'it\' agama by 7.2.35)',
+        
+        // Generated word labels
+        word_final: 'Final Form:',
+        word_siddha: 'Siddha Rupa:'
+    },
+    hi: {
+        // Brand & basic nav
+        brand: 'संस्कृत',
+        home: 'होम',
+        search_examples: 'उदाहरण खोजें',
+        builder: 'शब्द निर्माण',
+        sutra: 'व्याकरण सूत्र',
+        dark_mode: 'डार्क मोड',
+        
+        // Builder page labels
+        label_upa: 'उपसर्ग',
+        label_dhatu: 'धातु (मूल)',
+        label_prat: 'प्रत्यय',
+        placeholder_upa: 'चुनें या टाइप करें...',
+        placeholder_dhatu: 'उदा. कृ, पठ्, लिख्...',
+        placeholder_prat: 'उदा. तव्यत्, क्त्वा...',
+        no_upasarga: 'कोई उपसर्ग नहीं',
+        select_dhatu: 'धातु चुनें...',
+        select_pratyaya: 'प्रत्यय चुनें...',
+        
+        // Buttons
+        generate_word: 'शब्द बनाओ!',
+        dummy1: 'डमी आइटम 1',
+        dummy2: 'डमी आइटम 2',
+        dummy3: 'डमी आइटम 3',
+        
+        // Hero text
+        hero_title: 'शब्द निर्माण की प्रक्रिया! ✨',
+        hero_subtitle: 'अष्टाध्यायी के नियमों (१.१.१ - १.१.७५) के साथ शुद्ध रूप सिद्धि!',
+        
+        // Scroll overlay (index page)
+        scroll_title: '॥ तस्मै पाऽणिनये नमः ॥',
+        scroll_line1: 'येनाक्षरसमान्याभिषङ्ग्य महेशरात् | कृत्स्नं व्याकरणं प्रोतं तस्मै पाणिनये नमः ||',
+        scroll_line2: 'येन धौत गिरः पुंसां विमलेः शब्दवारिधि: । तमश्रज्ञानंज भिन्नं तस्मै पाणिनये नमः ॥',
+        scroll_line3: 'अज्ञानन्धस्य लोकस्य ज्ञानान्शश्लाकया चदुःक्ष्मीलितेन येन तस्मै पाणिनये नमः ।',
+        scroll_line4: 'वाक्यकारं वररुचं भाष्कारं पतञ्जलिम् । पाणिनि सूत्रकारं च प्रणतोऽस्मि मुनीन्यम् ॥',
+        
+        // Mini menu items
+        mini_dummy1: 'डमी आइटम 1',
+        mini_dummy2: 'डमी आइटम 2',
+        mini_dummy3: 'डमी आइटम 3',
+        
+        // Result section
+        result_hint: 'यह कैसे बना? (प्रक्रिया देखने के लिए टैप करें)',
+        
+        // Prakriya (steps)
+        prakriya_title: 'पाणिनीय सिद्धि प्रक्रिया:',
+        
+        // Search modal
+        search_title: 'उदाहरण खोजें',
+        search_placeholder: 'धातु, प्रत्यय या सूत्र संख्या से खोजें (उदा: 1.1.1)',
+        search_no_results: 'कोई परिणाम नहीं मिला।',
+        search_loading: 'डेटाबेस लोड हो रहा है...',
+        
+        // Footer
+        footer_title: 'पाणिनीय व्याकरण यन्त्र v2.0',
+        footer_desc: 'यह यन्त्र अष्टाध्यायी के सूत्रों के आधार पर कृदन्त शब्दों की रचना करता है।',
+        footer_copyright: '© 2026 Hotyoga द्वारा निर्मित',
+        
+        // Sutra dropdown
+        sutra_samjna: 'संज्ञा सूत्र',
+        sutra_pada1_2: '१.२ - संज्ञा सूत्र',
+        sutra_pada1_3: '१.३ - विविध सूत्र',
+        sutra_pada1_4: '१.४ - गित्',
+        sutra_pada2_1: '२.१ - आत्मनेपद',
+        sutra_pada2_2: '२.२ - परस्मैपद',
+        sutra_pada2_3: '२.३ - अर्धधातुक',
+        sutra_pada2_4: '२.४ - सर्वधातुक',
+        sutra_pada3_1: '३.१ - कृत्',
+        sutra_pada3_2: '३.२ - कृत्',
+        sutra_pada3_3: '३.३ - कृत्',
+        sutra_pada3_4: '३.४ - कृत्',
+        sutra_pada4_1: '४.१ - कृत्',
+        sutra_pada4_2: '४.२ - कृत्',
+        sutra_pada4_3: '४.३ - कृत्',
+        sutra_pada4_4: '४.४ - कृत्',
+        sutra_pada5_1: '५.१ - कृत्',
+        sutra_pada5_2: '५.२ - कृत्',
+        sutra_pada5_3: '५.३ - कृत्',
+        sutra_pada5_4: '५.४ - कृत्',
+        sutra_pada6_1: '६.१ - कृत्',
+        sutra_pada6_2: '६.२ - कृत्',
+        sutra_pada6_3: '६.३ - कृत्',
+        sutra_pada6_4: '६.४ - कृत्',
+        sutra_pada7_1: '७.१ - कृत्',
+        sutra_pada7_2: '७.२ - कृत्',
+        sutra_pada7_3: '७.३ - कृत्',
+        sutra_pada7_4: '७.४ - कृत्',
+        sutra_pada8_1: '८.१ - कृत्',
+        sutra_pada8_2: '८.२ - कृत्',
+        sutra_pada8_3: '८.३ - कृत्',
+        sutra_pada8_4: '८.४ - कृत्',
+        
+        // Engine messages
+        msg_select_dhatu_prat: 'कृपया कम से कम एक धातु और प्रत्यय टाइप करें!',
+        msg_database_missing: 'डेटा लोड नहीं हो सका। कृपया JSON फ़ाइलों की जाँच करें।',
+        msg_custom_dhatu: '(नोट: धातु कस्टम है, सिस्टम सामान्य उपधा नियमों से काम कर रहा है)',
+        msg_it_agama: '(इट्-आगम: धातु \'सेट्\' है और प्रत्यय वलादि है, \'आर्धधातुकस्येड् वलादेः\' से \'इ\' का आगम हुआ।)',
+        
+        // Generated word labels
+        word_final: 'अंतिम रूप:',
+        word_siddha: 'सिद्ध रूप:'
+    },
+    sa: {
+        // Brand & basic nav
+        brand: 'संस्कृत',
+        home: 'गृहम्',
+        search_examples: 'उदाहरणान्वेषणम्',
+        builder: 'निर्माणकार्यम्',
+        sutra: 'सूत्राणि',
+        dark_mode: 'निशाकरः',
+        
+        // Builder page labels
+        label_upa: 'उपसर्गः',
+        label_dhatu: 'धातु (मूलम्)',
+        label_prat: 'प्रत्ययः',
+        placeholder_upa: 'विन्यस्य वा टाइप करें...',
+        placeholder_dhatu: 'उदा. कृ, पठ्, लिख्...',
+        placeholder_prat: 'उदा. तव्यत्, क्त्वा...',
+        no_upasarga: 'नास्ति उपसर्गः',
+        select_dhatu: 'धातुं विन्यस्य...',
+        select_pratyaya: 'प्रत्ययं विन्यस्य...',
+        
+        // Buttons
+        generate_word: 'पदम् निर्माय!',
+        dummy1: 'नमूनार्थ 1',
+        dummy2: 'नमूनार्थ 2',
+        dummy3: 'नमूनार्थ 3',
+        
+        // Hero text
+        hero_title: 'पदनिर्माणप्रक्रिया! ✨',
+        hero_subtitle: 'अष्टाध्यायी-सूत्रैः (१.१.१ - १.१.७५) शुद्धरूपसिद्धिः!',
+        
+        // Scroll overlay (index page)
+        scroll_title: '॥ तस्मै पाऽणिनये नमः ॥',
+        scroll_line1: 'येनाक्षरसमान्याभिषङ्ग्य महेशरात् | कृत्स्नं व्याकरणं प्रोतं तस्मै पाणिनये नमः ||',
+        scroll_line2: 'येन धौत गिरः पुंसां विमलेः शब्दवारिधि: । तमश्रज्ञानंज भिन्नं तस्मै पाणिनये नमः ॥',
+        scroll_line3: 'अज्ञानन्धस्य लोकस्य ज्ञानान्शश्लाकया चदुःक्ष्मीलितेन येन तस्मै पाणिनये नमः ।',
+        scroll_line4: 'वाक्यकारं वररुचं भाष्कारं पतञ्जलिम् । पाणिनि सूत्रकारं च प्रणतोऽस्मि मुनीन्यम् ॥',
+        
+        // Mini menu items
+        mini_dummy1: 'नमूनार्थ 1',
+        mini_dummy2: 'नमूनार्थ 2',
+        mini_dummy3: 'नमूनार्थ 3',
+        
+        // Result section
+        result_hint: 'कथं निर्मितम्? (प्रक्रियां द्रष्टुं टैप करें)',
+        
+        // Prakriya (steps)
+        prakriya_title: 'पाणिनीय सिद्धिप्रक्रिया:',
+        
+        // Search modal
+        search_title: 'उदाहरणान्वेषणम्',
+        search_placeholder: 'धातु, प्रत्यय वा सूत्रसङ्ख्यायाः अन्वेषणम् (उदा: 1.1.1)',
+        search_no_results: 'उत्तराणि न सन्ति।',
+        search_loading: 'डेटाबेस लोड हो रहा है...',
+        
+        // Footer
+        footer_title: 'पाणिनीय व्याकरणयन्त्रम् v2.0',
+        footer_desc: 'अष्टाध्यायी-सूत्रैः कृतान्तात् कृदन्तपदानि निर्मिति भवति।',
+        footer_copyright: '© 2026 Hotyoga द्वारा निर्मितम्',
+        
+        // Sutra dropdown
+        sutra_samjna: 'संज्ञासूत्राणि',
+        sutra_pada1_2: '१.२ - संज्ञासूत्राणि',
+        sutra_pada1_3: '१.३ - विविधसूत्राणि',
+        sutra_pada1_4: '१.४ - गित्',
+        sutra_pada2_1: '२.१ - आत्मनेपदम्',
+        sutra_pada2_2: '२.२ - परस्मैपदम्',
+        sutra_pada2_3: '२.३ - अर्धधातुकम्',
+        sutra_pada2_4: '२.४ - सर्वधातुकम्',
+        sutra_pada3_1: '३.१ - कृत्',
+        sutra_pada3_2: '३.२ - कृत्',
+        sutra_pada3_3: '३.३ - कृत्',
+        sutra_pada3_4: '३.४ - कृत्',
+        sutra_pada4_1: '४.१ - कृत्',
+        sutra_pada4_2: '४.२ - कृत्',
+        sutra_pada4_3: '४.३ - कृत्',
+        sutra_pada4_4: '४.४ - कृत्',
+        sutra_pada5_1: '५.१ - कृत्',
+        sutra_pada5_2: '५.२ - कृत्',
+        sutra_pada5_3: '५.३ - कृत्',
+        sutra_pada5_4: '५.४ - कृत्',
+        sutra_pada6_1: '६.१ - कृत्',
+        sutra_pada6_2: '६.२ - कृत्',
+        sutra_pada6_3: '६.३ - कृत्',
+        sutra_pada6_4: '६.४ - कृत्',
+        sutra_pada7_1: '७.१ - कृत्',
+        sutra_pada7_2: '७.२ - कृत्',
+        sutra_pada7_3: '७.३ - कृत्',
+        sutra_pada7_4: '७.४ - कृत्',
+        sutra_pada8_1: '८.१ - कृत्',
+        sutra_pada8_2: '८.२ - कृत्',
+        sutra_pada8_3: '८.३ - कृत्',
+        sutra_pada8_4: '८.४ - कृत्',
+        
+        // Engine messages
+        msg_select_dhatu_prat: 'कृपया अल्पंतमम् एकं धातुं च प्रत्ययं वा लिख्यताम्!',
+        msg_database_missing: 'विवरणानि लोड् न भवन्ति। कृपया JSON-सङ्ख्यानि पश्यतु।',
+        msg_custom_dhatu: '(टिप्पणी: धातुः प्रत्ययः, सिस्टम सामान्य नियमैः कार्यं करोति)',
+        msg_it_agama: '(इट्-आगमः: धातुः \'सेट्\' अस्ति च प्रत्ययः वलादि, \'आर्धधातुकस्येड् वलादेः\' से \'इ\' आगमः।)',
+        
+        // Generated word labels
+        word_final: 'अन्तिमरूपम्:',
+        word_siddha: 'सिद्धरूपम्:'
+    }
+};
+
+function applyTranslations(lang) {
+    const map = TRANSLATIONS[lang] || TRANSLATIONS['hi'];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (map[key]) el.innerText = map[key];
+    });
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-lang') === lang));
+}
+
+function applyTranslationsExtended(lang) {
+    const map = TRANSLATIONS[lang] || TRANSLATIONS['hi'];
+    const hiMap = TRANSLATIONS['hi'] || {};
+    const reverse = {};
+    Object.keys(hiMap).forEach(k => {
+        const v = (hiMap[k] || '').toString().trim();
+        if (v) reverse[v] = k;
+    });
+    function replaceTextNode(node) {
+        const txt = node.nodeValue.trim();
+        if (!txt) return;
+        const key = reverse[txt];
+        if (key && map[key]) node.nodeValue = node.nodeValue.replace(txt, map[key]);
+    }
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+    let n;
+    while ((n = walker.nextNode())) {
+        const parent = n.parentElement;
+        if (!parent) continue;
+        const tag = parent.tagName.toLowerCase();
+        if (['script','style','noscript'].includes(tag)) continue;
+        if (parent.closest('.no-translate')) continue;
+        replaceTextNode(n);
+    }
+    const attrList = ['placeholder','title','alt','value'];
+    document.querySelectorAll('*').forEach(el => {
+        if (el.closest && el.closest('.no-translate')) return;
+        attrList.forEach(attr => {
+            if (el.hasAttribute && el.hasAttribute(attr)) {
+                const v = el.getAttribute(attr).toString().trim();
+                const key = reverse[v];
+                if (key && map[key]) el.setAttribute(attr, map[key]);
+            }
+        });
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (map[key]) el.setAttribute('placeholder', map[key]);
+    });
+}
+
 function openSearchModal() { document.getElementById("searchModal").style.display = "block"; document.getElementById("searchInput").focus(); }
 function closeSearchModal() { document.getElementById("searchModal").style.display = "none"; document.getElementById("searchInput").value = ""; document.getElementById("searchResults").innerHTML = ""; }
 window.addEventListener('click', function(event) { if (event.target == document.getElementById("searchModal")) closeSearchModal(); });
+
+// Load shared header/footer fragments and initialize language on page load
+async function loadSharedHeaderFooter() {
+    try {
+        const [headerRes, footerRes] = await Promise.all([fetch('header.html'), fetch('footer.html')]);
+        if (headerRes.ok) {
+            const headerHtml = await headerRes.text();
+            document.getElementById('site-header')?.insertAdjacentHTML('afterbegin', headerHtml);
+        }
+        if (footerRes.ok) {
+            const footerHtml = await footerRes.text();
+            document.getElementById('site-footer')?.insertAdjacentHTML('afterbegin', footerHtml);
+        }
+    } catch (e) { console.warn('Could not load shared header/footer', e); }
+}
+
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadSharedHeaderFooter();
+    // apply persisted theme first so fragments render with correct colors
+    try { applySavedTheme(); } catch(e) {}
+    const saved = localStorage.getItem('siteLang') || 'hi';
+    applyTranslationsExtended(saved);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-lang') === saved));
+});
 
 function getSutraDetails(sutraId) {
     const allArrays = [
