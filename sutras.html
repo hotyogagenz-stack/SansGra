@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title data-i18n="sutras_title">Grammar Rules</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main class="container">
+    <section class="sutras-page">
+      <h1 data-i18n="sutras_heading">Grammar Rules (Sutras)</h1>
+      <p data-i18n="sutras_intro">Select a sutra group to view the rules. This page loads sutras from the site's data and is translated based on the header language buttons.</p>
+
+      <div id="sutraList" class="sutra-list">
+        <!-- sutra groups will be rendered here by initializeUI() or a small renderer -->
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script>
+    // When fragments are loaded, initializeUI will run on window.onload as before.
+    // If initializeUI expects a #sutraDropdown, it will still find sutras.json and can render into #sutraList instead.
+
+    // If the global initializeUI provided by script.js doesn't render to #sutraList,
+    // we provide a small helper that will render sutras.json groups when available.
+    function renderSutrasIfAvailable() {
+      if (window.sutrasData) {
+        renderSutras(window.sutrasData);
+      } else {
+        // load sutras.json directly as fallback
+        fetch('sutras.json').then(r => r.json()).then(data => renderSutras(data)).catch(()=>{
+          const el = document.getElementById('sutraList');
+          el.innerHTML = '<p data-i18n="sutras_error">Could not load sutras.</p>';
+        });
+      }
+    }
+
+    function renderSutras(data) {
+      const container = document.getElementById('sutraList');
+      if (!container) return;
+      container.innerHTML = '';
+
+      // Render top-level short notes if present (data.sutras)
+      if (data && Array.isArray(data.sutras) && data.sutras.length) {
+        const notesSection = document.createElement('section');
+        const h = document.createElement('h2'); h.textContent = 'Notes';
+        notesSection.appendChild(h);
+        data.sutras.forEach(n => {
+          const card = document.createElement('div'); card.className = 'sutra-note';
+          const title = document.createElement('div'); title.className = 'sutra-note-title sanskrit-text'; title.textContent = n.name || n.title || '';
+          const desc = document.createElement('div'); desc.className = 'sutra-note-desc sanskrit-text'; desc.textContent = n.desc || '';
+          card.appendChild(title); card.appendChild(desc);
+          notesSection.appendChild(card);
+        });
+        container.appendChild(notesSection);
+      }
+
+      // Render detailed samjnaSutras (1.1.x list)
+      if (data && Array.isArray(data.samjnaSutras) && data.samjnaSutras.length) {
+        const listSection = document.createElement('section');
+        const h2 = document.createElement('h2'); h2.textContent = 'Samjna Sutras (1.1.x)'; listSection.appendChild(h2);
+        data.samjnaSutras.forEach(s => {
+          const card = document.createElement('div'); card.className = 'sutra-card';
+          const header = document.createElement('div'); header.className = 'sutra-card-header sanskrit-text'; header.textContent = `[${s.id || ''}] ${s.name || ''}`;
+          const desc = document.createElement('div'); desc.className = 'sutra-card-desc sanskrit-text'; desc.textContent = s.desc || '';
+          card.appendChild(header); card.appendChild(desc);
+          listSection.appendChild(card);
+        });
+        container.appendChild(listSection);
+      }
+
+      if (window.applyTranslationsExtended) window.applyTranslationsExtended();
+
+      // wire up accordion behavior for the newly rendered cards
+      container.querySelectorAll('.sutra-card').forEach(card => {
+        const hdr = card.querySelector('.sutra-card-header');
+        const desc = card.querySelector('.sutra-card-desc');
+        if (!hdr) return;
+        hdr.setAttribute('tabindex', '0');
+        hdr.setAttribute('role', 'button');
+        hdr.setAttribute('aria-expanded', 'false');
+        hdr.addEventListener('click', () => {
+          const active = card.classList.toggle('active');
+          hdr.setAttribute('aria-expanded', active ? 'true' : 'false');
+        });
+        hdr.addEventListener('keydown', (ev) => {
+          if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); hdr.click(); }
+        });
+      });
+    }
+
+    // run after window loads; if loadDatabase sets window.sutrasData, we pick it up
+    window.addEventListener('load', () => {
+      // delay a tick to allow other onload handlers to populate sutras
+      setTimeout(renderSutrasIfAvailable, 200);
+    });
+  </script>
+</body>
+</html>

@@ -23,99 +23,41 @@
 </head>
 <body>
 
-<header>
-    <div class="logo" onclick="location.reload()" style="cursor:pointer;">
-        <i class="fa-solid fa-wand-magic-sparkles" style="color:#ec4899;"></i> संस्कृत
-    </div>
-    <button class="hamburger" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars" id="menu-icon"></i></button>
+    <!-- shared header placeholder (loaded dynamically) -->
+    <div id="site-header"></div>
 
-    <nav id="nav-menu">
-        <a href="#" onclick="closeMobileMenu()"><i class="fa-solid fa-house"></i> होम</a>
-        <a href="#" onclick="openSearchModal(); closeMobileMenu();"><i class="fa-solid fa-magnifying-glass"></i> उदाहरण खोजें</a>
-        
-        <div class="nav-dropdown">
-            <button onclick="toggleSutraDropdown(event)">
-                <i class="fa-solid fa-book-open"></i> व्याकरण सूत्र <i class="fa-solid fa-caret-down"></i>
-            </button>
-            <div class="dropdown-content" id="sutraDropdown">
-                </div>
+<!-- small Sanskrit page title above the image removed per request -->
+
+<!-- hero removed as requested (pink heading) -->
+
+<!-- parchment image placed directly (no wrapping div); overlay text is a sibling positioned over it -->
+<section class="scroll-hero">
+    <img src="vecteezy_ancient-parchment-scroll-on-transparent-background_51065849.png" id="scrollImage" alt="parchment scroll">
+    <div class="scroll-overlay sanskrit-text" id="scrollText">
+        <h2 style="font-weight:800; margin-bottom:12px;">॥ तस्मै पाऽणिनये नमः ॥</h2>
+        <div id="scroll-lines">
+            <p>येनाक्षरसमान्याभिषङ्ग्य महेशरात् | कृत्स्नं व्याकरणं प्रोतं तस्मै पाणिनये नमः ||</p>
+            <p>येन धौत गिरः पुंसां विमलेः शब्दवारिधि: । तमश्रज्ञानंज भिन्नं तस्मै पाणिनये नमः ॥</p>
+            <p>अज्ञानन्धस्य लोकस्य ज्ञानान्शश्लाकया चदुःक्ष्मीलितेन येन तस्मै पाणिनये नमः ।</p>
+            <p>वाक्यकारं वररुचं भाष्कारं पतञ्जलिम् । पाणिनि सूत्रकारं च प्रणतोऽस्मि मुनीन्यम् ॥</p>
         </div>
-        <button onclick="toggleDark()"><i class="fa-solid fa-moon" id="theme-icon"></i> डार्क मोड</button>
-    </nav>
-</header>
+    </div>
 
-<section class="hero">
-    <h1>शब्द निर्माण की प्रक्रिया! ✨</h1>
-    <p>अष्टाध्यायी के नियमों (१.१.१ - १.१.७५) के साथ शुद्ध रूप सिद्धि!</p>
+    <!-- navigation pills placed under the image (these are the header elements moved below the image) -->
+    <nav class="nav-pills" id="nav-menu">
+        <a id="navHome" class="pill" href="index.html" onclick="closeMobileMenu()" data-i18n="home">होम</a>
+        <a id="navSearch" class="pill" href="#" onclick="openSearchModal(); closeMobileMenu();" data-i18n="search_examples">उदाहरण खोजें</a>
+        <a id="navBuilder" class="pill" href="builder.html" onclick="closeMobileMenu()" data-i18n="builder">Builder</a>
+    <a id="navSutra" class="pill" href="sutras.html" data-i18n="sutra">व्याकरण सूत्र</a>
+        <button id="navDark" class="pill" onclick="toggleDark()" data-i18n="dark_mode">डार्क मोड</button>
+    </nav>
+    <!-- sutra dropdown removed in favor of a dedicated sutras.html page to avoid content displacement -->
 </section>
 
-<div class="main-container" id="tool">
-    <div class="card">
-        <div class="input-grid">
-            <div class="input-group">
-                <label class="label-upa"><i class="fa-solid fa-puzzle-piece"></i> उपसर्ग</label>
-                <input type="text" id="upasarga" class="sanskrit-text" list="upaList" placeholder="चुनें या टाइप करें..." autocomplete="off">
-                <datalist id="upaList"></datalist>
-            </div>
-            
-            <div class="input-group">
-                <label class="label-dhatu"><i class="fa-solid fa-seedling"></i> धातु (मूल)</label>
-                <input type="text" id="dhatu" class="sanskrit-text" list="dhatuList" placeholder="उदा. कृ, पठ्, लिख्..." autocomplete="off">
-                <datalist id="dhatuList"></datalist>
-            </div>
-            
-            <div class="input-group">
-                <label class="label-prat"><i class="fa-solid fa-link"></i> प्रत्यय</label>
-                <input type="text" id="pratyaya" class="sanskrit-text" list="pratList" placeholder="उदा. तव्यत्, क्त्वा..." autocomplete="off">
-                <datalist id="pratList"></datalist>
-            </div>
-        </div>
+<!-- search modal moved to shared header fragment -->
 
-        <button class="btn-generate" onclick="generateKridanta()">
-            <i class="fa-solid fa-bolt"></i> शब्द बनाओ!
-        </button>
-
-        <div class="result-section" id="resultSection">
-            <div class="result-box" onclick="togglePrakriya()">
-                <div class="result-text sanskrit-text" id="finalOutput"></div>
-                <div class="hint"><i class="fa-solid fa-hand-pointer"></i> यह कैसे बना? (प्रक्रिया देखने के लिए टैप करें)</div>
-            </div>
-
-            <div class="prakriya-box" id="prakriyaBox">
-                <div class="prakriya-title"><i class="fa-solid fa-list-check"></i> पाणिनीय सिद्धि प्रक्रिया:</div>
-                <ul class="step-list sanskrit-text" id="prakriyaSteps">
-                    </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="searchModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeSearchModal()">&times;</span>
-        <h2 style="color: var(--text-dark); margin-bottom: 5px;">
-            <i class="fa-solid fa-magnifying-glass" style="color:#ec4899;"></i> उदाहरण खोजें
-        </h2>
-        <p style="margin-bottom: 20px; font-size: 0.9em; color: var(--text-light);">
-            धातु, प्रत्यय या सूत्र संख्या से खोजें (उदा: 1.1.1)
-        </p>
-        
-        <input type="text" id="searchInput" class="sanskrit-text" placeholder="खोजें..." onkeyup="performSearch()" autocomplete="off">
-        
-        <div id="searchResults" class="search-results">
-            </div>
-    </div>
-</div>
-
-<footer>
-    <div class="footer-grid">
-        <div class="footer-col">
-            <h3>पाणिनीय व्याकरण यन्त्र v2.0</h3>
-            <p>यह यन्त्र अष्टाध्यायी के सूत्रों के आधार पर कृदन्त शब्दों की रचना करता है।</p>
-            <p style="margin-top:10px; font-size: 0.8em; opacity: 0.7;">© 2026 Hotyoga द्वारा निर्मित</p>
-        </div>
-    </div>
-</footer>
+    <!-- shared footer placeholder (loaded dynamically) -->
+    <div id="site-footer"></div>
 
 <script src="ashtadhyayi_engine.js"></script>
 <script src="script.js"></script>

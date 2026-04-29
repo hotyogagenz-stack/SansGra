@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="sa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sanskrit Magic Builder | Ashtadhyayi Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--border-light); font-size: clamp(16px, 3vw, 20px); font-weight: 600; outline: none; transition: 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+        input[type="text"]:focus { border-color: #ec4899; box-shadow: 0 0 8px rgba(236, 72, 153, 0.2); }
+        .sutra-desc p { margin-bottom: 8px; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+<!-- shared header placeholder (loaded dynamically) -->
+<div id="site-header"></div>
+
+<section class="hero">
+    <h1 data-i18n="hero_title">शब्द निर्माण की प्रक्रिया! ✨</h1>
+    <p data-i18n="hero_subtitle">अष्टाध्यायी के नियमों (१.१.१ - १.१.७५) के साथ शुद्ध रूप सिद्धि!</p>
+</section>
+
+<div class="main-container" id="tool">
+    <div class="card">
+        <div class="input-grid">
+            <div class="input-group">
+                <label class="label-upa" data-i18n="label_upa"><i class="fa-solid fa-puzzle-piece"></i> उपसर्ग</label>
+                <input type="text" id="upasarga" class="sanskrit-text" list="upaList" data-i18n-placeholder="placeholder_upa" placeholder="चुनें या टाइप करें..." autocomplete="off">
+                <datalist id="upaList"></datalist>
+            </div>
+            
+            <div class="input-group">
+                <label class="label-dhatu" data-i18n="label_dhatu"><i class="fa-solid fa-seedling"></i> धातु (मूल)</label>
+                <input type="text" id="dhatu" class="sanskrit-text" list="dhatuList" data-i18n-placeholder="placeholder_dhatu" placeholder="उदा. कृ, पठ्, लिख्..." autocomplete="off">
+                <datalist id="dhatuList"></datalist>
+            </div>
+            
+            <div class="input-group">
+                <label class="label-prat" data-i18n="label_prat"><i class="fa-solid fa-link"></i> प्रत्यय</label>
+                <input type="text" id="pratyaya" class="sanskrit-text" list="pratList" data-i18n-placeholder="placeholder_prat" placeholder="उदा. तव्यत्, क्त्वा..." autocomplete="off">
+                <datalist id="pratList"></datalist>
+            </div>
+        </div>
+
+        <button class="btn-generate" onclick="generateKridanta()" data-i18n="generate_word">
+            <i class="fa-solid fa-bolt"></i> शब्द बनाओ!
+        </button>
+
+        <div class="result-section" id="resultSection">
+            <div class="result-box" onclick="togglePrakriya()">
+                <div class="result-text sanskrit-text" id="finalOutput"></div>
+                <div class="hint"><i class="fa-solid fa-hand-pointer"></i> <span data-i18n="result_hint">यह कैसे बना? (प्रक्रिया देखने के लिए टैप करें)</span></div>
+            </div>
+
+            <div class="prakriya-box" id="prakriyaBox">
+                <div class="prakriya-title"><i class="fa-solid fa-list-check"></i> <span data-i18n="prakriya_title">पाणिनीय सिद्धि प्रक्रिया:</span></div>
+                <ul class="step-list sanskrit-text" id="prakriyaSteps">
+                    </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeSearchModal()">&times;</span>
+        <h2 style="color: var(--text-dark); margin-bottom: 5px;">
+            <i class="fa-solid fa-magnifying-glass" style="color:#ec4899;"></i> <span data-i18n="search_title">उदाहरण खोजें</span>
+        </h2>
+        <p style="margin-bottom: 20px; font-size: 0.9em; color: var(--text-light);" data-i18n="search_placeholder">
+            धातु, प्रत्यय या सूत्र संख्या से खोजें (उदा: 1.1.1)
+        </p>
+        
+        <input type="text" id="searchInput" class="sanskrit-text" placeholder="खोजें..." onkeyup="performSearch()" autocomplete="off">
+        
+        <div id="searchResults" class="search-results">
+            </div>
+    </div>
+</div>
+
+<!-- shared footer placeholder (loaded dynamically) -->
+<div id="site-footer"></div>
+
+<script src="ashtadhyayi_engine.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
