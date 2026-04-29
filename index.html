@@ -9,116 +9,511 @@
     <link rel="stylesheet" href="style.css">
     <style>
         /* टाइपिंग बॉक्स और UI सुधार */
-        input[type="text"] { 
-            width: 100%; padding: 15px; border-radius: 12px; 
-            border: 2px solid var(--border-light); 
-            font-size: clamp(16px, 3vw, 20px); font-weight: 600; 
-            outline: none; transition: 0.3s; 
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); 
+        input[type="text"], select {
+            width: 100%;
+            padding: 16px 18px;
+            border-radius: 14px;
+            border: 2px solid var(--border-light);
+            font-size: clamp(16px, 3vw, 20px);
+            font-weight: 600;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            background: var(--card-light);
         }
-        input[type="text"]:focus { border-color: #ec4899; box-shadow: 0 0 8px rgba(236, 72, 153, 0.2); }
+        input[type="text"]:focus, select:focus {
+            border-color: #ec4899;
+            box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.1), 0 8px 20px rgba(236, 72, 153, 0.15);
+            transform: translateY(-1px);
+        }
         .sutra-desc p { margin-bottom: 8px; line-height: 1.6; }
-        .example-text { color: #4b5563; font-style: italic; border-top: 1px dashed #ddd; pt: 5px; }
+        .example-text { color: #4b5563; font-style: italic; border-top: 1px dashed #ddd; padding-top: 5px; }
+        
+        /* Modern Input Focus Animation */
+        input[type="text"]::placeholder {
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+        input[type="text"]:focus::placeholder {
+            opacity: 0.4;
+        }
+
+        /* How It Works Section - Timeline */
+        .how-steps {
+            position: relative;
+            padding: 20px 0;
+        }
+        .how-step {
+            position: relative;
+            padding: 10px 0;
+        }
+        .how-step-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ec4899;
+            position: absolute;
+            left: -40px;
+            top: 0;
+        }
+        .how-separator {
+            height: 2px;
+            background: #ec4899;
+            position: absolute;
+            left: -20px;
+            top: 30px;
+            width: 2px;
+        }
+
+        /* Tab Styles for Languages Supported Section */
+        .language-switcher {
+            margin-top: 20px;
+        }
+        .lang-tabs {
+            display: flex;
+            border-bottom: 2px solid #ec4899;
+        }
+        .lang-tab-btn {
+            flex: 1;
+            padding: 12px 0;
+            font-size: 18px;
+            font-weight: 500;
+            color: #4b5563;
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+        }
+        .lang-tab-btn.active {
+            color: #ec4899;
+        }
+        .lang-tab-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background: #ec4899;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        .lang-tab-btn.active::after {
+            transform: scaleX(1);
+        }
+        .lang-content {
+            padding: 20px 0;
+        }
+        .lang-pane {
+            display: none;
+        }
+        .lang-pane.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
 
 <header>
     <div class="logo" onclick="location.reload()" style="cursor:pointer;">
-        <i class="fa-solid fa-wand-magic-sparkles" style="color:#ec4899;"></i> संस्कृत
+    <i class="fa-solid fa-wand-magic-sparkles" style="color:#ec4899;"></i> <span data-i18n="logo">संस्कृत</span>
     </div>
     <button class="hamburger" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars" id="menu-icon"></i></button>
 
     <nav id="nav-menu">
-        <a href="#" onclick="closeMobileMenu()"><i class="fa-solid fa-house"></i> होम</a>
-        <a href="#" onclick="openSearchModal(); closeMobileMenu();"><i class="fa-solid fa-magnifying-glass"></i> उदाहरण खोजें</a>
+        <a href="index.html" onclick="closeMobileMenu()"><i class="fa-solid fa-house"></i> <span data-i18n="nav_home">होम</span></a>
+    <a href="grammar.html" onclick="closeMobileMenu()"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_grammar">व्याकरण जाँच</span></a>
+        <a href="qna.html" onclick="closeMobileMenu()"><i class="fa-solid fa-book-open"></i> <span data-i18n="nav_qna">प्रश्न-उत्तर</span></a>
+        <a href="about.html" onclick="closeMobileMenu()"><i class="fa-solid fa-circle-info"></i> <span data-i18n="nav_about">परिचय</span></a>
         
-        <div class="nav-dropdown">
-            <button onclick="toggleSutraDropdown(event)">
-                <i class="fa-solid fa-book-open"></i> व्याकरण सूत्र <i class="fa-solid fa-caret-down"></i>
-            </button>
-            <div class="dropdown-content" id="sutraDropdown">
-                </div>
+        <div class="nav-lang-switcher">
+            <button class="lang-btn" data-lang="en" onclick="setLanguage('en'); closeMobileMenu()">EN</button>
+            <span class="lang-divider">|</span>
+            <button class="lang-btn active" data-lang="hi" onclick="setLanguage('hi'); closeMobileMenu()">हि</button>
+            <span class="lang-divider">|</span>
+            <button class="lang-btn" data-lang="sa" onclick="setLanguage('sa'); closeMobileMenu()">𑌸</button>
         </div>
-        <button onclick="toggleDark()"><i class="fa-solid fa-moon" id="theme-icon"></i> डार्क मोड</button>
+        
+        <button onclick="toggleDark(); closeMobileMenu()" class="dark-mode-btn" aria-label="Toggle dark mode"><i class="fa-solid fa-moon" id="theme-icon"></i></button>
     </nav>
 </header>
 
-<section class="hero">
-    <h1>शब्द निर्माण की प्रक्रिया! ✨</h1>
-    <p>अष्टाध्यायी के नियमों (१.१.१ - १.१.७५) के साथ शुद्ध रूप सिद्धि!</p>
-</section>
-
-<div class="main-container" id="tool">
-    <div class="card">
-        <div class="input-grid">
-            <div class="input-group">
-                <label class="label-upa"><i class="fa-solid fa-puzzle-piece"></i> उपसर्ग</label>
-                <input type="text" id="upasarga" class="sanskrit-text" list="upaList" placeholder="चुनें या टाइप करें..." autocomplete="off">
-                <datalist id="upaList"></datalist>
+<main>
+    <!-- Section 2 — Hero -->
+    <section class="home-hero" id="home">
+        <div class="home-hero-inner">
+            <div class="hero-badge">🏆 India's First Trilingual Grammar Tool</div>
+            <h1 class="home-hero-title">
+                शुद्ध भाषा। सटीक व्याकरण।
+                <span class="home-hero-title-sub">Perfect Grammar in 3 Languages.</span>
+            </h1>
+            <p class="home-hero-sub">
+                Check your English, Hindi, and Sanskrit writing instantly. Built on Panini's Ashtadhyayi — the world's oldest grammar system.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="grammar.html">Start Checking</a>
+                <a class="btn btn-outline" href="qna.html">Ask a Question</a>
             </div>
-            
-            <div class="input-group">
-                <label class="label-dhatu"><i class="fa-solid fa-seedling"></i> धातु (मूल)</label>
-                <input type="text" id="dhatu" class="sanskrit-text" list="dhatuList" placeholder="उदा. कृ, पठ्, लिख्..." autocomplete="off">
-                <datalist id="dhatuList"></datalist>
-            </div>
-            
-            <div class="input-group">
-                <label class="label-prat"><i class="fa-solid fa-link"></i> प्रत्यय</label>
-                <input type="text" id="pratyaya" class="sanskrit-text" list="pratList" placeholder="उदा. तव्यत्, क्त्वा..." autocomplete="off">
-                <datalist id="pratList"></datalist>
+            <div class="hero-trust">
+                <span>✓ Free to use</span>
+                <span>✓ No signup needed</span>
+                <span>✓ 3 Languages</span>
+                <span>✓ 75+ Ashtadhyayi Sutras</span>
             </div>
         </div>
+    </section>
 
-        <button class="btn-generate" onclick="generateKridanta()">
-            <i class="fa-solid fa-bolt"></i> शब्द बनाओ!
-        </button>
-
-        <div class="result-section" id="resultSection">
-            <div class="result-box" onclick="togglePrakriya()">
-                <div class="result-text sanskrit-text" id="finalOutput"></div>
-                <div class="hint"><i class="fa-solid fa-hand-pointer"></i> यह कैसे बना? (प्रक्रिया देखने के लिए टैप करें)</div>
+    <!-- Section 3 — Live Demo Strip -->
+    <section class="section" id="demo">
+        <div class="container">
+            <div class="section-head">
+                <h2 class="section-title">Try It Right Here</h2>
+                <p class="section-desc">A focused demo of the Paninian word builder. Choose upasarga, dhatu, and pratyaya, then generate the final form with step-by-step prakriyā.</p>
             </div>
+            <div class="main-container" id="tool">
+                <div class="card panel">
+                    <div class="tool-header">
+                        <h2 class="tool-title"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="tool_title">शब्द निर्माण</span></h2>
+                        <button class="btn-search-examples" onclick="openSearchModal()">
+                            <i class="fa-solid fa-magnifying-glass"></i> <span data-i18n="search_examples">उदाहरण खोजें</span>
+                        </button>
+                    </div>
+                    
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label class="label-upa"><i class="fa-solid fa-puzzle-piece"></i> <span data-i18n="label_upasarga">उपसर्ग</span></label>
+                            <input type="text" id="upasarga" class="sanskrit-text" list="upaList" placeholder="चुनें या टाइप करें..." data-i18n-placeholder="placeholder_upasarga" autocomplete="off">
+                            <datalist id="upaList"></datalist>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="label-dhatu"><i class="fa-solid fa-seedling"></i> <span data-i18n="label_dhatu">धातु (मूल)</span></label>
+                            <input type="text" id="dhatu" class="sanskrit-text" list="dhatuList" placeholder="उदा. कृ, पठ्, लिख्..." data-i18n-placeholder="placeholder_dhatu" autocomplete="off">
+                            <datalist id="dhatuList"></datalist>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="label-prat"><i class="fa-solid fa-link"></i> <span data-i18n="label_pratyaya">प्रत्यय</span></label>
+                            <input type="text" id="pratyaya" class="sanskrit-text" list="pratList" placeholder="उदा. तव्यत्, क्त्वा..." data-i18n-placeholder="placeholder_pratyaya" autocomplete="off">
+                            <datalist id="pratList"></datalist>
+                        </div>
+                    </div>
 
-            <div class="prakriya-box" id="prakriyaBox">
-                <div class="prakriya-title"><i class="fa-solid fa-list-check"></i> पाणिनीय सिद्धि प्रक्रिया:</div>
-                <ul class="step-list sanskrit-text" id="prakriyaSteps">
-                    </ul>
+                    <button class="btn-generate" onclick="generateKridanta()">
+                        <i class="fa-solid fa-bolt"></i> <span data-i18n="btn_generate">शब्द बनाओ!</span>
+                    </button>
+
+                    <div class="result-section" id="resultSection">
+                        <div class="result-box" onclick="togglePrakriya()">
+                            <div class="result-text sanskrit-text" id="finalOutput"></div>
+                            <div class="hint"><i class="fa-solid fa-hand-pointer"></i> <span data-i18n="hint_prakriya">यह कैसे बना? (प्रक्रिया देखने के लिए टैप करें)</span></div>
+                        </div>
+
+                        <div class="prakriya-box" id="prakriyaBox">
+                            <div class="prakriya-title"><i class="fa-solid fa-list-check"></i> पाणिनीय सिद्धि प्रक्रिया:</div>
+                            <ul class="step-list sanskrit-text" id="prakriyaSteps">
+                                </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </section>
 
-<div id="searchModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeSearchModal()">&times;</span>
-        <h2 style="color: var(--text-dark); margin-bottom: 5px;">
-            <i class="fa-solid fa-magnifying-glass" style="color:#ec4899;"></i> उदाहरण खोजें
-        </h2>
-        <p style="margin-bottom: 20px; font-size: 0.9em; color: var(--text-light);">
-            धातु, प्रत्यय या सूत्र संख्या से खोजें (उदा: 1.1.1)
-        </p>
-        
-        <input type="text" id="searchInput" class="sanskrit-text" placeholder="खोजें..." onkeyup="performSearch()" autocomplete="off">
-        
-        <div id="searchResults" class="search-results">
+    <!-- Section 4 — Features -->
+    <section class="section section-tint" id="features">
+        <div class="container">
+            <div class="section-head">
+                <h2 class="section-title">What SansGra Does</h2>
+                <p class="section-desc">SansGra is more than just a grammar checker. It's a complete linguistic tool powered by ancient wisdom and modern AI.</p>
             </div>
-    </div>
-</div>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <div class="feature-item-icon"><i class="fa-solid fa-spell-check"></i></div>
+                    <div class="feature-item-content">
+                        <h3>Grammar Checking</h3>
+                        <p>Instantly finds grammar mistakes in your writing. Works for English, Hindi, and Sanskrit sentences with precision.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-item-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                    <div class="feature-item-content">
+                        <h3>Spell Correction</h3>
+                        <p>Catches spelling errors and wrong word usage. Sanskrit words checked against authentic Dhatu database.</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-item-icon"><i class="fa-solid fa-robot"></i></div>
+                    <div class="feature-item-content">
+                        <h3>AI-Powered Q&A</h3>
+                        <p>Ask any grammar question and get an instant answer. Powered by 75 Ashtadhyayi sutras and intelligent matching.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5 — How it works -->
+    <section class="section" id="how">
+        <div class="container">
+            <div class="section-head">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-desc">A simple, intuitive process to get your text analyzed in seconds.</p>
+            </div>
+            <div class="how-steps">
+                <div class="how-step">
+                    <div class="how-step-number">1</div>
+                    <div class="how-step-content">
+                        <h3>Choose Your Language</h3>
+                        <p>Select English, Hindi, or Sanskrit from the top bar.</p>
+                    </div>
+                </div>
+                <div class="how-separator"></div>
+                <div class="how-step">
+                    <div class="how-step-number">2</div>
+                    <div class="how-step-content">
+                        <h3>Type Your Text</h3>
+                        <p>Write or paste any sentence, paragraph, or word.</p>
+                    </div>
+                </div>
+                <div class="how-separator"></div>
+                <div class="how-step">
+                    <div class="how-step-number">3</div>
+                    <div class="how-step-content">
+                        <h3>Get Instant Results</h3>
+                        <p>Mistakes are highlighted. Click any underline to see the fix.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Why Choose Us -->
+    <section class="section section-tint" id="why-choose-us">
+        <div class="container">
+            <div class="section-head">
+                <h2 class="section-title">Why Choose SansGra?</h2>
+                <p class="section-desc">Get unparalleled accuracy and insight with a tool built on a foundation of ancient linguistic wisdom and modern technology.</p>
+            </div>
+            <dl class="why-grid">
+                <div class="why-item">
+                    <dt><i class="fa-solid fa-book-tanakh"></i> Authentic Engine</dt>
+                    <dd>Our core grammar logic is powered by Panini's Ashtadhyayi, ensuring corrections are rooted in authentic, time-tested rules.</dd>
+                </div>
+                <div class="why-item">
+                    <dt><i class="fa-solid fa-language"></i> Trilingual Support</dt>
+                    <dd>Seamlessly check your text in English, Hindi, and Sanskrit within a single, intuitive interface. One tool for all three.</dd>
+                </div>
+                <div class="why-item">
+                    <dt><i class="fa-solid fa-bolt-lightning"></i> Instant & Free</dt>
+                    <dd>No sign-ups, no fees, no hassle. Get immediate feedback on your writing the moment you need it, completely free of charge.</dd>
+                </div>
+                <div class="why-item">
+                    <dt><i class="fa-solid fa-robot"></i> AI-Powered Q&A</dt>
+                    <dd>Go beyond simple corrections. Ask complex grammar questions and get intelligent, context-aware answers from our AI assistant.</dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+
+    <!-- Section 6 — Languages Supported -->
+    <section class="section" id="languages">
+        <div class="container">
+            <div class="section-head">
+                <h2 class="section-title">Languages Supported</h2>
+                <p class="section-desc">From global business communication to ancient scholarly texts, SansGra has you covered.</p>
+            </div>
+
+            <div class="language-switcher">
+                <div class="lang-tabs">
+                    <button class="lang-tab-btn active" data-lang="en">
+                        <i class="fa-solid fa-flag-usa"></i> English
+                    </button>
+                    <button class="lang-tab-btn" data-lang="hi">
+                        <i class="fa-solid fa-om"></i> हिंदी
+                    </button>
+                    <button class="lang-tab-btn" data-lang="sa">
+                        <i class="fa-solid fa-om"></i> संस्कृत
+                    </button>
+                </div>
+                <div class="lang-content">
+                    <div class="lang-pane active" id="lang-en">
+                        <div class="lang-example">
+                            <div class="bad"><i class="fa-solid fa-xmark"></i> He don't know the answer.</div>
+                            <div class="good"><i class="fa-solid fa-check"></i> He doesn't know the answer.</div>
+                        </div>
+                        <div class="tag"><i class="fa-solid fa-tag"></i> Subject-Verb Agreement</div>
+                    </div>
+                    <div class="lang-pane" id="lang-hi">
+                        <div class="lang-example">
+                            <div class="bad"><i class="fa-solid fa-xmark"></i> मैं जाता है।</div>
+                            <div class="good"><i class="fa-solid fa-check"></i> मैं जाता हूँ।</div>
+                        </div>
+                        <div class="tag"><i class="fa-solid fa-tag"></i> क्रिया-कारक मेल</div>
+                    </div>
+                    <div class="lang-pane" id="lang-sa">
+                        <div class="lang-example">
+                            <div class="bad"><i class="fa-solid fa-xmark"></i> Input: पठ् + क्त</div>
+                            <div class="good"><i class="fa-solid fa-check"></i> Output: पठितः</div>
+                        </div>
+                        <div class="tag"><i class="fa-solid fa-tag"></i> Ashtadhyayi 1.1.26</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 7 — Ashtadhyayi Highlight -->
+    <section class="section section-dark" id="ashtadhyayi">
+        <div class="container">
+            <div class="ashtadhyayi-highlight">
+                <div class="ashtadhyayi-text">
+                    <div class="section-kicker">🏛️ Built on Ancient Scholarship</div>
+                    <h2 class="ashtadhyayi-title">Powered by Pāṇini's Aṣṭādhyāyī</h2>
+                    <p class="ashtadhyayi-sub">
+                        The Aṣṭādhyāyī is the foundational text of Sanskrit grammar, authored by the ancient scholar Pāṇini. This masterpiece, containing nearly 4,000 sūtras, represents the oldest complete linguistic system in the world. SansGra proudly uses its principles to deliver unparalleled accuracy.
+                    </p>
+                    <a class="btn btn-outline-light" href="qna.html">Explore the Sūtras</a>
+                </div>
+                <div class="ashtadhyayi-card-area">
+                    <div class="ashtadhyayi-card">
+                        <div class="sutra-pill">[1.1.1] वृद्धिरादैच्</div>
+                        <div class="sutra-meaning">The vowels `ā`, `ai`, and `au` are technically designated as `vṛddhi`.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 8 — FAQ Strip -->
+    <section class="section" id="faq">
+        <div class="container">
+            <div class="section-head">
+                <h2 class="section-title">Frequently Asked Questions</h2>
+            </div>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-q">What is Sandhi in Sanskrit? <i class="fa-solid fa-chevron-down faq-ico"></i></button>
+                    <div class="faq-a">Sandhi is a set of phonetic combination rules that change sounds at word boundaries to produce fluent pronunciation.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-q">What is the difference between Guna and Vriddhi? <i class="fa-solid fa-chevron-down faq-ico"></i></button>
+                    <div class="faq-a">Guna and Vriddhi are vowel-grade changes in Sanskrit. Vriddhi is generally a stronger expansion than Guna.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-q">When do we use 'a' vs 'an' in English? <i class="fa-solid fa-chevron-down faq-ico"></i></button>
+                    <div class="faq-a">Use “an” before vowel sounds (an hour), and “a” before consonant sounds (a university).</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-q">What is क्रिया-कारक मेल in Hindi grammar? <i class="fa-solid fa-chevron-down faq-ico"></i></button>
+                    <div class="faq-a">It’s the agreement between verb and subject/object (person, number, gender) in Hindi sentences.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-q">What does sutra 1.1.1 mean? <i class="fa-solid fa-chevron-down faq-ico"></i></button>
+                    <div class="faq-a">“वृद्धिरादैच्” defines the Vriddhi vowels: ā, ai, au are designated as Vriddhi.</div>
+                </div>
+            </div>
+            <div class="section-actions" style="text-align: center; margin-top: 30px;">
+                <a class="btn btn-outline" href="qna.html">See All Questions on Q&A Page →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 9 — CTA Banner -->
+    <section class="cta">
+        <div class="container cta-inner">
+            <h2>Ready to Write Better?</h2>
+            <p>Start checking your grammar for free. No account needed. Works in English, Hindi, and Sanskrit.</p>
+            <div class="cta-actions">
+                <a class="btn btn-light" href="#demo">Check My Grammar</a>
+                <a class="btn btn-outline-light" href="qna.html">Ask a Question</a>
+            </div>
+        </div>
+    </section>
+</main>
 
 <footer>
-    <div class="footer-grid">
-        <div class="footer-col">
-            <h3>पाणिनीय व्याकरण यन्त्र v2.0</h3>
-            <p>यह यन्त्र अष्टाध्यायी के सूत्रों के आधार पर कृदन्त शब्दों की रचना करता है।</p>
-            <p style="margin-top:10px; font-size: 0.8em; opacity: 0.7;">© 2026 Hotyoga द्वारा निर्मित</p>
+    <div class="container">
+        <div class="footer-grid footer-4">
+            <div class="footer-col">
+                <h3>✨ <span data-i18n="logo">संस्कृत</span></h3>
+                <p>Free grammar tool for English, Hindi &amp; Sanskrit</p>
+                <p>Built on Ashtadhyayi by Panini</p>
+                <p style="margin-top:10px; font-size: 0.85em; opacity: 0.8;">© 2026 SansGra</p>
+            </div>
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <a href="#home">Home</a>
+                <a href="#demo">Grammar Checker</a>
+                <a href="qna.html">Q&amp;A</a>
+                <a href="about.html">About</a>
+                <a href="admin.html">Admin</a>
+            </div>
+            <div class="footer-col">
+                <h3>Languages</h3>
+                <a href="#languages">🇬🇧 English Grammar</a>
+                <a href="#languages">हि Hindi Vyakaran</a>
+                <a href="#languages">𑌸 Sanskrit Grammar</a>
+                <a href="#ashtadhyayi">Ashtadhyayi Sutras</a>
+            </div>
+            <div class="footer-col">
+                <h3>Support</h3>
+                <a href="#">Feedback</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Use</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            © 2026 SansGra. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Use</a> | Built with ❤️ for Sanskrit, Hindi &amp; English learners.
         </div>
     </div>
 </footer>
 
-<script src="ashtadhyayi_engine.js"></script>
 <script src="script.js"></script>
+<script>
+    // Language switcher logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const langTabButtons = document.querySelectorAll('.lang-tab-btn');
+        const langPanes = document.querySelectorAll('.lang-pane');
 
+        langTabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Deactivate all tabs and panes
+                langTabButtons.forEach(btn => btn.classList.remove('active'));
+                langPanes.forEach(pane => pane.classList.remove('active'));
+
+                // Activate the clicked tab
+                button.classList.add('active');
+
+                // Activate the corresponding pane
+                const lang = button.dataset.lang;
+                document.getElementById(`lang-${lang}`).classList.add('active');
+            });
+        });
+
+        // FAQ Accordion Logic
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-q');
+            const answer = item.querySelector('.faq-a');
+
+            question.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+                
+                // Close all items
+                faqItems.forEach(i => {
+                    i.classList.remove('active');
+                    i.querySelector('.faq-a').style.display = 'none';
+                });
+
+                // Open the clicked item if it wasn't already active
+                if (!isActive) {
+                    item.classList.add('active');
+                    answer.style.display = 'block';
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

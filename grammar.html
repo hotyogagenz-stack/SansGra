@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="sa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Grammar Checker | SansGra</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Keep existing input styling used by the tool box */
+        input[type="text"] {
+            width: 100%; padding: 15px; border-radius: 12px;
+            border: 2px solid var(--border-light);
+            font-size: clamp(16px, 3vw, 20px); font-weight: 600;
+            outline: none; transition: 0.3s;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        input[type="text"]:focus { border-color: #ec4899; box-shadow: 0 0 8px rgba(236, 72, 153, 0.2); }
+
+        .page-hero {
+            margin-top: 90px;
+            padding: 40px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.10), rgba(243, 232, 255, 0.95));
+            border-bottom: 2px solid var(--border-light);
+        }
+        body.dark .page-hero { background: linear-gradient(135deg, rgba(236, 72, 153, 0.18), rgba(243, 232, 255, 0.06)); }
+        .page-hero h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 900;
+            margin-bottom: 10px;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .page-hero p { font-size: clamp(1rem, 2.5vw, 1.2rem); opacity: 0.85; font-weight: 650; max-width: 800px; margin: 0 auto; }
+
+        /* Make the original tool container sit nicely under the page hero */
+        .main-container { padding-top: 30px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo" onclick="location.href='index.html'" style="cursor:pointer;">
+        <i class="fa-solid fa-wand-magic-sparkles" style="color:#ec4899;"></i> <span data-i18n="logo">संस्कृत</span>
+    </div>
+    <button class="hamburger" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars" id="menu-icon"></i></button>
+
+    <nav id="nav-menu">
+        <a href="index.html" onclick="closeMobileMenu()"><i class="fa-solid fa-house"></i> <span data-i18n="nav_home">होम</span></a>
+        <a href="grammar.html" class="active" onclick="closeMobileMenu()"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="nav_grammar">व्याकरण जाँच</span></a>
+        <a href="qna.html" onclick="closeMobileMenu()"><i class="fa-solid fa-book-open"></i> <span data-i18n="nav_qna">प्रश्न-उत्तर</span></a>
+        <a href="about.html" onclick="closeMobileMenu()"><i class="fa-solid fa-circle-info"></i> <span data-i18n="nav_about">परिचय</span></a>
+
+        <div class="nav-lang-switcher">
+            <button class="lang-btn" data-lang="en" onclick="setLanguage('en'); closeMobileMenu()">EN</button>
+            <span class="lang-divider">|</span>
+            <button class="lang-btn active" data-lang="hi" onclick="setLanguage('hi'); closeMobileMenu()">हि</button>
+            <span class="lang-divider">|</span>
+            <button class="lang-btn" data-lang="sa" onclick="setLanguage('sa'); closeMobileMenu()">𑌸</button>
+        </div>
+
+        <button onclick="toggleDark(); closeMobileMenu()" class="dark-mode-btn" aria-label="Toggle dark mode"><i class="fa-solid fa-moon" id="theme-icon"></i></button>
+    </nav>
+</header>
+
+<section class="page-hero">
+    <h1>Grammar Checker</h1>
+    <p>Build Sanskrit forms with Paninian rules and explore examples. (English/Hindi/Sanskrit UI supported.)</p>
+</section>
+
+<!-- Live Demo Strip -->
+<section class="section" id="demo">
+    <div class="container">
+        <h2 class="section-title">Try It Right Here — No Signup Needed</h2>
+        <div class="demo-card">
+            <div class="demo-tabs" role="tablist" aria-label="Demo language selector">
+                <button class="demo-tab active" data-demo-lang="en" onclick="setDemoLanguage('en')">English</button>
+                <button class="demo-tab" data-demo-lang="hi" onclick="setDemoLanguage('hi')">हिंदी</button>
+                <button class="demo-tab" data-demo-lang="sa" onclick="setDemoLanguage('sa')">संस्कृत</button>
+            </div>
+            <textarea id="demoInput" class="demo-textarea" rows="4" placeholder="Type or paste your sentence here..."></textarea>
+            <div class="demo-actions">
+                <button class="btn btn-primary" onclick="runDemoCheck()">Check Grammar</button>
+            </div>
+            <div id="demoResult" class="demo-result" aria-live="polite">
+                <div class="demo-result-line">
+                    <span class="mistake">He don't</span> know the answer.
+                </div>
+                <div class="demo-suggestion">
+                    Suggestion: <span class="suggestion">He doesn't</span> know the answer.
+                    <span class="tag">Subject-Verb Agreement</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h3 data-i18n="footer_title">पाणिनीय व्याकरण यन्त्र v2.0</h3>
+            <p data-i18n="footer_desc">यह यन्त्र अष्टाध्यायी के सूत्रों के आधार पर कृदन्त शब्दों की रचना करता है।</p>
+            <p style="margin-top:10px; font-size: 0.8em; opacity: 0.7;">© 2026 SansGra</p>
+        </div>
+    </div>
+</footer>
+
+<script src="ashtadhyayi_engine.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
