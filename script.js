@@ -1,9 +1,282 @@
 let sanskritDatabase = {};
 let pratyayaDB = {}; 
 
-// ==================================================
-// 1. वर्ण संयोजन और सन्धि (Halant + Vowel Joiner & Sandhi)
-// ==================================================
+// Hinglish/common word mappings - for casual English spellings of Hindi/Sanskrit words
+const hinglishWordMap = {
+    'ram': 'राम', 'krishna': 'कृष्ण', 'shiva': 'शिव', 'ganesh': 'गणेश',
+    'hanuman': 'हनुमान', 'vishnu': 'विष्णु', 'brahma': 'ब्रह्मा',
+    'agni': 'अग्नि', 'vayu': 'वायु', 'indra': 'इन्द्र', 'surya': 'सूर्य',
+    'ganga': 'गङ्गा', 'yama': 'यम', 'kama': 'काम', 'dharma': 'धर्म',
+    'karma': 'कर्म', 'yoga': 'योग', 'mantra': 'मन्त्र', 'veda': 'वेद',
+    'rishi': 'ऋषि', 'guru': 'गुरु', 'pandit': 'पण्डित', 'swami': 'स्वामी',
+    'bhagwan': 'भगवान', 'deva': 'देव', 'devi': 'देवी',
+    'raja': 'राजा', 'rani': 'रानी', 'putra': 'पुत्र', 'kanya': 'कन्या',
+    'griha': 'गृह', 'nagar': 'नगर', 'pura': 'पुर', 'desh': 'देश',
+    'nadi': 'नदी', 'pani': 'पानी', 'aakash': 'आकाश', 'dharti': 'धरती',
+    'mata': 'माता', 'pita': 'पिता', 'bhaai': 'भाई', 'behen': 'बहन',
+    'mandir': 'मन्दिर', 'pustak': 'पुस्तक', 'shala': 'शाला',
+    'vaidya': 'वैद्य', 'chikitsa': 'चिकित्सा', 'aushadhi': 'औषधि',
+    'bhojan': 'भोजन', 'jal': 'जल', 'anna': 'अन्न', 'phool': 'फूल',
+    'pav': 'पाव', 'kitab': 'किताब', 'kursi': 'कुर्सी',
+    'darwaza': 'दरवाज़ा', 'khidki': 'खिड़की', 'chhatri': 'छतरी',
+    'baaraat': 'बारात', 'shadi': 'शादी', 'tyohar': 'त्योहार',
+    'sabha': 'सभा', 'samiti': 'समिति', 'sena': 'सेना',
+    'rajya': 'राज्य', 'raj': 'राज', 'maharaja': 'महाराजा',
+    'yuva': 'युवा', 'balak': 'बालक', 'stri': 'स्त्री',
+    'purush': 'पुरुष', 'manushya': 'मनुष्य', 'jeev': 'जीव',
+    'jeevan': 'जीवन', 'mrit': 'मृत', 'mrityu': 'मृत्यु',
+    'sukh': 'सुख', 'dukh': 'दुख', 'prem': 'प्रेम', 'pyar': 'प्यार',
+    'dosti': 'दोस्ती', 'saheli': 'सहेली', 'baba': 'बाबा',
+    'acharya': 'आचार्य', 'vidwan': 'विद्वान', 'mahila': 'महिला',
+    'nari': 'नारी', 'kumari': 'कुमारी', 'pati': 'पति', 'patni': 'पत्नी',
+    'santan': 'सन्तान', 'kul': 'कुल', 'vansh': 'वंश', 'parivar': 'परिवार',
+    'ghar': 'घर', 'makhan': 'मक्खन', 'dahi': 'दही',
+    'chawal': 'चावल', 'roti': 'रोटी', 'dal': 'दाल', 'sabzi': 'सब्ज़ी',
+    'phoolgobhi': 'फूलगोभी', 'pyaaz': 'प्याज़', 'adrak': 'अदरक',
+    'lehsun': 'लहसुन', 'haldi': 'हल्दी', 'mirch': 'मिर्च',
+    'namak': 'नमक', 'shakkar': 'शक्कर', 'chini': 'चीनी',
+    'kapur': 'कपूर', 'agarbatti': 'अगरबत्ती', 'deepak': 'दीपक',
+    'diya': 'दीया', 'pooja': 'पूजा', 'aarti': 'आरती', 'jaap': 'जाप',
+    'tapasya': 'तपस्या', 'sadhana': 'साधना', 'ashram': 'आश्रम',
+    'teerth': 'तीर्थ', 'kshetra': 'क्षेत्र', 'pavitra': 'पवित्र',
+    'shuddh': 'शुद्ध', 'sundar': 'सुन्दर', 'khoobsurat': 'खूबसूरत',
+    'bada': 'बड़ा', 'chota': 'छोटा', 'lamba': 'लंबा',
+    'achha': 'अच्छा', 'bura': 'बुरा', 'tez': 'तेज', 'dheere': 'धीरे',
+    'galat': 'गलत', 'sahi': 'सही', 'thik': 'ठीक',
+    'haan': 'हाँ', 'nahin': 'नहीं', 'nahi': 'नहीं', 'ji': 'जी',
+    'kya': 'क्या', 'kaise': 'कैसे', 'kab': 'कब', 'kahan': 'कहाँ',
+    'kaun': 'कौन', 'kyon': 'क्यों', 'kitna': 'कितना',
+    'mitr': 'मित्र', 'shatru': 'शत्रु', 'shishya': 'शिष्य',
+    'pandita': 'पण्डिता', 'santan': 'सन्तान',
+    'teerth': 'तीर्थ', 'sthal': 'स्थल',
+    'sundarta': 'सुन्दरता', 'bara': 'बड़ा',
+    'sakhi': 'सखी', 'tau': 'ताऊ', 'bua': 'बुआ',
+    'nana': 'नाना', 'nani': 'नानी', 'dada': 'दादा', 'dadi': 'दादी',
+    'fufa': 'फूफा', 'fufi': 'फूफी',
+    'chacha': 'चाचा', 'chachi': 'चाची', 'mama': 'मामा', 'mausi': 'मौसी',
+    'saas': 'सास', 'sasur': 'ससुर', 'behen': 'बहन', 'bhaai': 'भाई',
+    'didi': 'दीदी', 'bhaiya': 'भैया',
+    'swamiji': 'स्वामीजी', 'panditji': 'पण्डितजी',
+    'maulana': 'मौलाना', 'babaji': 'बाबाजी',
+    'yatra': 'यात्रा', 'darshan': 'दर्शन', 'prasad': 'प्रसाद',
+    'bhajan': 'भजन', 'kirtan': 'कीर्तन', 'homa': 'होम',
+    'yajna': 'यज्ञ', 'havan': 'हवन', 'upasana': 'उपासना',
+    'bhakti': 'भक्ति', 'jnana': 'ज्ञान', 'vairagya': 'वैराग्य',
+    'moksha': 'मोक्ष', 'nirvana': 'निर्वाण', 'samadhi': 'समाधि',
+    'prana': 'प्राण', 'chakra': 'चक्र', 'kundalini': 'कुण्डलिनी',
+    'tantra': 'तंत्र', 'mudra': 'मुद्रा', 'asana': 'आसन',
+    'pranayam': 'प्राणायाम', 'dhyana': 'ध्यान',
+    'siddhi': 'सिद्धि', 'shakti': 'शक्ति', 'shanti': 'शान्ति',
+    'om': 'ॐ', 'swastika': 'स्वस्तिक', 'kalash': 'कलश',
+    'purnakumbh': 'पूर्णकुंभ', 'toran': 'तोरण',
+    'rangoli': 'रंगोली', 'alpana': 'अल्पना',
+    'mehendi': 'मेहंदी', 'sindoor': 'सिन्दूर',
+    'mangalsutra': 'मंगलसूत्र', 'bichhiya': 'बिछिया',
+    'payal': 'पायल', 'kada': 'कड़ा', 'kangna': 'कंगन',
+    'nath': 'नथ', 'laung': 'लौंग',
+    'gopi': 'गोपी', 'radha': 'राधा',
+    'arjun': 'अर्जुन', 'bheem': 'भीम', 'yudh': 'युद्ध',
+    'dron': 'द्रोण', 'ashwathama': 'अश्वथामा', 'karna': 'कर्ण',
+    'duryodhan': 'दुर्योधन', 'shakuni': 'शकुनि',
+    'bhishma': 'भीष्म', 'parashuram': 'परशुराम',
+    'ramayan': 'रामायण', 'mahabharat': 'महाभारत',
+    'puran': 'पुराण', 'upanishad': 'उपनिषद',
+    'bhagvadgita': 'भगवद्गीता', 'vedant': 'वेदांत',
+    'mimansa': 'मीमांसा', 'nyaya': 'न्याय',
+    'vaiseshik': 'वैशेषिक', 'samkhya': 'सांख्य',
+    'yogasutra': 'योगसूत्र', 'ashtang': 'अष्टांग',
+    'hath': 'हठ', 'kundalini': 'कुण्डलिनी',
+    'chakra': 'चक्र', 'nadi': 'नाड़ी', 'prana': 'प्राण',
+    'shushumna': 'सुषुम्णा', 'ida': 'इडा', 'pingla': 'पिङ्गला',
+    'bindu': 'बिंदु', 'mandala': 'मण्डल', 'yantra': 'यंत्र',
+    'mantra': 'मन्त्र', 'beej': 'बीज', 'bij': 'बीज',
+    'siddha': 'सिद्ध', 'nath': 'नाथ', 'siddh': 'सिद्ध',
+    'naga': 'नाग', 'yaksha': 'यक्ष', 'rakshas': 'राक्षस',
+    'asura': 'असुर', 'danav': 'दानव', 'ravan': 'रावण',
+    'meghnad': 'मेघनाद', 'kumbhkaran': 'कुम्भकरण',
+    'vibhishan': 'विभीषण', 'shurpanakha': 'शूर्पणखा',
+    'tulsidas': 'तुलसीदास', 'kabir': 'कबीर', 'meerabai': 'मीराबाई',
+    'tukaram': 'तुकाराम', 'narsinh': 'नरसिंह', 'surdas': 'सूरदास',
+    'chaitanya': 'चैतन्य', 'ramanuj': 'रामानुज', 'madhav': 'माधव',
+    'adiguru': 'आदिगुरु', 'shankar': 'शंकर', 'ramkrishna': 'रामकृष्ण',
+    'vivekanand': 'विवेकानंद', 'chinmayanand': 'चिन्मयानंद',
+    'satya': 'सत्य', 'ahinsa': 'अहिंसा', 'karuna': 'करुणा',
+    'daya': 'दया', 'kshama': 'क्षमा', 'dhairya': 'धैर्य',
+    'virya': 'वीर्य', 'samta': 'समता', 'tyag': 'त्याग',
+    'aparigraha': 'अपरिग्रह', 'asteya': 'अस्तेय', 'brahmacharya': 'ब्रह्मचर्य',
+    'sauch': 'शौच', 'santosha': 'संतोष', 'tap': 'तप',
+    'swadhyay': 'स्वाध्याय', 'ishwar': 'ईश्वरप्रणिधान',
+    'yama': 'यम', 'niyam': 'नियम', 'asana': 'आसन',
+    'pratyahar': 'प्रत्याहार', 'dharana': 'धारणा',
+    'dhyana': 'ध्यान', 'samadhi': 'समाधि',
+    'prakriti': 'प्रकृति', 'purusha': 'पुरुष',
+    'triguna': 'त्रिगुण', 'sattva': 'सत्त्व', 'rajas': 'रजस्',
+    'tamas': 'तमस्', 'maya': 'माया', 'avidya': 'अविद्या',
+    'vidya': 'विद्या', 'moha': 'मोह', 'lobh': 'लोभ',
+    'krodh': 'क्रोध', 'mada': 'मद', 'matsarya': 'मत्सर्य',
+    'rag': 'राग', 'dwesh': 'द्वेष', 'bhay': 'भय',
+    'vishad': 'विषाद', 'chinta': 'चिंता', 'udveg': 'उद्वेग',
+    'nirvikar': 'निर्विकार', 'stithpragya': 'स्थितप्रज्ञ',
+    'vairagya': 'वैराग्य', 'tyag': 'त्याग', 'sanyas': 'संन्यास',
+    'grihasth': 'गृहस्थ', 'brahmachari': 'ब्रह्मचारी',
+    'vanprasth': 'वानप्रस्थ', 'sanyasi': 'संन्यासी',
+    'ashram': 'आश्रम', 'dharma': 'धर्म', 'artha': 'अर्थ',
+    'kama': 'काम', 'moksha': 'मोक्ष', 'purushartha': 'पुरुषार्थ',
+    'varna': 'वर्ण', 'ashram': 'आश्रम', 'samskara': 'संस्कार',
+    'sanskara': 'संस्कार', 'upanayan': 'उपनयन',
+    'yajnopavit': 'यज्ञोपवीत', 'grihya': 'गृह्य',
+    'shrauta': 'श्रौत', 'smarta': 'स्मार्त',
+    'agama': 'आगम', 'nigama': 'निगम',
+    'tantr': 'तंत्र', 'yantra': 'यंत्र', 'mantra': 'मन्त्र',
+    'pratishtha': 'प्रतिष्ठा', 'avahan': 'आवाहन',
+    'shodash': 'षोडश', 'upachar': 'उपचार',
+    'puja': 'पूजा', 'archana': 'अर्चना', 'stotra': 'स्तोत्र',
+    'ashtakam': 'अष्टकम', 'sahasranam': 'सहस्रनाम',
+    'chalisa': 'चालीसा', 'astak': 'अष्टक',
+    'stavan': 'स्तवन', 'stuti': 'स्तुति',
+    'vandana': 'वन्दना', 'namavali': 'नामावली',
+    'kavach': 'कवच', 'argala': 'अर्गला',
+    'kilak': 'किलक', 'samput': 'सम्पुट',
+    'nyas': 'न्यास', 'mudra': 'मुद्रा',
+    'mantra': 'मन्त्र', 'japa': 'जाप', 'homa': 'होम',
+    'yajna': 'यज्ञ', 'dana': 'दान', 'dakshina': 'दक्षिणा',
+    'bhiksha': 'भिक्षा', 'prasad': 'प्रसाद',
+    'naivedya': 'नैवेद्य', 'bali': 'बलि',
+    'tarpan': 'तर्पण', 'shraddha': 'श्राद्ध',
+    'pind': 'पिंड', 'pret': 'प्रेत', 'pitru': 'पितृ',
+    'dev': 'देव', 'pitru': 'पितृ', 'rishi': 'ऋषि',
+    'manushya': 'मनुष्य', 'pashu': 'पशु', 'pakshi': 'पक्षी',
+    'vriksha': 'वृक्ष', 'pushp': 'पुष्प', 'phool': 'फूल',
+    'dhatu': 'धातु', 'pratyay': 'प्रत्यय',
+    'sutra': 'सूत्र', 'vaky': 'वाक्य', 'shlok': 'श्लोक',
+    'pady': 'पद्य', 'geet': 'गीत', 'bhajan': 'भजन',
+    'kirtan': 'कीर्तन', 'stotra': 'स्तोत्र', 'ashtakam': 'अष्टकम',
+    'sahasranam': 'सहस्रनाम', 'chalisa': 'चालीसा',
+    'doha': 'दोहा', 'chaupai': 'चौपाई', 'kavit': 'कविता',
+    'kavya': 'काव्य', 'mahakavya': 'महाकाव्य', 'khandakavya': 'खण्डकाव्य',
+    'akhyayika': 'अख्यायिका', 'katha': 'कथा', 'prabandh': 'प्रबन्ध',
+    'campu': 'चम्पू', 'sandesh': 'सन्देश', 'baramas': 'बारमास',
+    'harikatha': 'हरिकथा', 'burrakatha': 'बुर्रकथा',
+    'kirtan': 'कीर्तन', 'bhajan': 'भजन', 'namavali': 'नामावली',
+    'sankirtan': 'संकीर्तन', 'nama': 'नाम', 'japa': 'जाप',
+    'ajapa': 'अजाप', 'ajapajap': 'अजापजप', 'hridaya': 'हृदय',
+    'manas': 'मनस्', 'buddhi': 'बुद्धि', 'chitta': 'चित्त',
+    'ahankar': 'अहङ्कार', 'antahkarana': 'अन्तःकरण',
+    'sukshma': 'सूक्ष्म', 'sthula': 'स्थूल',
+    'karana': 'कारण', 'karya': 'कार्य',
+    'nimitta': 'निमित्त', 'upaadana': 'उपादान',
+    'sambandh': 'संबंध', 'vishay': 'विषय',
+    'vishaya': 'विषय', 'alamban': 'आलम्बन',
+    'ashray': 'आश्रय', 'adhisthan': 'अधिष्ठान',
+    'shakti': 'शक्ति', 'shaktiman': 'शक्तिमान',
+    'prabhav': 'प्रभाव', 'vaibhav': 'वैभव',
+    'aishvarya': 'ऐश्वर्य', 'yash': 'यश', 'kirti': 'कीर्ति',
+    'fame': 'कीर्ति', 'glory': 'यश', 'honor': 'सम्मान',
+    'respect': 'सम्मान', 'dignity': 'गरिमा',
+    'pride': 'गर्व', 'ego': 'अहङ्कार', 'humility': 'विनम्रता',
+    'modesty': 'विनय', 'courtesy': 'विनय', 'politeness': 'विनय',
+    'gratitude': 'कृतज्ञता', 'thankfulness': 'कृतज्ञता',
+    'appreciation': 'प्रशंसा', 'admiration': 'प्रशंसा',
+    'love': 'प्रेम', 'affection': 'स्नेह', 'fondness': 'राग',
+    'attachment': 'आसक्ति', 'detachment': 'वैराग्य',
+    'desire': 'इच्छा', 'craving': 'तृष्णा', 'longing': 'वसना',
+    'passion': 'राग', 'anger': 'क्रोध', 'hatred': 'द्वेष',
+    'aversion': 'द्वेष', 'dislike': 'अरुचि', 'disgust': 'घृणा',
+    'fear': 'भय', 'terror': 'भीति', 'anxiety': 'चिंता',
+    'worry': 'चिंता', 'tension': 'तनाव', 'stress': 'तनाव',
+    'depression': 'विषाद', 'sadness': 'शोक', 'grief': 'शोक',
+    'sorrow': 'वेदना', 'pain': 'दुःख', 'suffering': 'दुःख',
+    'misery': 'दुःख', 'trouble': 'कष्ट', 'problem': 'समस्या',
+    'difficulty': 'कठिनाई', 'obstacle': 'बाधा', 'hurdle': 'बाधा',
+    'challenge': 'चुनौती', 'test': 'परीक्षा', 'trial': 'परीक्षा',
+    'opportunity': 'अवसर', 'chance': 'मौका', 'possibility': 'संभावना',
+    'hope': 'आशा', 'expectation': 'उम्मीद', 'belief': 'विश्वास',
+    'faith': 'विश्वास', 'trust': 'विश्वास', 'confidence': 'आत्मविश्वास',
+    'courage': 'साहस', 'bravery': 'वीरता', 'valor': 'वीरता',
+    'heroism': 'वीरता', 'strength': 'बल', 'power': 'शक्ति',
+    'energy': 'ऊर्जा', 'vitality': 'जीवनशक्ति', 'vigor': 'ताकत',
+    'enthusiasm': 'उत्साह', 'zeal': 'उत्साह', 'passion': 'राग',
+    'interest': 'रुचि', 'curiosity': 'जिज्ञासा', 'inquisitiveness': 'जिज्ञासा',
+    'wisdom': 'ज्ञान', 'knowledge': 'ज्ञान', 'understanding': 'बोध',
+    'intelligence': 'बुद्धि', 'intellect': 'बुद्धि', 'mind': 'मन',
+    'consciousness': 'चेतना', 'awareness': 'ज्ञान', 'realization': 'अनुभव',
+    'enlightenment': 'ज्ञान', 'awakening': 'जागरण', 'liberation': 'मोक्ष',
+    'freedom': 'स्वतंत्रता', 'independence': 'स्वतंत्रता',
+    'autonomy': 'स्वायत्तता', 'self': 'आत्मा', 'soul': 'आत्मा',
+    'spirit': 'आत्मा', 'essence': 'सार', 'core': 'मूल',
+    'root': 'मूल', 'base': 'आधार', 'foundation': 'नींव',
+    'principle': 'सिद्धांत', 'rule': 'नियम', 'law': 'विधान',
+    'duty': 'कर्तव्य', 'responsibility': 'दायित्व', 'obligation': 'बाध्यता',
+    'right': 'अधिकार', 'privilege': 'विशेषाधिकार',
+    'justice': 'न्याय', 'fairness': 'न्याय', 'equality': 'समानता',
+    'equity': 'समानता', 'balance': 'संतुलन', 'harmony': 'सामंजस्य',
+    'peace': 'शान्ति', 'tranquility': 'शांति', 'calm': 'शांत', 'shant': 'शांत', 'shaant': 'शांत',
+    'silence': 'मौन', 'quiet': 'शांत', 'stillness': 'निष्क्रियता',
+    'meditation': 'ध्यान', 'contemplation': 'ध्यान', 'reflection': 'चिंतन',
+    'thought': 'विचार', 'idea': 'विचार', 'concept': 'अवधारणा',
+    'notion': 'विचार', 'perception': 'अनुभव', 'view': 'दृष्टिकोण',
+    'opinion': 'मत', 'belief': 'विश्वास', 'conviction': 'दृढ़विश्वास',
+    'certainty': 'निश्चय', 'assurance': 'आश्वासन', 'guarantee': 'गारंटी',
+    'promise': 'वादा', 'commitment': 'प्रतिबद्धता', 'dedication': 'समर्पण',
+    'devotion': 'भक्ति', 'loyalty': 'निष्ठा', 'faithfulness': 'निष्ठा',
+    'sincerity': 'ईमानदारी', 'honesty': 'ईमानदारी', 'truth': 'सत्य',
+    'reality': 'वास्तविकता', 'fact': 'तथ्य', 'truth': 'सत्य',
+    'actuality': 'वास्तविकता', 'existence': 'अस्तित्व', 'being': 'अस्तित्व',
+    'life': 'जीवन', 'living': 'जीवन', 'existence': 'अस्तित्व',
+    'nature': 'प्रकृति', 'world': 'विश्व', 'universe': 'ब्रह्मांड',
+    'cosmos': 'ब्रह्मांड', 'creation': 'सृष्टि', 'destruction': 'लय',
+    'preservation': 'संरक्षण', 'transformation': 'रूपांतरण',
+    'change': 'परिवर्तन', 'evolution': 'विकास', 'growth': 'विकास',
+    'progress': 'प्रगति', 'development': 'विकास', 'improvement': 'सुधार',
+    'advancement': 'प्रगति', 'achievement': 'उपलब्धि', 'success': 'सफलता',
+    'victory': 'विजय', 'triumph': 'विजय', 'conquest': 'विजय',
+    'defeat': 'पराजय', 'loss': 'हानि', 'failure': 'असफलता',
+    'mistake': 'गलती', 'error': 'त्रुटि', 'fault': 'दोष',
+    'blame': 'दोष', 'accusation': 'आरोप', 'criticism': 'आलोचना',
+    'complaint': 'शिकायत', 'grievance': 'शिकायत', 'problem': 'समस्या',
+    'issue': 'मुद्दा', 'matter': 'बात', 'affair': 'बात',
+    'subject': 'विषय', 'topic': 'विषय', 'theme': 'विषय',
+    'title': 'शीर्षक', 'heading': 'शीर्षक', 'caption': 'विवरण',
+    'label': 'लेबल', 'tag': 'टैग', 'mark': 'चिह्न',
+    'sign': 'चिह्न', 'symbol': 'प्रतीक', 'emblem': 'चिह्न',
+    'logo': 'लोगो', 'brand': 'ब्रांड', 'trademark': 'ट्रेडमार्क',
+    'copyright': 'कॉपीराइट', 'patent': 'पेटेंट', 'license': 'लाइसेंस',
+    'permission': 'अनुमति', 'consent': 'सहमति', 'approval': 'मंजूरी',
+    'authorization': 'प्राधिकरण', 'validation': 'मान्यता', 'confirmation': 'पुष्टि',
+    'verification': 'सत्यापन', 'authentication': 'प्रमाणीकरण',
+    'identification': 'पहचान', 'recognition': 'पहचान', 'acknowledgment': 'स्वीकृति',
+    'acceptance': 'स्वीकृति', 'approval': 'मंजूरी', 'endorsement': 'प्रवर्तन',
+    'support': 'समर्थन', 'backing': 'समर्थन', 'sponsorship': 'प्रायोजन',
+    'patronage': 'प्रायोजन', 'funding': 'वित्तपोषण', 'financing': 'वित्तपोषण',
+    'investment': 'निवेश', 'capital': 'पूंजी', 'money': 'धन',
+    'wealth': 'धन', 'riches': 'धन', 'fortune': 'भाग्य',
+    'luck': 'भाग्य', 'chance': 'मौका', 'fate': 'भाग्य',
+    'destiny': 'भाग्य', 'kismet': 'भाग्य', 'providence': 'प्रभुकृपा',
+    'grace': 'कृपा', 'blessing': 'आशीर्वाद', 'boon': 'वर',
+    'gift': 'उपहार', 'present': 'उपहार', 'offering': 'अर्पण',
+    'donation': 'दान', 'charity': 'दान', 'philanthropy': 'सेवा',
+    'service': 'सेवा', 'help': 'सहायता', 'assistance': 'सहायता',
+    'aid': 'सहायता', 'relief': 'राहत', 'rescue': 'रक्षा',
+    'protection': 'संरक्षण', 'defense': 'रक्षा', 'security': 'सुरक्षा',
+    'safety': 'सुरक्षा', 'shelter': 'आश्रय', 'refuge': 'आश्रय',
+    'sanctuary': 'अभय', 'haven': 'आश्रय', 'home': 'घर',
+    'house': 'घर', 'residence': 'निवास', 'dwelling': 'निवास',
+    'abode': 'निवास', 'place': 'स्थान', 'location': 'स्थान',
+    'position': 'स्थिति', 'site': 'स्थान', 'spot': 'स्थान',
+    'area': 'क्षेत्र', 'region': 'क्षेत्र', 'zone': 'क्षेत्र',
+    'field': 'क्षेत्र', 'domain': 'क्षेत्र', 'sphere': 'क्षेत्र',
+    'range': 'विस्तार', 'scope': 'दायरा', 'extent': 'सीमा',
+    'limit': 'सीमा', 'boundary': 'सीमा', 'border': 'सीमा',
+    'edge': 'किनारा', 'margin': 'हाशिया', 'side': 'पक्ष',
+    'part': 'भाग', 'portion': 'भाग', 'section': 'खंड',
+    'segment': 'खंड', 'division': 'विभाजन', 'category': 'श्रेणी',
+    'class': 'वर्ग', 'type': 'प्रकार', 'kind': 'प्रकार',
+    'sort': 'प्रकार', 'variety': 'विविधता', 'form': 'रूप',
+    'shape': 'आकार', 'size': 'आकार', 'dimension': 'आयाम',
+    'measure': 'माप', 'quantity': 'मात्रा', 'amount': 'राशि',
+    'number': 'संख्या', 'count': 'गणना', 'total': 'कुल'
+};
+
 function joinSanskrit(text) {
     const vowelMap = { '्अ': '', '्आ': 'ा', '्इ': 'ि', '्ई': 'ी', '्उ': 'ु', '्ऊ': 'ू', '्ऋ': 'ृ', '्ए': 'े', '्ऐ': 'ै', '्ओ': 'ो', '्औ': 'ौ' };
     for (let [key, val] of Object.entries(vowelMap)) { text = text.split(key).join(val); }
@@ -101,6 +374,9 @@ async function loadDatabase() {
         sanskritDatabase = { ...dhatusData, ...sutrasData, ...examplesData };
         pratyayaDB = pratyayasData.pratyayaDB;
 
+        // Build lightweight search indexes so English/Hinglish keyboard queries can match the Devanagari database.
+        try { indexAllForSearch(); } catch (e) { /* ignore */ }
+
         initializeUI();
     } catch (error) { 
         console.error(error);
@@ -158,7 +434,419 @@ function initializeUI() {
 window.onload = loadDatabase;
 
 // ==================================================
-// 🛠️ 3. DYNAMIC PANINIAN ENGINE 🛠️
+// 3. TRANSLITERATION ENGINE (Roman → Devanagari)
+// ==================================================
+
+/**
+ * Convert Roman (English keyboard) Sanskrit input to Devanagari.
+ * Supports common IAST/Harvard-Kyoto/ITRANS-style input.
+ */
+function romanToDevanagari(roman) {
+    if (!roman) return "";
+    // Keep original case for output quality but process case-insensitively
+    let input = roman.toLowerCase().trim();
+
+    // Extended mapping including common Sanskrit transliteration schemes
+    const vowelMap = {
+        'a': 'अ', 'aa': 'आ', 'ā': 'आ',
+        'i': 'इ', 'ii': 'ई', 'ī': 'ई',
+        'ee': 'ई',
+        'u': 'उ', 'uu': 'ऊ', 'ū': 'ऊ',
+        'oo': 'ऊ',
+        'e': 'ए',
+        'ai': 'ऐ',
+        'o': 'ओ',
+        'au': 'औ',
+        'ṛ': 'ऋ', 'r̥': 'ऋ',
+        'ṝ': 'ॠ', 'r̥̄': 'ॠ',
+        'ḷ': 'ऌ', 'l̥': 'ऌ',
+        'ḹ': 'ॡ', 'l̥̄': 'ॡ'
+    };
+
+    const consonantMap = {
+        // Stops
+        'k': 'क', 'kh': 'ख',
+        'g': 'ग', 'gh': 'घ', 'ṅ': 'ङ', 'ng': 'ङ',
+        'c': 'च', 'ch': 'छ',
+        'j': 'ज', 'jh': 'झ', 'ñ': 'ञ',
+        'ṭ': 'ट', 'ṭh': 'ठ',
+        'ḍ': 'ड', 'ḍh': 'ढ', 'ṇ': 'ण',
+        't': 'त', 'th': 'थ',
+        'd': 'द', 'dh': 'ध', 'n': 'न',
+        'p': 'प', 'ph': 'फ',
+        'b': 'ब', 'bh': 'भ', 'm': 'म',
+        // Semivowels & sibilants
+        'y': 'य', 'r': 'र', 'l': 'ल', 'v': 'व', 'w': 'व',
+        'ś': 'श', 'sh': 'श', 'ṣ': 'ष', 's': 'स', 'shh': 'ष',
+        'h': 'ह',
+        // Clusters & special
+        'kṣ': 'क्ष', 'ksh': 'क्ष', 'x': 'क्ष',
+        'jñ': 'ज्ञ', 'gy': 'ज्ञ', 'jn': 'ज्ञ',
+        'tr': 'त्र', 'dr': 'द्र', 'kr': 'क्र', 'kl': 'क्ल', 'gl': 'ग्ल'
+    };
+
+    const signMap = {
+        'a': '',      // inherent - no sign needed
+        'ā': 'ा', 'aa': 'ा',
+        'i': 'ि', 'ii': 'ी', 'ee': 'ी',
+        'ī': 'ी',
+        'u': 'ु', 'uu': 'ू', 'oo': 'ू',
+        'ū': 'ू',
+        'e': 'े',
+        'ai': 'ै',
+        'o': 'ो',
+        'au': 'ौ',
+        'ṛ': 'ृ', 'r̥': 'ृ',
+        'ṝ': 'ॄ',
+        'ḷ': 'ॢ', 'l̥': 'ॢ',
+        'ḹ': 'ॣ'
+    };
+
+    // Standalone signs (visarga, anusvara, etc.)
+    const standaloneSigns = {
+        'ḥ': 'ः',   // visarga
+        'ṃ': 'ं',   // anusvara (M with dot below)
+        'ṁ': 'ं',   // anusvara (M with dot above)
+        '~': 'ं',   // tilde approximation
+        '.': '।',   // danda/abbreviation
+        '\'': 'ऽ',  // avagraha (apostrophe)
+        '`': 'ऽ',
+        '//': '॥'  // double danda
+    };
+
+    // Build combined mapping sorted by length (longest first)
+    const allMappings = [];
+    for (let k in vowelMap) allMappings.push({ key: k, val: vowelMap[k], type: 'vowel' });
+    for (let k in consonantMap) allMappings.push({ key: k, val: consonantMap[k], type: 'consonant' });
+    for (let k in standaloneSigns) allMappings.push({ key: k, val: standaloneSigns[k], type: 'sign' });
+    allMappings.sort((a, b) => b.key.length - a.key.length);
+
+    let result = "";
+    let prevWasConsonant = false;
+    let i = 0;
+
+    while (i < input.length) {
+        let matched = false;
+
+        // Try to match any mapping (longest first)
+        for (let m of allMappings) {
+            let key = m.key;
+            if (input.substr(i, key.length) === key) {
+                let char = m.val;
+                let type = m.type;
+
+                if (type === 'vowel') {
+                    if (prevWasConsonant) {
+                        // Attach vowel sign to the previous consonant
+                        let sign = signMap[key] || '';
+                        if (sign) result += sign;
+                        // For 'a' (inherent), sign is empty -> consonant stays as-is
+                    } else {
+                        // Standalone vowel - add directly
+                        result += char;
+                    }
+                    prevWasConsonant = false;
+                } else if (type === 'consonant') {
+                    if (prevWasConsonant) {
+                        // Consonant cluster: add virama then new consonant
+                        result += '्' + char;
+                    } else {
+                        result += char;
+                    }
+                    prevWasConsonant = true;
+                } else if (type === 'sign') {
+                    // Standalone sign (visarga, anusvara, etc.) - just append
+                    result += char;
+                    prevWasConsonant = false;
+                }
+
+                i += key.length;
+                matched = true;
+                break;
+            }
+        }
+
+        if (!matched) {
+            // Unknown character (space, number, punctuation, etc.)
+            result += input[i];
+            i++;
+            prevWasConsonant = false;
+        }
+    }
+
+    // If string ends with a consonant, the implicit 'a' is already there (no action needed)
+    // But if we want explicit halant at end for clarity, we could add it. Not needed.
+
+    return result;
+}
+
+function hasDevanagari(text) {
+    return /[\u0900-\u097F]/.test(text || "");
+}
+
+function escapeRegex(text) {
+    return (text || "").replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function tokenizeSearchQuery(query) {
+    if (!query) return [];
+    try {
+        return query.match(/[\p{L}\p{N}.]+/gu) || [];
+    } catch (e) {
+        return query.match(/[A-Za-z0-9.\u0900-\u097F]+/g) || [];
+    }
+}
+
+function devanagariToRomanAscii(text) {
+    if (!text) return "";
+
+    const independentVowels = {
+        'अ': 'a', 'आ': 'aa', 'इ': 'i', 'ई': 'ii', 'उ': 'u', 'ऊ': 'uu',
+        'ऋ': 'ri', 'ॠ': 'rii', 'ऌ': 'li', 'ॡ': 'lii',
+        'ए': 'e', 'ऐ': 'ai', 'ओ': 'o', 'औ': 'au'
+    };
+
+    const consonants = {
+        'क': 'k', 'ख': 'kh', 'ग': 'g', 'घ': 'gh', 'ङ': 'ng',
+        'च': 'ch', 'छ': 'chh', 'ज': 'j', 'झ': 'jh', 'ञ': 'ny',
+        'ट': 't', 'ठ': 'th', 'ड': 'd', 'ढ': 'dh', 'ण': 'n',
+        'त': 't', 'थ': 'th', 'द': 'd', 'ध': 'dh', 'न': 'n',
+        'प': 'p', 'फ': 'ph', 'ब': 'b', 'भ': 'bh', 'म': 'm',
+        'य': 'y', 'र': 'r', 'ल': 'l', 'व': 'v',
+        'श': 'sh', 'ष': 'sh', 'स': 's', 'ह': 'h',
+        'ळ': 'l'
+    };
+
+    const vowelSigns = {
+        'ा': 'aa', 'ि': 'i', 'ी': 'ii', 'ु': 'u', 'ू': 'uu',
+        'ृ': 'ri', 'ॄ': 'rii', 'ॢ': 'li', 'ॣ': 'lii',
+        'े': 'e', 'ै': 'ai', 'ो': 'o', 'ौ': 'au'
+    };
+
+    const specials = {
+        // Use 'n' for anusvara to better match common Hinglish typing (e.g., "sankat", "shant").
+        'ं': 'n', 'ँ': 'n', 'ः': 'h', 'ऽ': '',
+        '।': '.', '॥': '||'
+    };
+
+    let out = "";
+    const chars = Array.from(text);
+    for (let i = 0; i < chars.length; i++) {
+        const ch = chars[i];
+        if (independentVowels[ch]) { out += independentVowels[ch]; continue; }
+        if (specials[ch] !== undefined) { out += specials[ch]; continue; }
+
+        if (consonants[ch]) {
+            out += consonants[ch];
+
+            const next = chars[i + 1];
+            if (next === '्') { i += 1; continue; }
+            if (next && vowelSigns[next]) { out += vowelSigns[next]; i += 1; continue; }
+
+            out += 'a';
+            continue;
+        }
+
+        if (vowelSigns[ch]) { out += vowelSigns[ch]; continue; }
+
+        out += ch;
+    }
+    return out;
+}
+
+function normalizeRomanForSearch(text) {
+    if (!text) return "";
+    let s = text.toLowerCase();
+
+    // Unicode diacritics → ASCII-ish
+    s = s
+        .replace(/ā/g, 'aa').replace(/ī/g, 'ii').replace(/ū/g, 'uu')
+        .replace(/ṛ|r̥/g, 'ri').replace(/ṝ|r̥̄/g, 'rii')
+        .replace(/ḷ|l̥/g, 'li').replace(/ḹ|l̥̄/g, 'lii')
+        .replace(/ṅ/g, 'ng').replace(/ñ/g, 'ny')
+        .replace(/ṭ/g, 't').replace(/ḍ/g, 'd').replace(/ṇ/g, 'n')
+        .replace(/[śṣ]/g, 'sh')
+        .replace(/[ṃṁ]/g, 'n')
+        .replace(/ḥ/g, 'h');
+
+    // Common casual spellings
+    s = s.replace(/w/g, 'v');
+    s = s.replace(/ph/g, 'f');
+    s = s.replace(/x/g, 'ksh');
+
+    // Collapse long vowels so "raama" matches "ram"
+    s = s.replace(/aa/g, 'a').replace(/ii/g, 'i').replace(/uu/g, 'u');
+
+    // Keep only alphanumerics (and dots for sutra-like tokens)
+    s = s.replace(/[^a-z0-9.]+/g, '');
+    return s;
+}
+
+function devanagariNasalClustersToAnusvara(text) {
+    if (!text) return "";
+    // Convert nasal conjuncts like "न्त/ङ्क/म्प" to anusvara forms like "ंत/ंक/ंप"
+    // Helps Hinglish users who type "shant" expecting "शांत" etc.
+    return text.replace(/[ङञणनम]\u094d(?=[क-ह])/g, 'ं');
+}
+
+function generateRomanVariantsForSearch(tokenLower) {
+    if (!tokenLower) return [];
+    const base = tokenLower.toLowerCase().trim();
+    if (!base) return [];
+
+    const variants = [base];
+
+    // If user types Hinglish without long vowels (aa/ii/uu), try a few likely long-vowel variants.
+    // We keep this conservative: at most 3 extra variants, only on the first vowel after the initial consonant cluster.
+    if (/^[^aeiou]/.test(base)) {
+        const vowelExpansions = [
+            { v: 'a', vv: 'aa' },
+            { v: 'i', vv: 'ii' },
+            { v: 'u', vv: 'uu' }
+        ];
+        for (const { v, vv } of vowelExpansions) {
+            const re = new RegExp(`(^[^aeiou]*?)${v}`);
+            if (re.test(base)) {
+                const expanded = base.replace(re, `$1${vv}`);
+                if (expanded && expanded !== base) variants.push(expanded);
+            }
+        }
+    }
+
+    return [...new Set(variants)];
+}
+
+function indexExamplesForSearch() {
+    if (!sanskritDatabase.examples || !Array.isArray(sanskritDatabase.examples)) return;
+    sanskritDatabase.examples.forEach(item => {
+        if (!item || typeof item.ex !== 'string') return;
+        if (item._exRoman && item._exRomanNorm) return;
+        const roman = devanagariToRomanAscii(item.ex);
+        item._exRoman = roman;
+        item._exRomanNorm = normalizeRomanForSearch(roman);
+    });
+}
+
+function indexSutrasForSearch() {
+    if (!sanskritDatabase) return;
+    if (sanskritDatabase._sutraSearchIndexed) return;
+
+    const sutraArrayKeys = [
+        'samjnaSutras', 'pada_1_2', 'pada_1_3', 'pada_1_4', 'pada_2_1', 'pada_2_2', 'pada_2_3', 'pada_2_4',
+        'pada_3_1', 'pada_3_2', 'pada_3_3', 'pada_3_4', 'pada_4_1', 'pada_4_2', 'pada_4_3', 'pada_4_4',
+        'pada_5_1', 'pada_5_2', 'pada_5_3', 'pada_5_4', 'pada_6_1', 'pada_6_2', 'pada_6_3', 'pada_6_4',
+        'pada_7_1', 'pada_7_2', 'pada_7_3', 'pada_7_4', 'pada_8_1', 'pada_8_2', 'pada_8_3', 'pada_8_4'
+    ];
+
+    const sutraById = Object.create(null);
+    const sutraList = [];
+
+    // Top-level notes (no id) also count as searchable content
+    if (Array.isArray(sanskritDatabase.sutras)) {
+        sanskritDatabase.sutras.forEach(s => {
+            if (!s) return;
+            if (!s._searchRomanNorm) {
+                const dev = `${s.name || ''} ${s.desc || ''}`.trim();
+                s._searchDev = dev;
+                s._searchRomanNorm = normalizeRomanForSearch(devanagariToRomanAscii(dev));
+            }
+            sutraList.push(s);
+        });
+    }
+
+    sutraArrayKeys.forEach(key => {
+        const arr = sanskritDatabase[key];
+        if (!Array.isArray(arr)) return;
+        arr.forEach(s => {
+            if (!s) return;
+            if (s.id) sutraById[s.id] = s;
+            if (!s._searchRomanNorm) {
+                const dev = `${s.id ? `[${s.id}] ` : ''}${s.name || ''} ${s.desc || ''}`.trim();
+                s._searchDev = dev;
+                s._searchRomanNorm = normalizeRomanForSearch(devanagariToRomanAscii(dev));
+            }
+            sutraList.push(s);
+        });
+    });
+
+    sanskritDatabase._sutraById = sutraById;
+    sanskritDatabase._sutraList = sutraList;
+    sanskritDatabase._sutraSearchIndexed = true;
+}
+
+function indexDhatusForSearch() {
+    if (!sanskritDatabase) return;
+    if (sanskritDatabase._dhatuSearchIndexed) return;
+    const list = [];
+    if (sanskritDatabase.dhatus) {
+        for (const [key, d] of Object.entries(sanskritDatabase.dhatus)) {
+            if (!d) continue;
+            if (!d._searchRomanNorm) {
+                const dev = `${key} ${d.label || ''} ${d.clean || ''}`.trim();
+                d._searchDev = dev;
+                d._searchRomanNorm = normalizeRomanForSearch(devanagariToRomanAscii(dev));
+            }
+            list.push({ key, data: d });
+        }
+    }
+    sanskritDatabase._dhatuList = list;
+    sanskritDatabase._dhatuSearchIndexed = true;
+}
+
+function indexPratyayasForSearch() {
+    if (!sanskritDatabase) return;
+    if (sanskritDatabase._pratyayaSearchIndexed) return;
+    const list = [];
+    if (pratyayaDB) {
+        for (const [key, p] of Object.entries(pratyayaDB)) {
+            if (!p) continue;
+            if (!p._searchRomanNorm) {
+                const dev = `${key} ${p.real || ''} ${p.type || ''} ${p.lopa || ''}`.trim();
+                p._searchDev = dev;
+                p._searchRomanNorm = normalizeRomanForSearch(devanagariToRomanAscii(dev));
+            }
+            list.push({ key, data: p });
+        }
+    }
+    sanskritDatabase._pratyayaList = list;
+    sanskritDatabase._pratyayaSearchIndexed = true;
+}
+
+function indexUpasargasForSearch() {
+    if (!sanskritDatabase) return;
+    if (sanskritDatabase._upasargaSearchIndexed) return;
+    const list = [];
+    if (Array.isArray(sanskritDatabase.upasargas)) {
+        sanskritDatabase.upasargas.forEach(u => {
+            if (!u) return;
+            if (!u._searchRomanNorm) {
+                const dev = `${u.id || ''} ${u.label || ''}`.trim();
+                u._searchDev = dev;
+                u._searchRomanNorm = normalizeRomanForSearch(devanagariToRomanAscii(dev));
+            }
+            list.push(u);
+        });
+    }
+    sanskritDatabase._upasargaList = list;
+    sanskritDatabase._upasargaSearchIndexed = true;
+}
+
+function indexAllForSearch() {
+    indexExamplesForSearch();
+    indexSutrasForSearch();
+    indexDhatusForSearch();
+    indexPratyayasForSearch();
+    indexUpasargasForSearch();
+}
+
+// ==================================================
+// 4. ENHANCED SEARCH with Transliteration
+// ==================================================
+// NOTE: `performSearch()` is defined near the end of this file (after shared header/footer load),
+// so it can use the latest helpers and Hinglish/English-keyboard matching.
+
+// ==================================================
+// 3. DYNAMIC PANINIAN ENGINE
 // ==================================================
 function generateKridanta() {
     let upa = document.getElementById("upasarga").value.trim();
@@ -393,7 +1081,7 @@ const TRANSLATIONS = {
         dummy3: 'Dummy Item 3',
         
         // Hero text
-        hero_title: 'Word Formation Process! ✨',
+        hero_title: 'Word Formation Process!',
         hero_subtitle: 'Pure derivation using Ashtadhyayi rules (1.1.1 - 1.1.75)!',
         
         // Scroll overlay (index page)
@@ -416,7 +1104,7 @@ const TRANSLATIONS = {
         
         // Search modal
         search_title: 'Search Examples',
-        search_placeholder: 'Search by dhatu, pratyaya or rule no. (e.g. 1.1.1)',
+        search_placeholder: 'Search by dhatu, pratyaya, rule no. or type in Roman (e.g. bhagah, gacchati)',
         search_no_results: 'No results found.',
         search_loading: 'Database loading...',
         
@@ -496,7 +1184,7 @@ const TRANSLATIONS = {
         dummy3: 'डमी आइटम 3',
         
         // Hero text
-        hero_title: 'शब्द निर्माण की प्रक्रिया! ✨',
+        hero_title: 'शब्द निर्माण की प्रक्रिया!',
         hero_subtitle: 'अष्टाध्यायी के नियमों (१.१.१ - १.१.७५) के साथ शुद्ध रूप सिद्धि!',
         
         // Scroll overlay (index page)
@@ -599,7 +1287,7 @@ const TRANSLATIONS = {
         dummy3: 'नमूनार्थ 3',
         
         // Hero text
-        hero_title: 'पदनिर्माणप्रक्रिया! ✨',
+        hero_title: 'पदनिर्माणप्रक्रिया!',
         hero_subtitle: 'अष्टाध्यायी-सूत्रैः (१.१.१ - १.१.७५) शुद्धरूपसिद्धिः!',
         
         // Scroll overlay (index page)
@@ -756,6 +1444,11 @@ document.addEventListener('DOMContentLoaded', async function() {
 });
 
 function getSutraDetails(sutraId) {
+    try { indexSutrasForSearch(); } catch (e) {}
+    if (sanskritDatabase && sanskritDatabase._sutraById && sanskritDatabase._sutraById[sutraId]) {
+        return sanskritDatabase._sutraById[sutraId];
+    }
+
     const allArrays = [
         'samjnaSutras', 'pada_1_2', 'pada_1_3', 'pada_1_4', 'pada_2_1', 'pada_2_2', 'pada_2_3', 'pada_2_4', 
         'pada_3_1', 'pada_3_2', 'pada_3_3', 'pada_3_4', 'pada_4_1', 'pada_4_2', 'pada_4_3', 'pada_4_4',
@@ -772,20 +1465,210 @@ function getSutraDetails(sutraId) {
 }
 
 function performSearch() {
-    let query = document.getElementById("searchInput").value.trim();
-    let resultsDiv = document.getElementById("searchResults");
-    if (query.length === 0) { resultsDiv.innerHTML = ""; return; }
-    if (!sanskritDatabase.examples) { resultsDiv.innerHTML = `<p style="color:red; text-align:center;">डेटाबेस लोड हो रहा है...</p>`; return; }
+    const inputEl = document.getElementById("searchInput");
+    const resultsDiv = document.getElementById("searchResults");
+    if (!inputEl || !resultsDiv) return;
 
-    let matchedExamples = sanskritDatabase.examples.filter(item => item.ex.includes(query) || item.sutra.includes(query));
-    if (matchedExamples.length === 0) { resultsDiv.innerHTML = `<p style="color:red; text-align:center; margin-top:20px;">कोई परिणाम नहीं मिला।</p>`; return; }
+    const query = inputEl.value.trim();
+    if (query.length === 0) { resultsDiv.innerHTML = ""; return; }
+    if (!sanskritDatabase) { resultsDiv.innerHTML = `<p style="color:red; text-align:center;">डेटाबेस लोड हो रहा है...</p>`; return; }
+
+    indexAllForSearch();
+
+    const tokens = tokenizeSearchQuery(query);
+    const tokenList = tokens.length ? tokens : [query];
+
+    function buildTokenMatcher(token) {
+        const t = (token || "").trim();
+        if (!t) return null;
+
+        const sutraLike = /^[0-9.]+$/.test(t) && /\d/.test(t);
+        if (sutraLike) return { type: 'sutra', raw: t };
+
+        const devForms = [];
+        const romanForms = [];
+
+        if (hasDevanagari(t)) {
+            devForms.push(t);
+        } else {
+            const tl = t.toLowerCase();
+            const devSet = new Set();
+
+            const hing = hinglishWordMap[tl];
+            if (hing) {
+                devSet.add(hing);
+                devSet.add(devanagariNasalClustersToAnusvara(hing));
+            }
+
+            const romanVariants = generateRomanVariantsForSearch(tl);
+            for (const rv of romanVariants) {
+                const dev = romanToDevanagari(rv);
+                if (dev) {
+                    devSet.add(dev);
+                    devSet.add(devanagariNasalClustersToAnusvara(dev));
+                }
+                const romanNorm = normalizeRomanForSearch(rv);
+                if (romanNorm && romanNorm.length >= 2) romanForms.push(romanNorm);
+            }
+
+            devForms.push(...devSet);
+        }
+
+        return {
+            type: 'text',
+            raw: t,
+            devForms: [...new Set(devForms.filter(Boolean))],
+            romanForms: [...new Set(romanForms.filter(Boolean))],
+            highlightForms: [...new Set(devForms.filter(v => (v || "").length >= 2))]
+        };
+    }
+
+    const matchers = tokenList.map(buildTokenMatcher).filter(Boolean);
+
+    const highlightForms = [...new Set(matchers.flatMap(m => m.highlightForms || []))].sort((a, b) => b.length - a.length);
+
+    function highlightText(text) {
+        let out = text || "";
+        for (const qf of highlightForms) {
+            if (!qf) continue;
+            const regex = new RegExp(escapeRegex(qf), 'g');
+            out = out.replace(regex,
+                `<span style="background-color:#fbbf24; color:#1e293b; border-radius:2px; padding:0 2px; font-weight:bold;">$&</span>`);
+        }
+        return out;
+    }
+
+    function recordMatches(record, matcher) {
+        if (!record) return false;
+        if (matcher.type === 'sutra') {
+            return (record.sutraId || "").startsWith(matcher.raw);
+        }
+        const dev = record.dev || "";
+        for (const d of matcher.devForms) {
+            if (d && dev.includes(d)) return true;
+        }
+        const romanNorm = record.romanNorm || "";
+        for (const r of matcher.romanForms) {
+            if (r && romanNorm.includes(r)) return true;
+        }
+        return false;
+    }
+
+    const MAX_PER_SECTION = 20;
+
+    // 1) Examples
+    const matchedExamples = (sanskritDatabase.examples || [])
+        .filter(item => matchers.every(m => recordMatches({
+            sutraId: item?.sutra || "",
+            dev: item?.ex || "",
+            romanNorm: item?._exRomanNorm || ""
+        }, m)))
+        .slice(0, MAX_PER_SECTION);
+
+    // 2) Sutras (full sutra database)
+    const sutraList = sanskritDatabase._sutraList || [];
+    const matchedSutras = sutraList
+        .filter(s => matchers.every(m => recordMatches({
+            sutraId: s?.id || "",
+            dev: s?._searchDev || `${s?.id || ''} ${s?.name || ''} ${s?.desc || ''}`.trim(),
+            romanNorm: s?._searchRomanNorm || ""
+        }, m)))
+        .slice(0, MAX_PER_SECTION);
+
+    // 3) Dhatus
+    const dhatuList = sanskritDatabase._dhatuList || [];
+    const matchedDhatus = dhatuList
+        .filter(({ key, data }) => matchers.every(m => recordMatches({
+            sutraId: "",
+            dev: data?._searchDev || `${key || ''} ${data?.label || ''} ${data?.clean || ''}`.trim(),
+            romanNorm: data?._searchRomanNorm || ""
+        }, m)))
+        .slice(0, MAX_PER_SECTION);
+
+    // 4) Pratyayas
+    const pratyayaList = sanskritDatabase._pratyayaList || [];
+    const matchedPratyayas = pratyayaList
+        .filter(({ key, data }) => matchers.every(m => recordMatches({
+            sutraId: "",
+            dev: data?._searchDev || `${key || ''} ${data?.real || ''} ${data?.type || ''} ${data?.lopa || ''}`.trim(),
+            romanNorm: data?._searchRomanNorm || ""
+        }, m)))
+        .slice(0, MAX_PER_SECTION);
+
+    // 5) Upasargas
+    const upaList = sanskritDatabase._upasargaList || [];
+    const matchedUpasargas = upaList
+        .filter(u => matchers.every(m => recordMatches({
+            sutraId: "",
+            dev: u?._searchDev || `${u?.id || ''} ${u?.label || ''}`.trim(),
+            romanNorm: u?._searchRomanNorm || ""
+        }, m)))
+        .slice(0, MAX_PER_SECTION);
+
+    if (
+        matchedExamples.length === 0 &&
+        matchedSutras.length === 0 &&
+        matchedDhatus.length === 0 &&
+        matchedPratyayas.length === 0 &&
+        matchedUpasargas.length === 0
+    ) {
+        resultsDiv.innerHTML = `<p style="color:red; text-align:center; margin-top:20px;">कोई परिणाम नहीं मिला।</p>`;
+        return;
+    }
+
+    function sectionHeader(title, count) {
+        return `<div style="margin:12px 0 6px; font-weight:800; color: var(--text-dark);">${title} <span style="opacity:0.7; font-weight:700;">(${count})</span></div>`;
+    }
 
     let htmlOutput = "";
-    matchedExamples.forEach(match => {
-        let sutraInfo = getSutraDetails(match.sutra);
-        let regex = new RegExp(query, 'gi');
-        let highlightedEx = match.ex.replace(regex, `<span style="background-color:yellow; color:black; border-radius:2px; padding:0 2px;">$&</span>`);
-        htmlOutput += `<div class="result-card"><div class="ex-text sanskrit-text">${highlightedEx}</div><div class="su-text sanskrit-text"><b>सूत्र:</b> [${match.sutra}] ${sutraInfo.name}</div><div class="desc-text sanskrit-text">${sutraInfo.desc}</div></div>`;
-    });
+
+    if (matchedExamples.length) {
+        htmlOutput += sectionHeader("Examples", matchedExamples.length);
+        matchedExamples.forEach(match => {
+            const sutraInfo = getSutraDetails(match.sutra);
+            const highlightedEx = highlightText(match.ex);
+            htmlOutput += `<div class="result-card"><div class="ex-text sanskrit-text">${highlightedEx}</div><div class="su-text sanskrit-text"><b>सूत्र:</b> [${match.sutra}] ${highlightText(sutraInfo.name || "")}</div><div class="desc-text sanskrit-text">${highlightText(sutraInfo.desc || "")}</div></div>`;
+        });
+    }
+
+    if (matchedSutras.length) {
+        htmlOutput += sectionHeader("Sutras", matchedSutras.length);
+        matchedSutras.forEach(s => {
+            const title = `${s.id ? `[${s.id}] ` : ''}${s.name || ''}`.trim();
+            htmlOutput += `<div class="result-card"><div class="ex-text sanskrit-text">${highlightText(title)}</div><div class="desc-text sanskrit-text">${highlightText(s.desc || "")}</div></div>`;
+        });
+    }
+
+    if (matchedDhatus.length) {
+        htmlOutput += sectionHeader("Dhatus", matchedDhatus.length);
+        matchedDhatus.forEach(({ key, data }) => {
+            const title = `${key}`.trim();
+            const desc = (data && data.label) ? data.label : "";
+            htmlOutput += `<div class="result-card"><div class="ex-text sanskrit-text">${highlightText(title)}</div><div class="desc-text sanskrit-text">${highlightText(desc)}</div></div>`;
+        });
+    }
+
+    if (matchedPratyayas.length) {
+        htmlOutput += sectionHeader("Pratyayas", matchedPratyayas.length);
+        matchedPratyayas.forEach(({ key, data }) => {
+            const title = `${key}`.trim();
+            const descParts = [];
+            if (data?.real) descParts.push(`real: ${data.real}`);
+            if (data?.type) descParts.push(`type: ${data.type}`);
+            if (data?.lopa) descParts.push(`it-lopa: ${data.lopa}`);
+            const desc = descParts.join(" | ");
+            htmlOutput += `<div class="result-card"><div class="ex-text sanskrit-text">${highlightText(title)}</div><div class="desc-text sanskrit-text">${highlightText(desc)}</div></div>`;
+        });
+    }
+
+    if (matchedUpasargas.length) {
+        htmlOutput += sectionHeader("Upasargas", matchedUpasargas.length);
+        matchedUpasargas.forEach(u => {
+            const title = `${u.id || ""}`.trim();
+            const desc = u.label || "";
+            htmlOutput += `<div class="result-card"><div class="ex-text sanskrit-text">${highlightText(title)}</div><div class="desc-text sanskrit-text">${highlightText(desc)}</div></div>`;
+        });
+    }
+
     resultsDiv.innerHTML = htmlOutput;
 }
