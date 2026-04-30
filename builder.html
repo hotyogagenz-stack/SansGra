@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="style.css">
     <style>
         input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--border-light); font-size: clamp(16px, 3vw, 20px); font-weight: 600; outline: none; transition: 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
-        input[type="text"]:focus { border-color: #ec4899; box-shadow: 0 0 8px rgba(236, 72, 153, 0.2); }
+        input[type="text"]:focus { border-color: #9a3412; box-shadow: 0 0 8px rgba(154, 52, 18, 0.2); }
         .sutra-desc p { margin-bottom: 8px; line-height: 1.6; }
     </style>
 </head>
@@ -18,13 +18,17 @@
 <!-- shared header placeholder (loaded dynamically) -->
 <div id="site-header"></div>
 
-<section class="hero">
-    <h1 data-i18n="hero_title">शब्द निर्माण की प्रक्रिया! ✨</h1>
-    <p data-i18n="hero_subtitle">अष्टाध्यायी के नियमों (१.१.१ - १.१.७५) के साथ शुद्ध रूप सिद्धि!</p>
+<div id="floating-sanskrit-container"></div>
+
+<section class="hero" style="position: relative; z-index: 10; margin-top: 40px; margin-bottom: 20px;">
+    <div class="glass-hero" style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 30px 40px; border-radius: 8px; display: inline-block; box-shadow: 0 4px 15px rgba(69, 26, 3, 0.1); border: 1px solid rgba(154, 52, 18, 0.2); border-top: 4px solid #78350f;">
+        <h1 data-i18n="hero_title" style="color: #4a2f1d; text-shadow: 0 1px 2px rgba(0,0,0,0.1); margin-bottom: 10px; font-weight: 800; font-size: clamp(2rem, 5vw, 3rem); font-family: 'Tiro Devanagari Sanskrit', serif;">शब्द निर्माण की प्रक्रिया</h1>
+        <p data-i18n="hero_subtitle" style="color: #78350f; font-size: clamp(1.1rem, 2.5vw, 1.3rem); font-weight: 600;">अष्टाध्यायी के नियमों (१.१.१ - १.१.७५) के साथ शुद्ध रूप सिद्धि।</p>
+    </div>
 </section>
 
-<div class="main-container" id="tool">
-    <div class="card">
+<div class="main-container" id="tool" style="position: relative; z-index: 10;">
+    <div class="card premium-card">
         <div class="input-grid">
             <div class="input-group">
                 <label class="label-upa" data-i18n="label_upa"><i class="fa-solid fa-puzzle-piece"></i> उपसर्ग</label>
@@ -85,6 +89,7 @@
 <div id="site-footer"></div>
 
 <script src="ashtadhyayi_engine.js"></script>
+<script src="animations.js"></script>
 <script src="script.js"></script>
 
 </body>

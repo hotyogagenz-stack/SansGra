@@ -5,12 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title data-i18n="sutras_title">Grammar Rules</title>
   <link rel="stylesheet" href="style.css">
+  <script defer src="animations.js"></script>
   <script defer src="script.js"></script>
 </head>
 <body>
   <div id="site-header"></div>
 
-  <main class="container">
+  <div id="floating-sanskrit-container"></div>
+
+  <main class="container" style="position: relative; z-index: 10;">
     <section class="sutras-page">
       <h1 data-i18n="sutras_heading">Grammar Rules (Sutras)</h1>
       <p data-i18n="sutras_intro">Select a sutra group to view the rules. This page loads sutras from the site's data and is translated based on the header language buttons.</p>
