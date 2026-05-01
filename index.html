@@ -32,26 +32,142 @@
 <!-- hero removed as requested (pink heading) -->
 
 <!-- parchment image placed directly (no wrapping div); overlay text is a sibling positioned over it -->
-<section class="scroll-hero">
-    <img src="vecteezy_ancient-parchment-scroll-on-transparent-background_51065849.png" id="scrollImage" alt="parchment scroll">
-    <div class="scroll-overlay sanskrit-text" id="scrollText">
-        <h2 style="font-weight:800; margin-bottom:12px;">॥ तस्मै पाऽणिनये नमः ॥</h2>
-        <div id="scroll-lines">
-            <p>येनाक्षरसमान्याभिषङ्ग्य महेशरात् | कृत्स्नं व्याकरणं प्रोतं तस्मै पाणिनये नमः ||</p>
-            <p>येन धौत गिरः पुंसां विमलेः शब्दवारिधि: । तमश्रज्ञानंज भिन्नं तस्मै पाणिनये नमः ॥</p>
-            <p>अज्ञानन्धस्य लोकस्य ज्ञानान्शश्लाकया चदुःक्ष्मीलितेन येन तस्मै पाणिनये नमः ।</p>
-            <p>वाक्यकारं वररुचं भाष्कारं पतञ्जलिम् । पाणिनि सूत्रकारं च प्रणतोऽस्मि मुनीन्यम् ॥</p>
+    <!-- New Central Search Hero (Ancient Aesthetic) -->
+    <section class="central-hero">
+        <h1 class="hero-tagline" data-i18n="hero_tagline">॥ वन्दे संस्कृतम् ॥</h1>
+        <div class="hero-search-container">
+            <input type="text" id="heroSearchInput" class="hero-search-bar sanskrit-text" data-i18n-placeholder="hero_search_placeholder" placeholder="शिक्षापत्रीम् अन्वेषय..." onfocus="openSearchModal()">
+            <button class="hero-search-btn" onclick="openSearchModal()"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+        <p class="hero-subtext" data-i18n="hero_search_subtext">धातु, प्रत्यय या सूत्र संख्या से खोजें (उदा: 1.1.1)</p>
+    </section>
+
+    <!-- 3D book navigation under the scroll image (Ancient Granthas) -->
+    <div class="main-nav-container granthas-container" style="background: transparent; box-shadow: none; padding: 20px 0 160px; backdrop-filter: none;">
+        <h2 class="section-title granthas-title" data-i18n="section_granthas" style="text-align: center; font-family: 'Tiro Devanagari Sanskrit', serif; color: #581818; margin-bottom: 30px; font-weight: 900; letter-spacing: 2px; width: auto; display: table; margin: 0 auto 10px;">॥ ग्रन्थाः ॥</h2>
+        <div class="section-divider"></div>
+        <div class="book-nav" id="nav-menu">
+            <!-- 1. Examples -->
+            <a href="#" class="book-item ancient-book" onclick="openSearchModal(); closeMobileMenu();" title="Examples">
+                <div class="book-back"></div>
+                <div class="book-spine"></div>
+                <div class="book-pages"></div>
+                <div class="book-cover">
+                    <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+                    <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+                    <span class="book-text sanskrit-text" data-i18n="book_examples">॥ उदाहरणम् ॥</span>
+                </div>
+            </a>
+
+            <!-- 2. Kridanta Book -->
+            <a href="kridanta.html" class="book-item ancient-book" title="Kridanta">
+                <div class="book-back"></div>
+                <div class="book-spine"></div>
+                <div class="book-pages"></div>
+                <div class="book-cover">
+                    <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+                    <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+                    <span class="book-text sanskrit-text" data-i18n="book_kridanta">॥ कृदन्तम् ॥</span>
+                </div>
+            </a>
+
+            <!-- 3. Tinnanta Book -->
+            <a href="tinnanta.html" class="book-item ancient-book" title="Tinnanta">
+                <div class="book-back"></div>
+                <div class="book-spine"></div>
+                <div class="book-pages"></div>
+                <div class="book-cover">
+                    <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+                    <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+                    <span class="book-text sanskrit-text" data-i18n="book_tinnanta">॥ तिङन्तम् ॥</span>
+                </div>
+            </a>
+
+            <!-- 4. Taddhitanta Book -->
+            <a href="taddhitanta.html" class="book-item ancient-book" title="Taddhitanta">
+                <div class="book-back"></div>
+                <div class="book-spine"></div>
+                <div class="book-pages"></div>
+                <div class="book-cover">
+                    <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+                    <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+                    <span class="book-text sanskrit-text" data-i18n="book_taddhitanta">॥ तद्धितान्तम् ॥</span>
+                </div>
+            </a>
+
+            <!-- 5. Subanta Book -->
+            <a href="subanta.html" class="book-item ancient-book" title="Subanta">
+                <div class="book-back"></div>
+                <div class="book-spine"></div>
+                <div class="book-pages"></div>
+                <div class="book-cover">
+                    <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+                    <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+                    <span class="book-text sanskrit-text" data-i18n="book_subanta">॥ सुबन्तम् ॥</span>
+                </div>
+            </a>
+
+            <!-- 3. Sutras -->
+            <a href="sutras.html" class="book-item ancient-book" title="Sutras">
+                <div class="book-back"></div>
+                <div class="book-spine"></div>
+                <div class="book-pages"></div>
+                <div class="book-cover">
+                    <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+                    <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+                    <span class="book-text sanskrit-text" data-i18n="book_sutras">॥ सूत्राणि ॥</span>
+                </div>
+            </a>
+
+            <!-- 4. Dhatus -->
+            <a href="#" class="book-item ancient-book" title="Dhatus">
+                <div class="book-back"></div>
+                <div class="book-spine"></div>
+                <div class="book-pages"></div>
+                <div class="book-cover">
+                    <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+                    <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+                    <span class="book-text sanskrit-text" data-i18n="book_dhatus">॥ धातवः ॥</span>
+                </div>
+            </a>
+
+            <!-- 5. Shabda Rupa -->
+            <a href="#" class="book-item ancient-book" title="Shabda Rupa">
+                <div class="book-back"></div>
+                <div class="book-spine"></div>
+                <div class="book-pages"></div>
+                <div class="book-cover">
+                    <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+                    <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+                    <span class="book-text sanskrit-text" data-i18n="book_shabda">॥ शब्दरूपाणि ॥</span>
+                </div>
+            </a>
+
+            <!-- 6. Dhatu Rupa -->
+            <a href="#" class="book-item ancient-book" title="Dhatu Rupa">
+                <div class="book-back"></div>
+                <div class="book-spine"></div>
+                <div class="book-pages"></div>
+                <div class="book-cover">
+                    <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+                    <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+                    <span class="book-text sanskrit-text" data-i18n="book_dhatu_rupa">॥ धातुरूपाणि ॥</span>
+                </div>
+            </a>
+
+            <!-- 7. More -->
+            <a href="#" class="book-item ancient-book" title="More">
+                <div class="book-back"></div>
+                <div class="book-spine"></div>
+                <div class="book-pages"></div>
+                <div class="book-cover">
+                    <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+                    <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+                    <span class="book-text sanskrit-text" data-i18n="book_more">॥ अधिकम् ॥</span>
+                </div>
+            </a>
         </div>
     </div>
-
-    <!-- navigation pills placed under the image (these are the header elements moved below the image) -->
-    <nav class="nav-pills" id="nav-menu">
-        <a id="navHome" class="pill" href="index.html" onclick="closeMobileMenu()" data-i18n="home">होम</a>
-        <a id="navSearch" class="pill" href="#" onclick="openSearchModal(); closeMobileMenu();" data-i18n="search_examples">उदाहरण खोजें</a>
-        <a id="navBuilder" class="pill" href="builder.html" onclick="closeMobileMenu()" data-i18n="builder">Builder</a>
-    <a id="navSutra" class="pill" href="sutras.html" data-i18n="sutra">व्याकरण सूत्र</a>
-        <button id="navDark" class="pill" onclick="toggleDark()" data-i18n="dark_mode">डार्क मोड</button>
-    </nav>
     <!-- sutra dropdown removed in favor of a dedicated sutras.html page to avoid content displacement -->
 </section>
 

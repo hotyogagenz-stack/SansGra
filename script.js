@@ -385,27 +385,10 @@ async function loadDatabase() {
 }
 
 function initializeUI() {
-    let upaList = document.getElementById("upaList");
-    if (upaList && sanskritDatabase.upasargas) {
-        upaList.innerHTML = '<option value="">कोई उपसर्ग नहीं</option>';
-        sanskritDatabase.upasargas.forEach(u => { if(u.id !== "") upaList.insertAdjacentHTML('beforeend', `<option value="${u.id}">${u.label}</option>`); });
-    }
-    
-    let dhatuList = document.getElementById("dhatuList");
-    if (dhatuList && sanskritDatabase.dhatus) {
-        dhatuList.innerHTML = '<option value="">धातु चुनें...</option>';
-        for (let key in sanskritDatabase.dhatus) { 
-            dhatuList.insertAdjacentHTML('beforeend', `<option value="${key}">${sanskritDatabase.dhatus[key].label}</option>`); 
-        }
-    }
-    
-    let pratList = document.getElementById("pratList");
-    if (pratList && pratyayaDB) {
-        pratList.innerHTML = '<option value="">प्रत्यय चुनें...</option>';
-        for (let key in pratyayaDB) { 
-            pratList.insertAdjacentHTML('beforeend', `<option value="${key}">${key}</option>`); 
-        }
-    }
+    // Setup Intelligent Autocomplete
+    setupAutocomplete('upasarga', 'upaSuggestions', 'upasargas');
+    setupAutocomplete('dhatu', 'dhatuSuggestions', 'dhatus');
+    setupAutocomplete('pratyaya', 'pratSuggestions', 'pratyayas');
 
     let dropdownContainer = document.getElementById("sutraDropdown");
     // Only populate the inline dropdown if the element explicitly opts-in via data-render="dropdown".
@@ -586,6 +569,26 @@ function hasDevanagari(text) {
 
 function escapeRegex(text) {
     return (text || "").replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * Convert input text to Devanagari with Hinglish support.
+ * First checks hinglishWordMap for common words, then falls back to transliteration.
+ */
+function toDevanagariWithHinglish(input) {
+    if (!input) return "";
+    
+    // Trim and convert to lowercase for hinglish map lookup
+    const trimmed = input.trim();
+    const lower = trimmed.toLowerCase();
+    
+    // Check if it's a known hinglish word
+    if (hinglishWordMap[lower]) {
+        return hinglishWordMap[lower];
+    }
+    
+    // Otherwise, use transliteration
+    return romanToDevanagari(trimmed);
 }
 
 function tokenizeSearchQuery(query) {
@@ -849,9 +852,9 @@ function indexAllForSearch() {
 // 3. DYNAMIC PANINIAN ENGINE
 // ==================================================
 function generateKridanta() {
-    let upa = document.getElementById("upasarga").value.trim();
-    let dhatuStr = document.getElementById("dhatu").value.trim();
-    let rawPratStr = document.getElementById("pratyaya").value.trim().replace(/\s+/g, '');
+    let upa = toDevanagariWithHinglish(document.getElementById("upasarga").value.trim());
+    let dhatuStr = toDevanagariWithHinglish(document.getElementById("dhatu").value.trim());
+    let rawPratStr = toDevanagariWithHinglish(document.getElementById("pratyaya").value.trim().replace(/\s+/g, ''));
 
     if(!dhatuStr || !rawPratStr) { alert("कृपया कम से कम एक धातु और प्रत्यय टाइप करें!"); return; }
 
@@ -1042,15 +1045,228 @@ function applySavedTheme() {
     });
 }
 
-// Simple language switcher stub (expand as needed)
-function setLang(lang) {
-    // lang: 'hi' | 'en' | 'sa'
-    try {
-        localStorage.setItem('siteLang', lang);
-        applyTranslations(lang);
-        console.log('Language set to', lang);
-    } catch (e) { console.warn('Could not set language', e); }
+
+
+// =========================================
+// 5. SUGGESTION DROPDOWN FOR BUILDER PAGE
+// =========================================
+
+// Track active suggestion index for keyboard navigation
+let activeSuggestionIndex = -1;
+let currentSuggestionType = '';
+let currentSuggestions = [];
+
+function setupSuggestionListeners() {
+    const inputs = [
+        { id: 'upasarga', type: 'upasarga', dropdownId: 'upaSuggestions' },
+        { id: 'dhatu', type: 'dhatu', dropdownId: 'dhatuSuggestions' },
+        { id: 'pratyaya', type: 'pratyaya', dropdownId: 'pratSuggestions' }
+    ];
+
+    inputs.forEach(({ id, type, dropdownId }) => {
+        const input = document.getElementById(id);
+        if (!input) return;
+
+        input.addEventListener('input', () => handleInput(input, type, dropdownId));
+        input.addEventListener('focus', () => handleInput(input, type, dropdownId));
+        input.addEventListener('keydown', (e) => handleKeydown(e, type, dropdownId));
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.input-group')) {
+            closeAllSuggestions();
+        }
+    });
 }
+
+function handleInput(input, type, dropdownId) {
+    const query = input.value.trim();
+    const dropdown = document.getElementById(dropdownId);
+    
+    if (!dropdown) return;
+
+    if (query.length === 0) {
+        dropdown.classList.remove('show');
+        return;
+    }
+
+    // Ensure database is loaded
+    if (!sanskritDatabase) {
+        dropdown.innerHTML = '<div class="no-suggestions">डेटाबेस लोड हो रहा है...</div>';
+        dropdown.classList.add('show');
+        return;
+    }
+
+    const suggestions = getSuggestions(query, type);
+    currentSuggestions = suggestions;
+    currentSuggestionType = type;
+    activeSuggestionIndex = -1;
+
+    renderSuggestions(suggestions, dropdown, dropdownId);
+}
+
+function getSuggestions(query, type) {
+    const lowerQuery = query.toLowerCase();
+    const isDevanagari = hasDevanagari(query);
+    const maxResults = 10;
+    let results = [];
+
+    if (type === 'upasarga') {
+        const upasargas = sanskritDatabase.upasargas || [];
+        results = upasargas.filter(u => {
+            if (!u || !u.id) return false;
+            const label = (u.label || '').toLowerCase();
+            const id = (u.id || '').toLowerCase();
+            return label.includes(lowerQuery) || id.includes(lowerQuery);
+        }).slice(0, maxResults);
+    } 
+    else if (type === 'dhatu') {
+        const dhatus = sanskritDatabase.dhatus || {};
+        results = Object.entries(dhatus)
+            .filter(([key, d]) => {
+                if (!d) return false;
+                const label = (d.label || '').toLowerCase();
+                const clean = (d.clean || '').toLowerCase();
+                return key.toLowerCase().includes(lowerQuery) || 
+                       label.toLowerCase().includes(lowerQuery) ||
+                       clean.includes(lowerQuery);
+            })
+            .slice(0, maxResults)
+            .map(([key, d]) => ({ ...d, key, label: d.label }));
+    }
+    else if (type === 'pratyaya') {
+        const pratyayas = pratyayaDB || {};
+        results = Object.entries(pratyayas)
+            .filter(([key, p]) => {
+                if (!p) return false;
+                return key.toLowerCase().includes(lowerQuery);
+            })
+            .slice(0, maxResults)
+            .map(([key, p]) => ({ ...p, key }));
+    }
+
+    return results;
+}
+
+function renderSuggestions(suggestions, dropdown, dropdownId) {
+    if (!suggestions || suggestions.length === 0) {
+        dropdown.innerHTML = '<div class="no-suggestions">कोई परिणाम नहीं मिला</div>';
+        dropdown.classList.add('show');
+        return;
+    }
+
+    let html = '';
+    suggestions.forEach((item, index) => {
+        let text = '';
+        let label = '';
+        
+        if (item.key && item.label) {
+            // Dhatu format
+            text = item.key;
+            label = item.label;
+        } else if (item.id) {
+            // Upasarga format
+            text = item.id;
+            label = item.label || '';
+        } else if (item.key) {
+            // Pratyaya format
+            text = item.key;
+            label = `type: ${item.type || ''} ${item.real ? '| real: ' + item.real : ''}`.trim();
+        }
+
+        html += `
+            <div class="suggestion-item" data-value="${text}" data-index="${index}" onclick="selectSuggestion('${dropdownId}', '${text.replace(/'/g, "\\'")}')">
+                <div>
+                    <div class="suggestion-text">${text}</div>
+                    <div class="suggestion-label">${label}</div>
+                </div>
+            </div>
+        `;
+    });
+
+    dropdown.innerHTML = html;
+    dropdown.classList.add('show');
+}
+
+function selectSuggestion(dropdownId, value) {
+    const inputMap = {
+        'upaSuggestions': 'upasarga',
+        'dhatuSuggestions': 'dhatu',
+        'pratSuggestions': 'pratyaya'
+    };
+
+    const inputId = inputMap[dropdownId];
+    if (!inputId) return;
+
+    const input = document.getElementById(inputId);
+    if (input) {
+        input.value = value;
+        input.focus();
+    }
+
+    closeAllSuggestions();
+}
+
+function handleKeydown(e, type, dropdownId) {
+    const dropdown = document.getElementById(dropdownId);
+    if (!dropdown || !dropdown.classList.contains('show')) return;
+
+    const items = dropdown.querySelectorAll('.suggestion-item');
+    if (!items.length) return;
+
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeSuggestionIndex = Math.min(activeSuggestionIndex + 1, items.length - 1);
+        updateActiveItem(items);
+    } 
+    else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeSuggestionIndex = Math.max(activeSuggestionIndex - 1, 0);
+        updateActiveItem(items);
+    }
+    else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (activeSuggestionIndex >= 0 && activeSuggestionIndex < items.length) {
+            const selectedItem = items[activeSuggestionIndex];
+            const value = selectedItem.getAttribute('data-value');
+            selectSuggestion(dropdownId, value);
+        }
+    }
+    else if (e.key === 'Escape') {
+        closeAllSuggestions();
+    }
+}
+
+function updateActiveItem(items) {
+    items.forEach((item, index) => {
+        item.classList.toggle('active', index === activeSuggestionIndex);
+    });
+}
+
+function closeAllSuggestions() {
+    document.querySelectorAll('.suggestion-dropdown').forEach(d => {
+        d.classList.remove('show');
+    });
+    activeSuggestionIndex = -1;
+}
+
+// Initialize suggestion system
+function initSuggestionSystem() {
+    // Check if we're on the builder page by looking for the input elements
+    if (document.getElementById('upasarga') || document.getElementById('dhatu') || document.getElementById('pratyaya')) {
+        // DOM is already loaded or loading - set up listeners
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupSuggestionListeners);
+        } else {
+            // DOM is already loaded
+            setupSuggestionListeners();
+        }
+    }
+}
+
+initSuggestionSystem();
+
 
 // Comprehensive translations for all pages
 const TRANSLATIONS = {
@@ -1060,7 +1276,7 @@ const TRANSLATIONS = {
         home: 'Home',
         search_examples: 'Search Examples',
         builder: 'Builder',
-        sutra: 'Grammar Rules',
+        sutra: 'Sutras',
         dark_mode: 'Dark Mode',
         
         // Builder page labels
@@ -1084,6 +1300,22 @@ const TRANSLATIONS = {
         hero_title: 'Word Formation Process!',
         hero_subtitle: 'Pure derivation using Ashtadhyayi rules (1.1.1 - 1.1.75)!',
         
+        // Homepage specific
+        hero_tagline: '|| Vande Sanskritam ||',
+        hero_search_placeholder: 'Search Shikshapatri...',
+        hero_search_subtext: 'Search by dhatu, pratyaya or sutra no. (e.g. 1.1.1)',
+        section_granthas: '|| Granthas ||',
+        book_examples: '|| Examples ||',
+        book_kridanta: '|| Kridanta ||',
+        book_tinnanta: '|| Tinnanta ||',
+        book_taddhitanta: '|| Taddhitanta ||',
+        book_subanta: '|| Subanta ||',
+        book_sutras: '|| Sutras ||',
+        book_dhatus: '|| Dhatus ||',
+        book_shabda: '|| Shabda Rupa ||',
+        book_dhatu_rupa: '|| Dhatu Rupa ||',
+        book_more: '|| More ||',
+
         // Scroll overlay (index page)
         scroll_title: '॥ तस्मै पाऽणिनये नमः ॥',
         scroll_line1: 'येनाक्षरसमान्याभिषङ्ग्य महेशरात् | कृत्स्नं व्याकरणं प्रोतं तस्मै पाणिनये नमः ||',
@@ -1105,9 +1337,16 @@ const TRANSLATIONS = {
         // Search modal
         search_title: 'Search Examples',
         search_placeholder: 'Search by dhatu, pratyaya, rule no. or type in Roman (e.g. bhagah, gacchati)',
+        search_input_placeholder: 'Search...',
         search_no_results: 'No results found.',
         search_loading: 'Database loading...',
         
+        // Sutras page
+        sutras_title: 'Sutras',
+        sutras_heading: 'Sutras',
+        sutras_intro: 'Select a sutra group to view the sutras. This page loads sutras from the site\'s data and is translated based on the header language buttons.',
+        sutras_error: 'Could not load sutras.',
+
         // Footer
         footer_title: 'Paninian Grammar Engine v2.0',
         footer_desc: 'This engine creates derived words based on Ashtadhyayi sutras.',
@@ -1187,6 +1426,22 @@ const TRANSLATIONS = {
         hero_title: 'शब्द निर्माण की प्रक्रिया!',
         hero_subtitle: 'अष्टाध्यायी के नियमों (१.१.१ - १.१.७५) के साथ शुद्ध रूप सिद्धि!',
         
+        // Homepage specific
+        hero_tagline: '॥ वन्दे संस्कृतम् ॥',
+        hero_search_placeholder: 'शिक्षापत्री खोजें...',
+        hero_search_subtext: 'धातु, प्रत्यय या सूत्र संख्या से खोजें (उदा: 1.1.1)',
+        section_granthas: '॥ ग्रन्थाः ॥',
+        book_examples: '॥ उदाहरणम् ॥',
+        book_kridanta: '॥ कृदन्तम् ॥',
+        book_tinnanta: '॥ तिङन्तम् ॥',
+        book_taddhitanta: '॥ तद्धितान्तम् ॥',
+        book_subanta: '॥ सुबन्तम् ॥',
+        book_sutras: '॥ सूत्राणि ॥',
+        book_dhatus: '॥ धातवः ॥',
+        book_shabda: '॥ शब्दरूपाणि ॥',
+        book_dhatu_rupa: '॥ धातुरूपाणि ॥',
+        book_more: '॥ अधिकम् ॥',
+
         // Scroll overlay (index page)
         scroll_title: '॥ तस्मै पाऽणिनये नमः ॥',
         scroll_line1: 'येनाक्षरसमान्याभिषङ्ग्य महेशरात् | कृत्स्नं व्याकरणं प्रोतं तस्मै पाणिनये नमः ||',
@@ -1208,9 +1463,16 @@ const TRANSLATIONS = {
         // Search modal
         search_title: 'उदाहरण खोजें',
         search_placeholder: 'धातु, प्रत्यय या सूत्र संख्या से खोजें (उदा: 1.1.1)',
+        search_input_placeholder: 'खोजें...',
         search_no_results: 'कोई परिणाम नहीं मिला।',
         search_loading: 'डेटाबेस लोड हो रहा है...',
         
+        // Sutras page
+        sutras_title: 'व्याकरण सूत्र',
+        sutras_heading: 'व्याकरण सूत्र',
+        sutras_intro: 'सूत्रों को देखने के लिए एक समूह चुनें। यह पृष्ठ डेटा से सूत्र लोड करता है और भाषा के आधार पर अनुवादित होता है।',
+        sutras_error: 'सूत्र लोड नहीं हो सके।',
+
         // Footer
         footer_title: 'पाणिनीय व्याकरण यन्त्र v2.0',
         footer_desc: 'यह यन्त्र अष्टाध्यायी के सूत्रों के आधार पर कृदन्त शब्दों की रचना करता है।',
@@ -1290,6 +1552,22 @@ const TRANSLATIONS = {
         hero_title: 'पदनिर्माणप्रक्रिया!',
         hero_subtitle: 'अष्टाध्यायी-सूत्रैः (१.१.१ - १.१.७५) शुद्धरूपसिद्धिः!',
         
+        // Homepage specific
+        hero_tagline: '॥ वन्दे संस्कृतम् ॥',
+        hero_search_placeholder: 'शिक्षापत्रीम् अन्वेषय...',
+        hero_search_subtext: 'धातु, प्रत्यय वा सूत्रसङ्ख्यायाः अन्वेषणम् (उदा: 1.1.1)',
+        section_granthas: '॥ ग्रन्थाः ॥',
+        book_examples: '॥ उदाहरणम् ॥',
+        book_kridanta: '॥ कृदन्तम् ॥',
+        book_tinnanta: '॥ तिङन्तम् ॥',
+        book_taddhitanta: '॥ तद्धितान्तम् ॥',
+        book_subanta: '॥ सुबन्तम् ॥',
+        book_sutras: '॥ सूत्राणि ॥',
+        book_dhatus: '॥ धातवः ॥',
+        book_shabda: '॥ शब्दरूपाणि ॥',
+        book_dhatu_rupa: '॥ धातुरूपाणि ॥',
+        book_more: '॥ अधिकम् ॥',
+
         // Scroll overlay (index page)
         scroll_title: '॥ तस्मै पाऽणिनये नमः ॥',
         scroll_line1: 'येनाक्षरसमान्याभिषङ्ग्य महेशरात् | कृत्स्नं व्याकरणं प्रोतं तस्मै पाणिनये नमः ||',
@@ -1311,9 +1589,16 @@ const TRANSLATIONS = {
         // Search modal
         search_title: 'उदाहरणान्वेषणम्',
         search_placeholder: 'धातु, प्रत्यय वा सूत्रसङ्ख्यायाः अन्वेषणम् (उदा: 1.1.1)',
+        search_input_placeholder: 'अन्वेषय...',
         search_no_results: 'उत्तराणि न सन्ति।',
         search_loading: 'डेटाबेस लोड हो रहा है...',
         
+        // Sutras page
+        sutras_title: 'सूत्राणि',
+        sutras_heading: 'सूत्राणि',
+        sutras_intro: 'सूत्राणि द्रष्टुं कश्चित् वर्गं चिनुत। इदं पृष्ठं डेटा-तः सूत्राणि लोड् करोति तथा च भाषा-आधारितम् अस्ति।',
+        sutras_error: 'सूत्राणि लोड् कर्तुं न शक्यन्ते।',
+
         // Footer
         footer_title: 'पाणिनीय व्याकरणयन्त्रम् v2.0',
         footer_desc: 'अष्टाध्यायी-सूत्रैः कृतान्तात् कृदन्तपदानि निर्मिति भवति।',
@@ -1365,6 +1650,15 @@ const TRANSLATIONS = {
     }
 };
 
+function setLang(lang) {
+    localStorage.setItem('siteLang', lang);
+    applyTranslationsExtended(lang);
+    // Update active state of language buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+    });
+}
+
 function applyTranslations(lang) {
     const map = TRANSLATIONS[lang] || TRANSLATIONS['hi'];
     document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -1375,6 +1669,7 @@ function applyTranslations(lang) {
 }
 
 function applyTranslationsExtended(lang) {
+    applyTranslations(lang);
     const map = TRANSLATIONS[lang] || TRANSLATIONS['hi'];
     const hiMap = TRANSLATIONS['hi'] || {};
     const reverse = {};
@@ -1426,6 +1721,12 @@ async function loadSharedHeaderFooter() {
         if (headerRes.ok) {
             const headerHtml = await headerRes.text();
             document.getElementById('site-header')?.insertAdjacentHTML('afterbegin', headerHtml);
+            
+            // Hide text navigation on home page as it has the 3D books
+            if (window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/') || window.location.pathname === '') {
+                const textNav = document.querySelector('.main-text-nav-container');
+                if (textNav) textNav.style.display = 'none';
+            }
         }
         if (footerRes.ok) {
             const footerHtml = await footerRes.text();
@@ -1669,6 +1970,178 @@ function performSearch() {
             htmlOutput += `<div class="result-card"><div class="ex-text sanskrit-text">${highlightText(title)}</div><div class="desc-text sanskrit-text">${highlightText(desc)}</div></div>`;
         });
     }
-
     resultsDiv.innerHTML = htmlOutput;
 }
+
+// ==================================================
+// 🚀 INTELLIGENT AUTOCOMPLETE SYSTEM (Hinglish Support)
+// ==================================================
+
+const suggestionData = {
+    upasargas: [
+        { hinglish: "pra", devanagari: "प्र", meaning: "forward, intense, very" },
+        { hinglish: "para", devanagari: "परा", meaning: "away, opposite, back" },
+        { hinglish: "apa", devanagari: "अप", meaning: "away, off, down" },
+        { hinglish: "sam", devanagari: "सम्", meaning: "together, perfect, well" },
+        { hinglish: "anu", devanagari: "अनु", meaning: "after, along, following" },
+        { hinglish: "ava", devanagari: "अव", meaning: "down, off, away" },
+        { hinglish: "nis", devanagari: "निस्", meaning: "out, forth, away" },
+        { hinglish: "nir", devanagari: "निर्", meaning: "out, away, without" },
+        { hinglish: "dus", devanagari: "दुस्", meaning: "bad, difficult, hard" },
+        { hinglish: "dur", devanagari: "दुर्", meaning: "bad, difficult, evil" },
+        { hinglish: "vi", devanagari: "वि", meaning: "apart, without, away" },
+        { hinglish: "aa", devanagari: "आङ्", meaning: "towards, near, back" },
+        { hinglish: "ni", devanagari: "नि", meaning: "down, into, back" },
+        { hinglish: "adhi", devanagari: "अधि", meaning: "above, over, on" },
+        { hinglish: "api", devanagari: "अपि", meaning: "on, near, also" },
+        { hinglish: "ati", devanagari: "अति", meaning: "across, beyond, very" },
+        { hinglish: "su", devanagari: "सु", meaning: "good, well, easy" },
+        { hinglish: "ut", devanagari: "उत्", meaning: "up, forth, out" },
+        { hinglish: "abhi", devanagari: "अभि", meaning: "towards, near, against" },
+        { hinglish: "prati", devanagari: "प्रति", meaning: "towards, back, each" },
+        { hinglish: "pari", devanagari: "परि", meaning: "around, about, fully" },
+        { hinglish: "upa", devanagari: "उप", meaning: "towards, near, sub" }
+    ],
+    dhatus: [], // Populated dynamically
+    pratyayas: [] // Populated dynamically
+};
+
+function setupAutocomplete(inputId, dropdownId, type) {
+    const input = document.getElementById(inputId);
+    const dropdown = document.getElementById(dropdownId);
+    if (!input || !dropdown) return;
+
+    let activeIndex = -1;
+
+    // Populate dynamic data if needed
+    if (type === 'dhatus' && suggestionData.dhatus.length === 0) {
+        for (let key in sanskritDatabase.dhatus) {
+            const d = sanskritDatabase.dhatus[key];
+            const hinglishMatch = d.label.match(/\((.*?)\)/);
+            const meaningMatch = d.label.match(/\| (.*?)\)/);
+            suggestionData.dhatus.push({
+                hinglish: key.toLowerCase().replace(/्/g, ''),
+                devanagari: key,
+                meaning: meaningMatch ? meaningMatch[1] : d.label
+            });
+        }
+    }
+    if (type === 'pratyayas' && suggestionData.pratyayas.length === 0) {
+        for (let key in pratyayaDB) {
+            suggestionData.pratyayas.push({
+                hinglish: key.toLowerCase(),
+                devanagari: key,
+                meaning: pratyayaDB[key].type || "प्रत्यय"
+            });
+        }
+    }
+
+    input.addEventListener('input', (e) => {
+        const value = e.target.value.toLowerCase().trim();
+        if (!value) {
+            dropdown.classList.remove('show');
+            return;
+        }
+
+        // Smart Matching: Match Hinglish OR transliterated Devanagari
+        const devQuery = romanToDevanagari(value);
+        
+        const matches = suggestionData[type].filter(item => 
+            item.hinglish.includes(value) || 
+            item.devanagari.includes(value) ||
+            item.devanagari.includes(devQuery) ||
+            item.meaning.toLowerCase().includes(value)
+        ).sort((a, b) => {
+            // Priority: Exact Hinglish match > Starts with query > Includes query
+            if (a.hinglish === value) return -1;
+            if (b.hinglish === value) return 1;
+            if (a.hinglish.startsWith(value) && !b.hinglish.startsWith(value)) return -1;
+            if (b.hinglish.startsWith(value) && !a.hinglish.startsWith(value)) return 1;
+            return 0;
+        }).slice(0, 10); 
+
+        renderSuggestions(matches, dropdown, input, value);
+    });
+
+    input.addEventListener('keydown', (e) => {
+        const items = dropdown.querySelectorAll('.suggestion-item');
+        if (!dropdown.classList.contains('show') || items.length === 0) return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            activeIndex = (activeIndex + 1) % items.length;
+            updateActiveItem(items, activeIndex);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            activeIndex = (activeIndex - 1 + items.length) % items.length;
+            updateActiveItem(items, activeIndex);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (activeIndex > -1) {
+                items[activeIndex].click();
+            }
+        } else if (e.key === 'Escape') {
+            dropdown.classList.remove('show');
+        }
+    });
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+        if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+}
+
+function renderSuggestions(matches, dropdown, input, query) {
+    if (matches.length === 0) {
+        dropdown.classList.remove('show');
+        return;
+    }
+
+    dropdown.innerHTML = matches.map((item, index) => `
+        <div class="suggestion-item" onclick="selectSuggestion('${input.id}', '${item.devanagari}')" data-index="${index}">
+            <div class="suggestion-main">
+                <span class="suggestion-hinglish">${highlightMatch(item.hinglish, query)}</span>
+                <span class="suggestion-devanagari sanskrit-text">${item.devanagari}</span>
+            </div>
+            <div class="suggestion-meaning">${item.meaning}</div>
+        </div>
+    `).join('');
+
+    // Add keyboard hint
+    dropdown.insertAdjacentHTML('beforeend', `
+        <div class="suggestion-kbd-hint">
+            <span>Use ↑ ↓ to navigate</span>
+            <span>Enter to select</span>
+        </div>
+    `);
+
+    dropdown.classList.add('show');
+}
+
+function highlightMatch(text, query) {
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<span class="match-highlight">$1</span>');
+}
+
+function selectSuggestion(inputId, value) {
+    const input = document.getElementById(inputId);
+    input.value = value;
+    const dropdownId = inputId === 'upasarga' ? 'upaSuggestions' : (inputId === 'dhatu' ? 'dhatuSuggestions' : 'pratSuggestions');
+    document.getElementById(dropdownId).classList.remove('show');
+    input.focus();
+}
+
+function updateActiveItem(items, index) {
+    items.forEach((item, i) => {
+        if (i === index) {
+            item.classList.add('active');
+            item.scrollIntoView({ block: 'nearest' });
+        } else {
+            item.classList.remove('active');
+        }
+    });
+}
+
+window.selectSuggestion = selectSuggestion; // Expose to global for onclick

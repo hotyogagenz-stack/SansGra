@@ -6,63 +6,76 @@ function initFloatingSanskrit() {
     const container = document.getElementById('floating-sanskrit-container');
     if (!container) return;
 
-    // A list of authentic Sanskrit words/dhatus to float around
     const words = [
-        'ज्ञान', 'योग', 'धर्म', 'कर्म', 'मोक्ष', 'सत्य', 'शान्ति', 'आनन्द', 'ब्रह्म',
-        'आत्मा', 'प्रज्ञा', 'ध्यान', 'भक्ति', 'शक्ति', 'मुक्ति', 'कृ', 'भू', 'गम्',
-        'पठ्', 'लिख्', 'दृश्', 'स्था', 'पा', 'दा', 'श्रु', 'वद्', 'अस्', 'हन्',
-        'अष्टाध्यायी', 'पाणिनि', 'सूत्र', 'धातु', 'प्रत्यय', 'उपसर्ग', 'अधिकार'
+        'अ', 'इ', 'उ', 'ण्', 'ऋ', 'ऌ', 'क्', 'ए', 'ओ', 'ङ्', 'ऐ', 'औ', 'च्',
+        'ह', 'य', 'व', 'र', 'ट्', 'ल', 'ण्', 'ञ', 'म', 'ङ', 'ण', 'न', 'म्',
+        'झ', 'भ', 'ञ्', 'घ', 'ढ', 'ध', 'ष्', 'ज', 'ब', 'ग', 'ड', 'द', 'श्',
+        'ख', 'फ', 'छ', 'ठ', 'थ', 'च', 'ट', 'त', 'व्', 'क', 'प', 'य्',
+        'श', 'ष', 'स', 'र्', 'ह', 'ल्', 'ॐ', '॥', 'श्र', 'प्र', 'वि', 'अनु', 'प्रति',
+        'सं', 'अधि', 'अति', 'नि', 'सु', 'उत', 'अभि', 'परि', 'उप', 'आ'
     ];
 
-    const wordCount = 30; // Number of floating words
+    const wordCount = 150;
 
+    // Initial burst from center for "Woooow" factor
+    for (let i = 0; i < 40; i++) {
+        setTimeout(() => createFloatingWord(container, words, true), i * 30);
+    }
+
+    // Steady flow
     for (let i = 0; i < wordCount; i++) {
-        createFloatingWord(container, words);
+        createFloatingWord(container, words, false);
     }
 }
 
-function createFloatingWord(container, words) {
+function createFloatingWord(container, words, isBurst) {
     const wordEl = document.createElement('div');
     wordEl.className = 'floating-word';
 
-    // Pick a random word
     const randomWord = words[Math.floor(Math.random() * words.length)];
     wordEl.textContent = randomWord;
 
-    // Randomize positioning and animation properties
-    const startX = Math.random() * 100; // 0 to 100 vw
-    const startZ = (Math.random() * -600) - 100; // -100 to -700 px (depth)
+    // Start positions
+    let startX, startZ, endX, duration, delay;
 
-    const duration = Math.random() * 15 + 15; // 15s to 30s
-    const delay = Math.random() * -30; // Negative delay to start immediately at different stages
+    if (isBurst) {
+        // Burst from the center of the screen
+        startX = 50 + (Math.random() * 20 - 10); 
+        startZ = (Math.random() * -300);
+        endX = startX + (Math.random() * 80 - 40);
+        duration = Math.random() * 4 + 3; // Fast burst
+        delay = 0;
+    } else {
+        // Normal drift
+        startX = Math.random() * 100;
+        startZ = (Math.random() * -600) - 100;
+        endX = startX + (Math.random() * 40 - 20);
+        duration = Math.random() * 10 + 15;
+        delay = Math.random() * -30;
+    }
 
-    const fontSize = Math.random() * 1.5 + 1.5; // 1.5rem to 3rem
-
-    // Different opacities for depth effect
-    const maxOpacity = Math.random() * 0.2 + 0.1; // 0.1 to 0.3
+    const fontSize = Math.random() * 1.5 + 1.2;
+    const maxOpacity = Math.random() * 0.25 + 0.05;
 
     wordEl.style.left = `${startX}%`;
     wordEl.style.fontSize = `${fontSize}rem`;
     wordEl.style.animationDuration = `${duration}s`;
     wordEl.style.animationDelay = `${delay}s`;
     wordEl.style.setProperty('--max-opacity', maxOpacity);
-
-    // Apply some initial rotation
-    const rotX = Math.random() * 360;
-    const rotY = Math.random() * 360;
-    const rotZ = Math.random() * 360;
-    // We override transform locally if we want, but CSS animation handles it. 
-    // To make it truly random 3D, we'd need to set CSS variables or use JS animation. 
-    // Let's use CSS vars for start/end points.
-
-    const endX = startX + (Math.random() * 20 - 10); // Drift left/right
-
     wordEl.style.setProperty('--start-x', `${startX}vw`);
+    wordEl.style.setProperty('--start-y', isBurst ? '50vh' : '110vh');
     wordEl.style.setProperty('--start-z', `${startZ}px`);
     wordEl.style.setProperty('--end-x', `${endX}vw`);
 
-    // In style.css, the keyframes float3D doesn't use vars yet, but we can dynamically add inline style 
-    // if we want varied paths, or just stick to the CSS class animation.
+    if (isBurst) {
+        wordEl.style.filter = 'blur(0px)';
+        wordEl.style.zIndex = '100';
+    }
 
     container.appendChild(wordEl);
+    
+    // Remove burst items after animation ends to keep DOM clean
+    if (isBurst) {
+        setTimeout(() => wordEl.remove(), duration * 1000);
+    }
 }
