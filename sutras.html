@@ -49,34 +49,19 @@
       if (!container) return;
       container.innerHTML = '';
 
-      // Render top-level short notes if present (data.sutras)
-      if (data && Array.isArray(data.sutras) && data.sutras.length) {
-        const notesSection = document.createElement('section');
-        const h = document.createElement('h2'); h.textContent = 'Notes';
-        notesSection.appendChild(h);
-        data.sutras.forEach(n => {
-          const card = document.createElement('div'); card.className = 'sutra-note';
-          const title = document.createElement('div'); title.className = 'sutra-note-title sanskrit-text'; title.textContent = n.name || n.title || '';
-          const desc = document.createElement('div'); desc.className = 'sutra-note-desc sanskrit-text'; desc.textContent = n.desc || '';
-          card.appendChild(title); card.appendChild(desc);
-          notesSection.appendChild(card);
-        });
-        container.appendChild(notesSection);
-      }
-
-      // Render detailed samjnaSutras (1.1.x list)
+      // Render detailed samjnaSutras (1.1.x list) directly into container for 2-column grid
       if (data && Array.isArray(data.samjnaSutras) && data.samjnaSutras.length) {
-        const listSection = document.createElement('section');
-        const h2 = document.createElement('h2'); h2.textContent = 'Samjna Sutras (1.1.x)'; listSection.appendChild(h2);
         data.samjnaSutras.forEach(s => {
           const card = document.createElement('div'); card.className = 'sutra-card';
-          const header = document.createElement('div'); header.className = 'sutra-card-header sanskrit-text'; header.textContent = `[${s.id || ''}] ${s.name || ''}`;
+          const header = document.createElement('div'); header.className = 'sutra-card-header sanskrit-text'; 
+          header.innerHTML = `<span class="sutra-id">${s.id || ''}</span> ${s.name || ''}`;
           const desc = document.createElement('div'); desc.className = 'sutra-card-desc sanskrit-text'; desc.textContent = s.desc || '';
           card.appendChild(header); card.appendChild(desc);
-          listSection.appendChild(card);
+          container.appendChild(card);
         });
-        container.appendChild(listSection);
       }
+
+
 
       if (window.applyTranslationsExtended) window.applyTranslationsExtended();
 

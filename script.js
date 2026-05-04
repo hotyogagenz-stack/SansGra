@@ -414,7 +414,7 @@ function initializeUI() {
         });
     }
 }
-window.onload = loadDatabase;
+// window.onload = loadDatabase; // Replaced by DOMContentLoaded call for better coordination
 
 // ==================================================
 // 3. TRANSLITERATION ENGINE (Roman → Devanagari)
@@ -1710,9 +1710,22 @@ function applyTranslationsExtended(lang) {
     });
 }
 
-function openSearchModal() { document.getElementById("searchModal").style.display = "block"; document.getElementById("searchInput").focus(); }
-function closeSearchModal() { document.getElementById("searchModal").style.display = "none"; document.getElementById("searchInput").value = ""; document.getElementById("searchResults").innerHTML = ""; }
-window.addEventListener('click', function(event) { if (event.target == document.getElementById("searchModal")) closeSearchModal(); });
+function openSearchModal() { 
+    if(document.getElementById("searchModal")) {
+        document.getElementById("searchModal").style.display = "block"; 
+        document.getElementById("searchInput").focus(); 
+    } else {
+        window.location.href = 'search.html';
+    }
+}
+function closeSearchModal() { 
+    if(document.getElementById("searchModal")) {
+        document.getElementById("searchModal").style.display = "none"; 
+        document.getElementById("searchInput").value = ""; 
+        document.getElementById("searchResults").innerHTML = ""; 
+    }
+}
+window.addEventListener('click', function(event) { if (document.getElementById("searchModal") && event.target == document.getElementById("searchModal")) closeSearchModal(); });
 
 // Load shared header/footer fragments and initialize language on page load
 async function loadSharedHeaderFooter() {
@@ -1722,10 +1735,21 @@ async function loadSharedHeaderFooter() {
             const headerHtml = await headerRes.text();
             document.getElementById('site-header')?.insertAdjacentHTML('afterbegin', headerHtml);
             
-            // Hide text navigation on home page as it has the 3D books
-            if (window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/') || window.location.pathname === '') {
+            // Hide/Show specific header parts based on page
+            const isHome = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/') || window.location.pathname === '';
+            
+            if (isHome) {
+                // Home page: hide text nav, show mini header
                 const textNav = document.querySelector('.main-text-nav-container');
                 if (textNav) textNav.style.display = 'none';
+            } else {
+                // Other pages: show text nav, hide the "red" mini header
+                const miniHeader = document.querySelector('.mini-header');
+                if (miniHeader) miniHeader.style.display = 'none';
+                
+                // Ensure main nav is visible
+                const textNav = document.querySelector('.main-text-nav-container');
+                if (textNav) textNav.style.display = 'block';
             }
         }
         if (footerRes.ok) {
@@ -1739,9 +1763,25 @@ document.addEventListener('DOMContentLoaded', async function() {
     await loadSharedHeaderFooter();
     // apply persisted theme first so fragments render with correct colors
     try { applySavedTheme(); } catch(e) {}
+    
+    // Ensure database is loaded before translations and search
+    await loadDatabase();
+
     const saved = localStorage.getItem('siteLang') || 'hi';
     applyTranslationsExtended(saved);
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-lang') === saved));
+
+    // Handle search page specific logic
+    if (window.location.pathname.endsWith('search.html')) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('q');
+        const searchInput = document.getElementById('searchInput');
+        if (query && searchInput) {
+            searchInput.value = query;
+            performSearch();
+        }
+        if (searchInput) searchInput.focus();
+    }
 });
 
 function getSutraDetails(sutraId) {
@@ -2145,3 +2185,75 @@ function updateActiveItem(items, index) {
 }
 
 window.selectSuggestion = selectSuggestion; // Expose to global for onclick
+
+// ==================================================
+// 💬 CHAT BOX & EMAILJS INTEGRATION
+// ==================================================
+
+function toggleChatBox() {
+    const chatBox = document.getElementById('chatBox');
+    if (chatBox) {
+        chatBox.classList.toggle('show');
+        if (chatBox.classList.contains('show')) {
+            document.getElementById('userName').focus();
+        }
+    }
+}
+
+async function handleContactSubmit(event) {
+    event.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    const status = document.getElementById('formStatus');
+    const form = event.target;
+
+    btn.disabled = true;
+    btn.innerText = "Sending...";
+    status.innerText = "";
+    status.className = "form-status";
+
+    try {
+        // EmailJS integration
+        // Note: USER will provide keys later. 
+        // Replace 'YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', and 'YOUR_PUBLIC_KEY' with actual values.
+        
+        if (window.emailjs) {
+            const result = await emailjs.sendForm(
+                'YOUR_SERVICE_ID', // Service ID
+                'YOUR_TEMPLATE_ID', // Template ID
+                form,
+                'YOUR_PUBLIC_KEY' // Public Key
+            );
+            
+            console.log('SUCCESS!', result.status, result.text);
+            status.innerText = "Message sent successfully!";
+            status.classList.add('success');
+            form.reset();
+            setTimeout(() => toggleChatBox(), 2000);
+        } else {
+            // Fallback if EmailJS is not loaded yet
+            status.innerText = "Email service not ready. Try again later.";
+            status.classList.add('error');
+        }
+    } catch (error) {
+        console.error('FAILED...', error);
+        status.innerText = "Failed to send message. Please try again.";
+        status.classList.add('error');
+    } finally {
+        btn.disabled = false;
+        btn.innerText = "Send";
+    }
+}
+
+// Inject EmailJS SDK
+(function() {
+    const script = document.createElement('script');
+    script.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js";
+    script.async = true;
+    script.onload = function() {
+        // emailjs.init("YOUR_PUBLIC_KEY"); // User will provide this
+    };
+    document.head.appendChild(script);
+})();
+
+window.toggleChatBox = toggleChatBox;
+window.handleContactSubmit = handleContactSubmit;

@@ -21,8 +21,8 @@
             <div id="miniMenuDropdown" class="mini-menu-dropdown" role="menu" aria-hidden="true">
                 <a id="miniHome" href="index.html" class="mini-menu-item" data-i18n="home"
                     onclick="closeMobileMenu()">होम</a>
-                <a id="miniSearch" href="#" class="mini-menu-item" data-i18n="search_examples"
-                    onclick="openSearchModal(); closeMobileMenu()">उदाहरण खोजें</a>
+                <a id="miniSearch" href="search.html" class="mini-menu-item" data-i18n="search_examples"
+                    onclick="closeMobileMenu()">उदाहरण खोजें</a>
                 <a id="miniBuilder" href="builder.html" class="mini-menu-item" data-i18n="builder"
                     onclick="closeMobileMenu()">Builder</a>
                 <a id="miniSutra" href="sutras.html" class="mini-menu-item" data-i18n="sutra"
@@ -36,7 +36,8 @@
 <!-- main header/navigation: Text Links -->
 <div class="main-text-nav-container">
     <nav class="text-nav">
-        <a href="#" onclick="openSearchModal(); closeMobileMenu();">Examples</a>
+        <a href="index.html">Home</a>
+        <a href="search.html">Examples</a>
 
         <div class="nav-dropdown">
             <a href="#" class="dropbtn">Builder <i class="fa-solid fa-caret-down"></i></a>
@@ -56,20 +57,3 @@
     </nav>
 </div>
 
-
-<!-- Search modal included in shared header so it is available on all pages -->
-<div id="searchModal" class="modal" aria-hidden="true">
-    <div class="modal-content">
-        <button class="close-btn" aria-label="Close search" onclick="closeSearchModal()">&times;</button>
-        <h2 style="color: var(--text-dark); margin-bottom: 5px;">
-            <i class="fa-solid fa-magnifying-glass" style="color:#b45309;"></i> <span data-i18n="search_title">उदाहरण
-                खोजें</span>
-        </h2>
-        <p style="margin-bottom: 20px; font-size: 0.9em; color: var(--text-light);" data-i18n="search_placeholder">
-            धातु, प्रत्यय या सूत्र संख्या से खोजें (उदा: 1.1.1)
-        </p>
-        <input type="text" id="searchInput" class="sanskrit-text" data-i18n-placeholder="search_input_placeholder" placeholder="खोजें..." onkeyup="performSearch()"
-            autocomplete="off">
-        <div id="searchResults" class="search-results"></div>
-    </div>
-</div>
