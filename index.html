@@ -36,8 +36,8 @@
     <section class="central-hero">
         <h1 class="hero-tagline" data-i18n="hero_tagline">॥ वन्दे संस्कृतम् ॥</h1>
         <div class="hero-search-container">
-            <input type="text" id="heroSearchInput" class="hero-search-bar sanskrit-text" data-i18n-placeholder="hero_search_placeholder" placeholder="शिक्षापत्रीम् अन्वेषय..." onfocus="openSearchModal()">
-            <button class="hero-search-btn" onclick="openSearchModal()"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <input type="text" id="heroSearchInput" class="hero-search-bar sanskrit-text" data-i18n-placeholder="hero_search_placeholder" placeholder="शिक्षापत्रीम् अन्वेषय..." onclick="window.location.href='search.html'">
+            <button class="hero-search-btn" onclick="window.location.href='search.html'"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
         <p class="hero-subtext" data-i18n="hero_search_subtext">धातु, प्रत्यय या सूत्र संख्या से खोजें (उदा: 1.1.1)</p>
     </section>
@@ -48,7 +48,7 @@
         <div class="section-divider"></div>
         <div class="book-nav" id="nav-menu">
             <!-- 1. Examples -->
-            <a href="#" class="book-item ancient-book" onclick="openSearchModal(); closeMobileMenu();" title="Examples">
+            <a href="search.html" class="book-item ancient-book" title="Examples">
                 <div class="book-back"></div>
                 <div class="book-spine"></div>
                 <div class="book-pages"></div>

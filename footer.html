@@ -8,3 +8,35 @@
         </div>
     </div>
 </footer>
+<!-- Floating Chat/Feedback Box -->
+<div id="chatToggle" class="chat-toggle" onclick="toggleChatBox()">
+    <i class="fa-solid fa-envelope-open-text"></i>
+    <span class="chat-tooltip">Write to us</span>
+</div>
+
+<div id="chatBox" class="chat-box-container" aria-hidden="true">
+    <div class="chat-box-header">
+        <span class="chat-header-title">Write to us</span>
+        <button class="chat-close-mini" onclick="toggleChatBox()"><i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+    <div class="chat-box-body">
+        <form id="contactForm" onsubmit="handleContactSubmit(event)">
+            <div class="chat-input-group">
+                <div class="chat-input-icon"><i class="fa-solid fa-user"></i></div>
+                <input type="text" id="userName" name="from_name" placeholder="Name" required>
+            </div>
+            <div class="chat-input-group">
+                <div class="chat-input-icon"><i class="fa-solid fa-at"></i></div>
+                <input type="email" id="userEmail" name="from_email" placeholder="your email" required>
+            </div>
+            <div class="chat-input-group textarea-group">
+                <div class="chat-input-icon"><i class="fa-solid fa-comment"></i></div>
+                <textarea id="userMessage" name="message" placeholder="message" required></textarea>
+            </div>
+            <div class="chat-submit-container">
+                <button type="submit" class="chat-send-btn" id="submitBtn">Send</button>
+            </div>
+        </form>
+        <div id="formStatus" class="form-status"></div>
+    </div>
+</div>
