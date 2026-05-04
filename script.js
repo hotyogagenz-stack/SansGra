@@ -1315,6 +1315,7 @@ const TRANSLATIONS = {
         book_shabda: '|| Shabda Rupa ||',
         book_dhatu_rupa: '|| Dhatu Rupa ||',
         book_more: '|| More ||',
+        book_about: 'About Us',
 
         // Scroll overlay (index page)
         scroll_title: '॥ तस्मै पाऽणिनये नमः ॥',
@@ -1394,7 +1395,21 @@ const TRANSLATIONS = {
         
         // Generated word labels
         word_final: 'Final Form:',
-        word_siddha: 'Siddha Rupa:'
+        word_siddha: 'Siddha Form:',
+
+        // About Page
+        about: 'About Us',
+        about_hero_title: '॥ About Us ॥',
+        about_hero_subtext: 'Preserving the ancient wisdom of Sanskrit through modern technology and interactive learning.',
+        our_mission: 'Our Mission',
+        mission_desc: 'To make the complex rules of Ashtadhyayi accessible to everyone, bridging the gap between ancient linguistic science and modern computational power.',
+        our_vision: 'Our Vision',
+        vision_desc: 'Creating a digital ecosystem where Sanskrit is not just a language of the past, but a living, breathing medium of expression for the future.',
+        our_values: 'Core Values',
+        values_desc: 'Authenticity in representation, simplicity in interface, and excellence in linguistic precision are the pillars of SansGra.',
+        vision_quote: 'भाषासु मुख्या मधुरा दिव्या गीर्वाणभारती।<br>तस्यां हि काव्यं मधुरं तस्मादपि सुभाषितम्॥',
+        the_creators: 'The Creators',
+        team_subtext: 'Dedicated scholars and developers working to bring Sanskrit to your fingertips.'
     },
     hi: {
         // Brand & basic nav
@@ -1441,6 +1456,7 @@ const TRANSLATIONS = {
         book_shabda: '॥ शब्दरूपाणि ॥',
         book_dhatu_rupa: '॥ धातुरूपाणि ॥',
         book_more: '॥ अधिकम् ॥',
+        book_about: '॥ अस्माकं विषयः ॥',
 
         // Scroll overlay (index page)
         scroll_title: '॥ तस्मै पाऽणिनये नमः ॥',
@@ -1520,7 +1536,21 @@ const TRANSLATIONS = {
         
         // Generated word labels
         word_final: 'अंतिम रूप:',
-        word_siddha: 'सिद्ध रूप:'
+        word_siddha: 'सिद्ध रूप:',
+
+        // About Page
+        about: 'हमारे बारे में',
+        about_hero_title: '॥ हमारे बारे में ॥',
+        about_hero_subtext: 'आधुनिक तकनीक और इंटरैक्टिव लर्निंग के माध्यम से संस्कृत के प्राचीन ज्ञान को संरक्षित करना।',
+        our_mission: 'हमारा लक्ष्य',
+        mission_desc: 'अष्टाध्यायी के जटिल नियमों को सभी के लिए सुलभ बनाना, प्राचीन भाषाई विज्ञान और आधुनिक गणना शक्ति के बीच की खाई को पाटना।',
+        our_vision: 'हमारा दृष्टिकोण',
+        vision_desc: 'एक ऐसा डिजिटल पारिस्थितिकी तंत्र बनाना जहां संस्कृत केवल अतीत की भाषा न हो, बल्कि भविष्य के लिए अभिव्यक्ति का एक जीवंत माध्यम हो।',
+        our_values: 'मुख्य मूल्य',
+        values_desc: 'प्रतिनिधित्व में प्रामाणिकता, इंटरफेस में सादगी और भाषाई सटीकता में उत्कृष्टता SansGra के स्तंभ हैं।',
+        vision_quote: 'भाषासु मुख्या मधुरा दिव्या गीर्वाणभारती।<br>तस्यां हि काव्यं मधुरं तस्मादपि सुभाषितम्॥',
+        the_creators: 'निर्माता',
+        team_subtext: 'समर्पित विद्वान और डेवलपर संस्कृत को आपकी उंगलियों तक लाने के लिए काम कर रहे हैं।'
     },
     sa: {
         // Brand & basic nav
@@ -1567,6 +1597,7 @@ const TRANSLATIONS = {
         book_shabda: '॥ शब्दरूपाणि ॥',
         book_dhatu_rupa: '॥ धातुरूपाणि ॥',
         book_more: '॥ अधिकम् ॥',
+        book_about: '॥ अस्माकं विषयः ॥',
 
         // Scroll overlay (index page)
         scroll_title: '॥ तस्मै पाऽणिनये नमः ॥',
@@ -1646,7 +1677,21 @@ const TRANSLATIONS = {
         
         // Generated word labels
         word_final: 'अन्तिमरूपम्:',
-        word_siddha: 'सिद्धरूपम्:'
+        word_siddha: 'सिद्धरूपम्:',
+
+        // About Page
+        about: 'अस्माकं विषयः',
+        about_hero_title: '॥ अस्माकं विषयः ॥',
+        about_hero_subtext: 'आधुनिकतन्त्रज्ञानस्य पारस्परिकशिक्षणस्य च माध्यमेन संस्कृतस्य प्राचीनज्ञानस्य संरक्षणम्।',
+        our_mission: 'अस्माकं लक्ष्यम्',
+        mission_desc: 'अष्टाध्यायी-नियमान् सर्वेषां कृते सुलभं कर्तुम्, प्राचीनभाषाविज्ञानस्य आधुनिकगणनायाश्च मध्ये सेतुनिर्माणम्।',
+        our_vision: 'अस्माकं दृष्टिः',
+        vision_desc: 'एतादृशं डिजिटल-पारिस्थितिकी-तन्त्रं निर्मातव्यं यत्र संस्कृतं न केवलं भूतकालस्य भाषा स्यात्, अपितु भविष्यस्य कृते अभिव्यक्ति-माध्यमं भवेत्।',
+        our_values: 'मुख्यमूल्यानि',
+        values_desc: 'प्रामाणिकता, सरलता, भाषाशुद्धिः च संसग्रा-इत्यस्य आधारस्तम्भाः सन्ति।',
+        vision_quote: 'भाषासु मुख्या मधुरा दिव्या गीर्वाणभारती।<br>तस्यां हि काव्यं मधुरं तस्मादपि सुभाषितम्॥',
+        the_creators: 'निर्मातारः',
+        team_subtext: 'समर्पिताः विद्वांसः डेवलपर्स च संस्कृतं युष्मभ्यं दातुं प्रयतन्ते।'
     }
 };
 
@@ -2256,4 +2301,17 @@ async function handleContactSubmit(event) {
 })();
 
 window.toggleChatBox = toggleChatBox;
+
+// Click outside to close chat box
+window.addEventListener('click', (e) => {
+    const chatBox = document.getElementById('chatBox');
+    const chatToggle = document.getElementById('chatToggle');
+    
+    if (chatBox && chatBox.classList.contains('show')) {
+        // If click is NOT inside chatBox and NOT on the toggle button
+        if (!chatBox.contains(e.target) && !chatToggle.contains(e.target)) {
+            chatBox.classList.remove('show');
+        }
+    }
+});
 window.handleContactSubmit = handleContactSubmit;
