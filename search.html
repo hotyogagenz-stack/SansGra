@@ -211,13 +211,7 @@
             <button class="search-icon-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
 
-        <div class="search-filters">
-            <span class="filter-tag active" onclick="filterResults('all')">All</span>
-            <span class="filter-tag" onclick="filterResults('examples')">Examples</span>
-            <span class="filter-tag" onclick="filterResults('sutras')">Sutras</span>
-            <span class="filter-tag" onclick="filterResults('dhatus')">Dhatus</span>
-            <span class="filter-tag" onclick="filterResults('pratyayas')">Pratyayas</span>
-        </div>
+
 
         <div id="searchResults" class="search-results">
             <!-- Results will be injected here -->
@@ -235,13 +229,7 @@
     <script src="script.js"></script>
     <script>
         // Additional logic for search page
-        function filterResults(type) {
-            document.querySelectorAll('.filter-tag').forEach(tag => tag.classList.remove('active'));
-            event.target.classList.add('active');
-            // This would normally filter the UI, but our performSearch currently re-renders everything.
-            // For now, let's just trigger search again.
-            performSearch();
-        }
+
 
         // Focus search input on page load
         window.addEventListener('load', () => {
