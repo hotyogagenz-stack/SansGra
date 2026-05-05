@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="sa">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shabda Rupa</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script defer src="animations.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <div id="site-header"></div>
+  <div id="floating-sanskrit-container"></div>
+  <main class="container" style="position: relative; z-index: 10;">
+    <section class="sutras-page">
+      <h1>शब्दरूपाणि (Shabda Rupa)</h1>
+      <p>शब्दानां लिङ्ग-अन्त-अनुसारं वर्गीकरणम्</p>
+      <div id="shabdaList" class="sutra-list">
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+  <script>
+    const shabdas = [
+      "अकारान्त पुल्लिंग", "अकारान्त स्त्रीलिंग", "अकारान्त नपुंसकलिंग",
+      "आकारान्त पुल्लिंग", "आकारान्त स्त्रीलिंग", "आकारान्त नपुंसकलिंग",
+      "इकारान्त पुल्लिंग", "इकारान्त स्त्रीलिंग", "इकारान्त नपुंसकलिंग",
+      "ईकारान्त पुल्लिंग", "ईकारान्त स्त्रीलिंग", "ईकारान्त नपुंसकलिंग",
+      "उकारान्त पुल्लिंग", "उकारान्त स्त्रीलिंग", "उकारान्त नपुंसकलिंग",
+      "ऊकारान्त पुल्लिंग", "ऊकारान्त स्त्रीलिंग", "ऊकारान्त नपुंसकलिंग",
+      "ऋकारान्त पुल्लिंग", "ऋकारान्त स्त्रीलिंग", "ऋकारान्त नपुंसकलिंग",
+      "व्यंजनान्त पुल्लिंग", "व्यंजनान्त स्त्रीलिंग", "व्यंजनान्त नपुंसकलिंग"
+    ];
+
+    function renderShabdas() {
+      const container = document.getElementById('shabdaList');
+      if (!container) return;
+      container.innerHTML = '';
+      
+      shabdas.forEach(shabda => {
+        const card = document.createElement('div');
+        card.className = 'sutra-card';
+        const header = document.createElement('div');
+        header.className = 'sutra-card-header sanskrit-text';
+        header.textContent = shabda;
+        
+        const desc = document.createElement('div');
+        desc.className = 'sutra-card-desc';
+        desc.innerHTML = '<p style="padding: 10px; color: #666;">रूपाणि शीघ्रमेव योजयिष्यन्ते।</p>';
+        
+        card.appendChild(header);
+        card.appendChild(desc);
+        container.appendChild(card);
+      });
+
+      container.querySelectorAll('.sutra-card').forEach(card => {
+        const hdr = card.firstElementChild;
+        hdr.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          card.classList.toggle('active');
+        });
+      });
+    }
+
+    window.addEventListener('load', renderShabdas);
+  </script>
+</body>
+</html>
