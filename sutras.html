@@ -49,36 +49,109 @@
       if (!container) return;
       container.innerHTML = '';
 
-      // Render detailed samjnaSutras (1.1.x list) directly into container for 2-column grid
-      if (data && Array.isArray(data.samjnaSutras) && data.samjnaSutras.length) {
-        data.samjnaSutras.forEach(s => {
-          const card = document.createElement('div'); card.className = 'sutra-card';
-          const header = document.createElement('div'); header.className = 'sutra-card-header sanskrit-text'; 
-          header.innerHTML = `<span class="sutra-id">${s.id || ''}</span> ${s.name || ''}`;
-          const desc = document.createElement('div'); desc.className = 'sutra-card-desc sanskrit-text'; desc.textContent = s.desc || '';
-          card.appendChild(header); card.appendChild(desc);
-          container.appendChild(card);
-        });
+      const adhyayaNames = [
+        "प्रथमोध्याय:", "द्वितीयोध्याय:", "तृतीयोध्यायः", "चतुर्थोध्यायः",
+        "पञ्चमोध्यायः", "षष्ठोध्यायः", "सप्तमोध्यायः", "अष्टमोध्यायः"
+      ];
+      const padahNames = [
+        "प्रथमः पादः", "द्वितीयः पादः", "तृतीयः पादः", "चतुर्थः पादः"
+      ];
+
+      let allSutras = [];
+      if (data && data.samjnaSutras) allSutras = allSutras.concat(data.samjnaSutras);
+      if (data && data.sutras) allSutras = allSutras.concat(data.sutras);
+
+      const hierarchy = {};
+      for(let i=1; i<=8; i++) {
+        hierarchy[i] = { 1: [], 2: [], 3: [], 4: [] };
       }
 
+      allSutras.forEach(s => {
+        if(!s.id) return;
+        const parts = s.id.split('.');
+        if(parts.length === 3) {
+          const a = parseInt(parts[0]);
+          const p = parseInt(parts[1]);
+          if(hierarchy[a] && hierarchy[a][p]) {
+            hierarchy[a][p].push(s);
+          }
+        }
+      });
 
+      for(let a=1; a<=8; a++) {
+        const adhyayaCard = document.createElement('div');
+        adhyayaCard.className = 'sutra-card';
+        const aHeader = document.createElement('div');
+        aHeader.className = 'sutra-card-header sanskrit-text';
+        aHeader.textContent = adhyayaNames[a-1];
+        
+        const aDesc = document.createElement('div');
+        aDesc.className = 'sutra-card-desc';
+        
+        let hasSutras = false;
+        for(let p=1; p<=4; p++) {
+          const padahSutras = hierarchy[a][p];
+          if(padahSutras.length === 0) continue;
+          hasSutras = true;
+          
+          const padahCard = document.createElement('div');
+          padahCard.className = 'sutra-card sub-card';
+          const pHeader = document.createElement('div');
+          pHeader.className = 'sutra-card-header sanskrit-text';
+          pHeader.textContent = padahNames[p-1];
+          
+          const pDesc = document.createElement('div');
+          pDesc.className = 'sutra-card-desc';
+          
+          padahSutras.forEach(s => {
+            const sutraItem = document.createElement('div');
+            sutraItem.className = 'sutra-card sub-card';
+            const sHeader = document.createElement('div');
+            sHeader.className = 'sutra-card-header sanskrit-text';
+            sHeader.innerHTML = `<span class="sutra-id">${s.id}</span> ${s.name}`;
+            const sDesc = document.createElement('div');
+            sDesc.className = 'sutra-card-desc sanskrit-text';
+            sDesc.textContent = s.desc;
+            
+            sutraItem.appendChild(sHeader);
+            sutraItem.appendChild(sDesc);
+            pDesc.appendChild(sutraItem);
+          });
+          
+          padahCard.appendChild(pHeader);
+          padahCard.appendChild(pDesc);
+          aDesc.appendChild(padahCard);
+        }
+        
+        if(hasSutras) {
+            adhyayaCard.appendChild(aHeader);
+            adhyayaCard.appendChild(aDesc);
+            container.appendChild(adhyayaCard);
+        } else {
+            // Even if empty, show it so the structure is visible as requested
+            adhyayaCard.appendChild(aHeader);
+            aDesc.innerHTML = '<p style="padding: 10px; color: #666;">कोई सूत्र उपलब्ध नहीं है</p>';
+            adhyayaCard.appendChild(aDesc);
+            container.appendChild(adhyayaCard);
+        }
+      }
 
       if (window.applyTranslationsExtended) window.applyTranslationsExtended();
 
       // wire up accordion behavior for the newly rendered cards
       container.querySelectorAll('.sutra-card').forEach(card => {
-        const hdr = card.querySelector('.sutra-card-header');
-        const desc = card.querySelector('.sutra-card-desc');
-        if (!hdr) return;
+        const hdr = card.firstElementChild;
+        if (!hdr || !hdr.classList.contains('sutra-card-header')) return;
         hdr.setAttribute('tabindex', '0');
         hdr.setAttribute('role', 'button');
         hdr.setAttribute('aria-expanded', 'false');
-        hdr.addEventListener('click', () => {
+        hdr.addEventListener('click', (ev) => {
+          ev.stopPropagation();
           const active = card.classList.toggle('active');
           hdr.setAttribute('aria-expanded', active ? 'true' : 'false');
         });
         hdr.addEventListener('keydown', (ev) => {
-          if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); hdr.click(); }
+          if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); ev.stopPropagation(); hdr.click(); }
         });
       });
     }

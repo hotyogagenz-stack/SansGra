@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="sa">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dhatus - Ganas</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script defer src="animations.js"></script>
+  <script defer src="script.js"></script>
+  <style>
+    .sub-card { margin-top: 10px; margin-left: 15px; border-left: 3px solid #b45309; }
+  </style>
+</head>
+<body>
+  <div id="site-header"></div>
+  <div id="floating-sanskrit-container"></div>
+  <main class="container" style="position: relative; z-index: 10;">
+    <section class="sutras-page">
+      <h1>धातवः (Dhatus)</h1>
+      <p>धातुगणानुसारम्</p>
+      <div id="dhatuList" class="sutra-list">
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+  <script>
+    const ganas = [
+      "भ्वादिगण (भू + आदि)",
+      "अदादिगण (अद् + आदि)",
+      "जुहोत्यादिगण (जुहोति + आदि)",
+      "दिवादिगण (दिव् + आदि)",
+      "स्वादिगण (सु + आदि)",
+      "तुदादिगण (तुद् + आदि)",
+      "रुधादिगण (रुध् + आदि)",
+      "तनादिगण (तन् + आदि)",
+      "क्र्यादिगण (क्री + आदि)",
+      "चुरादिगण (चुर् + आदि)"
+    ];
+
+    function renderGanas() {
+      const container = document.getElementById('dhatuList');
+      if (!container) return;
+      container.innerHTML = '';
+      
+      ganas.forEach(gana => {
+        const card = document.createElement('div');
+        card.className = 'sutra-card';
+        const header = document.createElement('div');
+        header.className = 'sutra-card-header sanskrit-text';
+        header.textContent = gana;
+        
+        const desc = document.createElement('div');
+        desc.className = 'sutra-card-desc';
+        desc.innerHTML = '<p style="padding: 10px; color: #666;">अस्मिन् गणे धातवः शीघ्रमेव योजयिष्यन्ते।</p>';
+        
+        card.appendChild(header);
+        card.appendChild(desc);
+        container.appendChild(card);
+      });
+
+      // accordion behavior
+      container.querySelectorAll('.sutra-card').forEach(card => {
+        const hdr = card.firstElementChild;
+        if (!hdr || !hdr.classList.contains('sutra-card-header')) return;
+        hdr.setAttribute('tabindex', '0');
+        hdr.setAttribute('role', 'button');
+        hdr.setAttribute('aria-expanded', 'false');
+        hdr.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          const active = card.classList.toggle('active');
+          hdr.setAttribute('aria-expanded', active ? 'true' : 'false');
+        });
+      });
+    }
+
+    window.addEventListener('load', renderGanas);
+  </script>
+</body>
+</html>

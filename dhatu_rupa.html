@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="sa">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dhatu Rupa</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Tiro+Devanagari+Sanskrit&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script defer src="animations.js"></script>
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <div id="site-header"></div>
+  <div id="floating-sanskrit-container"></div>
+  <main class="container" style="position: relative; z-index: 10;">
+    <section class="sutras-page">
+      <h1>धातुरूपाणि (Dhatu Rupa)</h1>
+      <p>लकारानुसारं धातुरूपाणि पश्यन्तु</p>
+      <div id="lakaraList" class="sutra-list">
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+  <script>
+    const lakaras = [
+      "लट् लकार (वर्तमान काल)",
+      "लङ् लकार (भूतकाल – अनद्यतन)",
+      "लिट् लकार (परोक्ष भूतकाल)",
+      "लुट् लकार (अनद्यतन भविष्यत्)",
+      "लृट् लकार (साधारण भविष्यत्)",
+      "लोट् लकार (आज्ञार्थक)",
+      "विधिलिङ् लकार (संभावना/इच्छा)",
+      "आशीर्लिङ् लकार (आशीर्वाद)",
+      "लुङ् लकार (आगम भूतकाल)",
+      "लृङ् लकार (शर्त/संभाव्य भूत)"
+    ];
+
+    function renderLakaras() {
+      const container = document.getElementById('lakaraList');
+      if (!container) return;
+      container.innerHTML = '';
+      
+      lakaras.forEach((lakara, index) => {
+        const card = document.createElement('div');
+        card.className = 'sutra-card';
+        const header = document.createElement('div');
+        header.className = 'sutra-card-header sanskrit-text';
+        header.textContent = lakara;
+        
+        const desc = document.createElement('div');
+        desc.className = 'sutra-card-desc';
+        desc.innerHTML = `
+            <div style="padding: 15px;">
+                <p style="margin-bottom: 10px;">धातुं प्रविशन्तु:</p>
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <input type="text" id="dhatuInput_${index}" class="hero-search-bar sanskrit-text" placeholder="उदा. पठ्, गम्, लिख्" style="flex:1;">
+                    <button class="hero-search-btn" style="position: static; transform: none;" onclick="showDhatuRupa(${index}, '${lakara}')">
+                        <i class="fa-solid fa-bolt"></i>
+                    </button>
+                </div>
+                <div id="dhatuResult_${index}" class="sanskrit-text" style="display:none; padding: 15px; background: rgba(0,0,0,0.05); border-radius: 8px;">
+                    <!-- Result will be shown here -->
+                </div>
+            </div>
+        `;
+        
+        card.appendChild(header);
+        card.appendChild(desc);
+        container.appendChild(card);
+      });
+
+      container.querySelectorAll('.sutra-card').forEach(card => {
+        const hdr = card.firstElementChild;
+        hdr.addEventListener('click', (ev) => {
+          ev.stopPropagation();
+          card.classList.toggle('active');
+        });
+      });
+    }
+
+    function showDhatuRupa(index, lakara) {
+        const input = document.getElementById(`dhatuInput_${index}`).value;
+        const resultDiv = document.getElementById(`dhatuResult_${index}`);
+        if(!input) {
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<p style="color: red;">कृपया धातुं लिखन्तु!</p>';
+            return;
+        }
+        
+        resultDiv.style.display = 'block';
+        // A placeholder for actual dhatu rupa generation logic
+        resultDiv.innerHTML = `
+            <h3 style="margin-bottom:10px; color: #701c1c;">${input} - ${lakara.split(' ')[0]}</h3>
+            <table style="width:100%; border-collapse: collapse; text-align:center;">
+                <tr style="background: rgba(180, 83, 9, 0.1);">
+                    <th style="padding: 8px; border: 1px solid #d1d5db;">पुरुषः</th>
+                    <th style="padding: 8px; border: 1px solid #d1d5db;">एकवचनम्</th>
+                    <th style="padding: 8px; border: 1px solid #d1d5db;">द्विवचनम्</th>
+                    <th style="padding: 8px; border: 1px solid #d1d5db;">बहुवचनम्</th>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #d1d5db; font-weight: bold;">प्रथमः</td>
+                    <td style="padding: 8px; border: 1px solid #d1d5db;">${input}ति</td>
+                    <td style="padding: 8px; border: 1px solid #d1d5db;">${input}तः</td>
+                    <td style="padding: 8px; border: 1px solid #d1d5db;">${input}न्ति</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #d1d5db; font-weight: bold;">मध्यमः</td>
+                    <td style="padding: 8px; border: 1px solid #d1d5db;">${input}सि</td>
+                    <td style="padding: 8px; border: 1px solid #d1d5db;">${input}थः</td>
+                    <td style="padding: 8px; border: 1px solid #d1d5db;">${input}थ</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #d1d5db; font-weight: bold;">उत्तमः</td>
+                    <td style="padding: 8px; border: 1px solid #d1d5db;">${input}मि</td>
+                    <td style="padding: 8px; border: 1px solid #d1d5db;">${input}वः</td>
+                    <td style="padding: 8px; border: 1px solid #d1d5db;">${input}मः</td>
+                </tr>
+            </table>
+            <p style="margin-top:10px; font-size:0.9em; color:#666;">(Note: This is a simplified display for demonstration)</p>
+        `;
+    }
+
+    window.addEventListener('load', renderLakaras);
+  </script>
+</body>
+</html>
