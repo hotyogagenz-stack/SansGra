@@ -36,14 +36,17 @@
     <section class="central-hero">
         <h1 class="hero-tagline" data-i18n="hero_tagline">॥ वन्दे संस्कृतम् ॥</h1>
         <div class="hero-search-container">
-            <input type="text" id="heroSearchInput" class="hero-search-bar sanskrit-text" data-i18n-placeholder="hero_search_placeholder" placeholder="शिक्षापत्रीम् अन्वेषय..." onclick="window.location.href='search.html'">
-            <button class="hero-search-btn" onclick="window.location.href='search.html'"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <input type="text" id="searchInput" class="hero-search-bar sanskrit-text" data-i18n-placeholder="hero_search_placeholder" placeholder="शिक्षापत्रीम् अन्वेषय..." onkeydown="if(event.key==='Enter'){ performSearch(); }">
+            <button class="hero-search-btn" onclick="performSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+        <div id="searchResults" class="search-results" style="max-width:900px;margin:18px auto 0;">
+            <!-- Inline search results will appear here when searching from the homepage -->
         </div>
         <p class="hero-subtext" data-i18n="hero_search_subtext">धातु, प्रत्यय या सूत्र संख्या से खोजें (उदा: 1.1.1)</p>
     </section>
 
     <!-- 3D book navigation under the scroll image (Ancient Granthas) -->
-    <div class="main-nav-container granthas-container" style="background: transparent; box-shadow: none; padding: 20px 0 160px; backdrop-filter: none;">
+    <div class="main-nav-container granthas-container" style="background: transparent; box-shadow: none; padding: 20px 0 40px; backdrop-filter: none;">
         <h2 class="section-title granthas-title" data-i18n="section_granthas" style="text-align: center; font-family: 'Tiro Devanagari Sanskrit', serif; color: #581818; margin-bottom: 30px; font-weight: 900; letter-spacing: 2px; width: auto; display: table; margin: 0 auto 10px;">॥ ग्रन्थाः ॥</h2>
         <div class="section-divider"></div>
         <div class="book-nav" id="nav-menu">
@@ -120,7 +123,7 @@
             </a>
 
             <!-- 4. Dhatus -->
-            <a href="#" class="book-item ancient-book" title="Dhatus">
+            <a href="dhatus.html" class="book-item ancient-book" title="Dhatus">
                 <div class="book-back"></div>
                 <div class="book-spine"></div>
                 <div class="book-pages"></div>
@@ -132,7 +135,7 @@
             </a>
 
             <!-- 5. Shabda Rupa -->
-            <a href="#" class="book-item ancient-book" title="Shabda Rupa">
+            <a href="shabda_rupa.html" class="book-item ancient-book" title="Shabda Rupa">
                 <div class="book-back"></div>
                 <div class="book-spine"></div>
                 <div class="book-pages"></div>
@@ -144,7 +147,7 @@
             </a>
 
             <!-- 6. Dhatu Rupa -->
-            <a href="#" class="book-item ancient-book" title="Dhatu Rupa">
+            <a href="dhatu_rupa.html" class="book-item ancient-book" title="Dhatu Rupa">
                 <div class="book-back"></div>
                 <div class="book-spine"></div>
                 <div class="book-pages"></div>
@@ -157,6 +160,19 @@
 
 
         </div>
+    </div>
+    <!-- Add Q&A AI book tile -->
+    <div style="max-width:1100px;margin:8px auto 24px;text-align:center;">
+        <a href="qna.html" class="book-item ancient-book" title="Q&A AI" style="display:inline-block;">
+            <div class="book-back"></div>
+            <div class="book-spine"></div>
+            <div class="book-pages"></div>
+            <div class="book-cover">
+                <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+                <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+                <span class="book-text sanskrit-text">Q&amp;A AI</span>
+            </div>
+        </a>
     </div>
     <!-- sutra dropdown removed in favor of a dedicated sutras.html page to avoid content displacement -->
 </section>

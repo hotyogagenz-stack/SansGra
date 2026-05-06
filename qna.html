@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Q&A AI</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <div id="site-header"></div>
+  <main class="container">
+    <section class="sutras-page">
+      <h1>Q&amp;A AI</h1>
+      <p>Type a question. The system will try to answer from the local database first. You can optionally send the question to an external AI in future.</p>
+
+      <div style="max-width:800px;margin:18px auto;">
+        <label for="qnaInput">Your question</label>
+        <input id="qnaInput" type="text" placeholder="Type your question here..." />
+        <div style="margin-top:10px;display:flex;gap:8px;">
+          <button onclick="answerFromLocal()">Answer from DB</button>
+          <button onclick="sendToAI()">Send to AI (future)</button>
+        </div>
+        <div id="qnaResult" style="margin-top:18px;padding:12px;border:1px solid var(--border-light);border-radius:8px;background:var(--card-light);"></div>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+
+  <script>
+    // Simple local answerer: searches dhatus, sutras, examples and pratyayas for matches
+    function answerFromLocal() {
+      const q = document.getElementById('qnaInput').value.trim().toLowerCase();
+      const out = document.getElementById('qnaResult');
+      if (!q) { out.innerHTML = '<em>Please enter a question.</em>'; return; }
+
+      // Basic search across loaded data
+      const results = [];
+      try {
+        // search sutras
+        if (window.sutrasData && window.sutrasData.sutras) {
+          window.sutrasData.sutras.forEach(s => {
+            if ((s.name||'').toLowerCase().includes(q) || (s.desc||'').toLowerCase().includes(q) || (s.id||'').toLowerCase().includes(q)) results.push({type:'sutra', item: s});
+          });
+        }
+        // search dhatus
+        if (window.sanskritDatabase && window.sanskritDatabase.dhatus) {
+          Object.entries(window.sanskritDatabase.dhatus).forEach(([k,d]) => {
+            if ((k||'').toLowerCase().includes(q) || (d.label||'').toLowerCase().includes(q) || (d.clean||'').toLowerCase().includes(q)) results.push({type:'dhatu', item: {key:k, ...d}});
+          });
+        }
+        // examples
+        if (window.sanskritDatabase && window.sanskritDatabase.examples) {
+          (window.sanskritDatabase.examples || []).forEach(ex => {
+            if ((ex.input||'').toLowerCase().includes(q) || (ex.output||'').toLowerCase().includes(q) || (ex.desc||'').toLowerCase().includes(q)) results.push({type:'example', item: ex});
+          });
+        }
+      } catch(e) { console.warn(e); }
+
+      if (results.length === 0) {
+        out.innerHTML = '<em>No strong match found locally. You can try "Send to AI" for an external answer.</em>';
+        return;
+      }
+
+      // show top 5
+      out.innerHTML = '';
+      results.slice(0,5).forEach(r => {
+        const el = document.createElement('div');
+        el.style.marginBottom = '10px';
+        if (r.type === 'sutra') {
+          el.innerHTML = `<strong>(${r.item.id}) ${r.item.name}</strong><div style="margin-top:6px">${r.item.desc || ''}</div>`;
+        } else if (r.type === 'dhatu') {
+          el.innerHTML = `<strong>Dhatu: ${r.item.key}</strong><div style="margin-top:6px">${r.item.label || ''}</div>`;
+        } else if (r.type === 'example') {
+          el.innerHTML = `<strong>Example:</strong><div style="margin-top:6px">${r.item.input || ''} → ${r.item.output || ''}</div>`;
+        }
+        out.appendChild(el);
+      });
+    }
+
+    // Placeholder: hook for future AI integration. Currently shows a message.
+    function sendToAI() {
+      const q = document.getElementById('qnaInput').value.trim();
+      const out = document.getElementById('qnaResult');
+      if (!q) { out.innerHTML = '<em>Please enter a question.</em>'; return; }
+      out.innerHTML = '<em>AI integration not configured. This will send the question to an AI service in future.</em>';
+    }
+  </script>
+</body>
+</html>
