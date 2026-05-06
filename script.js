@@ -989,7 +989,7 @@ function toggleMobileMenu() {
     const icon = document.getElementById("menu-icon");
     nav.classList.toggle("active");
     if(nav.classList.contains("active")) { icon.classList.replace("fa-bars", "fa-xmark"); document.body.style.overflow = "hidden"; } 
-    else { icon.classList.replace("fa-xmark", "fa-bars"); document.body.style.overflow = "auto"; }
+    else { icon.classList.replace("fa-xmark", "fa-bars"); document.body.style.overflow = ""; }
 }
 function closeMobileMenu() { if(window.innerWidth <= 768) toggleMobileMenu(); }
 function toggleSutraDropdown(event) { event.stopPropagation(); document.getElementById("sutraDropdown").classList.toggle("show"); }
@@ -1780,22 +1780,9 @@ async function loadSharedHeaderFooter() {
             const headerHtml = await headerRes.text();
             document.getElementById('site-header')?.insertAdjacentHTML('afterbegin', headerHtml);
             
-            // Hide/Show specific header parts based on page
-            const isHome = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/') || window.location.pathname === '';
-            
-            if (isHome) {
-                // Home page: hide text nav, show mini header
-                const textNav = document.querySelector('.main-text-nav-container');
-                if (textNav) textNav.style.display = 'none';
-            } else {
-                // Other pages: show text nav, hide the "red" mini header
-                const miniHeader = document.querySelector('.mini-header');
-                if (miniHeader) miniHeader.style.display = 'none';
-                
-                // Ensure main nav is visible
-                const textNav = document.querySelector('.main-text-nav-container');
-                if (textNav) textNav.style.display = 'block';
-            }
+            // Show mini-header on all pages (it's the only navigation in header.html)
+            const miniHeader = document.querySelector('.mini-header');
+            if (miniHeader) miniHeader.style.display = 'flex';
         }
         if (footerRes.ok) {
             const footerHtml = await footerRes.text();
@@ -1803,6 +1790,61 @@ async function loadSharedHeaderFooter() {
         }
     } catch (e) { console.warn('Could not load shared header/footer', e); }
 }
+
+// Helpers for the minimal mini-menu
+function closeMobileMenu() {
+    const dd = document.getElementById('miniMenuDropdown');
+    const btn = document.getElementById('miniMenuBtn');
+    if (dd) { dd.style.display = 'none'; dd.setAttribute('aria-hidden', 'true'); }
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+}
+
+function toggleMiniMenu(ev) {
+    ev = ev || window.event;
+    const dd = document.getElementById('miniMenuDropdown');
+    const btn = document.getElementById('miniMenuBtn');
+    if (!dd) return;
+    const isOpen = dd.style.display === 'block' || dd.getAttribute('aria-hidden') === 'false';
+    if (isOpen) {
+        dd.style.display = 'none';
+        dd.setAttribute('aria-hidden', 'true');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+    } else {
+        dd.style.display = 'block';
+        dd.setAttribute('aria-hidden', 'false');
+        if (btn) btn.setAttribute('aria-expanded', 'true');
+    }
+}
+
+// Ensure mini-header is visible and main text-nav hidden (user asked: top line shows only Home)
+document.addEventListener('DOMContentLoaded', function() {
+    const mini = document.querySelector('.mini-header');
+    if (mini) mini.style.display = 'flex';
+    const textNav = document.querySelector('.main-text-nav-container');
+    if (textNav) textNav.style.display = 'none';
+});
+
+// Safety: ensure no scroll-lock remains from mobile menu (fixes 'not able to scroll')
+function ensureScrollEnabled() {
+    try {
+        // remove any overflow:hidden accidentally left
+        if (document.body.style.overflow === 'hidden') document.body.style.overflow = '';
+        const nav = document.getElementById('nav-menu');
+        const icon = document.getElementById('menu-icon');
+        if (nav && nav.classList.contains('active')) {
+            nav.classList.remove('active');
+            if (icon && icon.classList) icon.classList.replace('fa-xmark','fa-bars');
+        }
+    } catch(e) { /* ignore */ }
+}
+window.addEventListener('load', ensureScrollEnabled);
+window.addEventListener('resize', () => { if (window.innerWidth > 768) ensureScrollEnabled(); });
+
+// Placeholder global function to send a question to an external AI service in future.
+// Currently a no-op that returns a rejected promise. Replace implementation when integrating a backend or API key.
+window.sendToAI = async function(question) {
+    return Promise.reject(new Error('AI integration not configured. Implement sendToAI with your AI provider.'));
+};
 
 document.addEventListener('DOMContentLoaded', async function() {
     await loadSharedHeaderFooter();
@@ -1827,6 +1869,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         if (searchInput) searchInput.focus();
     }
+    // Ensure main nav container (home menu) only shows on the homepage
+    try {
+        const isHome = window.location.pathname.endsWith('index.html') || window.location.pathname.endsWith('/') || window.location.pathname === '';
+        document.querySelectorAll('.main-nav-container').forEach(el => {
+            el.style.display = isHome ? '' : 'none';
+        });
+    } catch(e) {}
 });
 
 function getSutraDetails(sutraId) {

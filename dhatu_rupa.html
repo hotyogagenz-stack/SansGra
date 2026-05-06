@@ -10,12 +10,15 @@
   <script defer src="animations.js"></script>
   <script defer src="script.js"></script>
 </head>
-<body>
-  <div id="site-header"></div>
-  <div id="floating-sanskrit-container"></div>
-  <main class="container" style="position: relative; z-index: 10;">
+  <body>
+    <div id="site-header"></div>
+    <div id="floating-sanskrit-container"></div>
+    <main class="container full-width" style="position: relative; z-index: 10;">
     <section class="sutras-page">
-      <h1>धातुरूपाणि (Dhatu Rupa)</h1>
+      <div class="sutra-hero-row" style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+        <button class="menu-mini-btn" aria-hidden="true" onclick="toggleMiniMenu(event)" style="background:none;border:none;font-size:20px;">☰</button>
+        <h1 style="margin:0;">धातुरूपाणि (Dhatu Rupa)</h1>
+      </div>
       <p>लकारानुसारं धातुरूपाणि पश्यन्तु</p>
       <div id="lakaraList" class="sutra-list">
       </div>
@@ -41,42 +44,33 @@
       if (!container) return;
       container.innerHTML = '';
       
-      lakaras.forEach((lakara, index) => {
-        const card = document.createElement('div');
-        card.className = 'sutra-card';
-        const header = document.createElement('div');
-        header.className = 'sutra-card-header sanskrit-text';
-        header.textContent = lakara;
-        
-        const desc = document.createElement('div');
-        desc.className = 'sutra-card-desc';
-        desc.innerHTML = `
-            <div style="padding: 15px;">
-                <p style="margin-bottom: 10px;">धातुं प्रविशन्तु:</p>
-                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                    <input type="text" id="dhatuInput_${index}" class="hero-search-bar sanskrit-text" placeholder="उदा. पठ्, गम्, लिख्" style="flex:1;">
-                    <button class="hero-search-btn" style="position: static; transform: none;" onclick="showDhatuRupa(${index}, '${lakara}')">
-                        <i class="fa-solid fa-bolt"></i>
-                    </button>
-                </div>
-                <div id="dhatuResult_${index}" class="sanskrit-text" style="display:none; padding: 15px; background: rgba(0,0,0,0.05); border-radius: 8px;">
-                    <!-- Result will be shown here -->
-                </div>
-            </div>
-        `;
-        
-        card.appendChild(header);
-        card.appendChild(desc);
-        container.appendChild(card);
-      });
+    lakaras.forEach((lakara, index) => {
+    const item = document.createElement('div');
+    item.className = 'sutra-item sutra-card';
+    const header = document.createElement('div'); header.className = 'sutra-card-header sanskrit-text'; header.textContent = lakara;
+    const desc = document.createElement('div'); desc.className = 'sutra-card-desc';
+    desc.innerHTML = `
+      <div style="padding: 15px;">
+        <p style="margin-bottom: 10px;">धातुं प्रविशन्तु:</p>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+          <input type="text" id="dhatuInput_${index}" class="hero-search-bar sanskrit-text" placeholder="उदा. पठ्, गम्, लिख्" style="flex:1;">
+          <button class="hero-search-btn" style="position: static; transform: none;" onclick="showDhatuRupa(${index}, '${lakara}')">
+            <i class="fa-solid fa-bolt"></i>
+          </button>
+        </div>
+        <div id="dhatuResult_${index}" class="sanskrit-text" style="display:none; padding: 15px; background: rgba(0,0,0,0.05); border-radius: 8px;">
+          <!-- Result will be shown here -->
+        </div>
+      </div>
+    `;
+    item.appendChild(header); item.appendChild(desc); container.appendChild(item);
+    });
 
-      container.querySelectorAll('.sutra-card').forEach(card => {
-        const hdr = card.firstElementChild;
-        hdr.addEventListener('click', (ev) => {
-          ev.stopPropagation();
-          card.classList.toggle('active');
-        });
-      });
+    container.querySelectorAll('.sutra-item').forEach(item => {
+    const hdr = item.querySelector('.sutra-card-header'); if(!hdr) return;
+    hdr.setAttribute('tabindex','0'); hdr.setAttribute('role','button'); hdr.setAttribute('aria-expanded','false');
+    hdr.addEventListener('click', (ev) => { ev.stopPropagation(); container.querySelectorAll('.sutra-item.active').forEach(act=>{ if(act!==item){ act.classList.remove('active'); act.querySelector('.sutra-card-header')?.setAttribute('aria-expanded','false'); } }); const becoming = item.classList.toggle('active'); hdr.setAttribute('aria-expanded', becoming ? 'true' : 'false'); });
+    });
     }
 
     function showDhatuRupa(index, lakara) {
