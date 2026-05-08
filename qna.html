@@ -269,10 +269,10 @@
         const isUser = sender === 'user';
         
         const row = document.createElement('div');
-        row.className = \`message-row \${isUser ? 'user' : 'ai'}\`;
+        row.className = `message-row ${isUser ? 'user' : 'ai'}`;
         
         const avatar = document.createElement('div');
-        avatar.className = \`avatar \${isUser ? 'user' : 'ai'}\`;
+        avatar.className = `avatar ${isUser ? 'user' : 'ai'}`;
         avatar.innerHTML = isUser ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-robot"></i>';
         
         const content = document.createElement('div');
@@ -291,7 +291,7 @@
         const historyList = document.getElementById('historyList');
         const item = document.createElement('div');
         item.className = 'history-item';
-        item.innerHTML = \`<i class="fa-regular fa-message"></i> \${question}\`;
+        item.innerHTML = `<i class="fa-regular fa-message"></i> ${question}`;
         
         // When clicking a history item, it puts the question back into the chat
         item.onclick = function() {
@@ -331,11 +331,11 @@
 
     function startNewChat() {
         const msgContainer = document.getElementById('chatMessages');
-        msgContainer.innerHTML = \`
+        msgContainer.innerHTML = `
         <div class="message-row ai">
           <div class="avatar ai"><i class="fa-solid fa-robot"></i></div>
           <div class="message-content">Hello! I am your Sanskrit AI Assistant. Ask me anything about Panini, grammar rules, or translations.</div>
-        </div>\`;
+        </div>`;
     }
 
     window.addEventListener('load', loadQA);
