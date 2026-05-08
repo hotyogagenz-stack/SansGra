@@ -1,9 +1,5 @@
 <!-- Shared header fragment: mini-header only -->
 <div class="mini-header">
-    <div class="header-nav-group" style="display: flex; gap: 8px;">
-        <button class="nav-btn" onclick="history.back()" title="Go Back">🔙</button>
-        <button class="nav-btn" onclick="history.forward()" title="Go Forward">⏩</button>
-    </div>
     <a id="miniBrand" class="mini-brand sanskrit-text" data-i18n="brand" href="index.html"
         onclick="closeMobileMenu()">Home</a>
     <div class="mini-controls">
@@ -34,5 +30,9 @@
                 <a href="about.html" class="mini-menu-item" data-i18n="about" onclick="closeMobileMenu()">About Us</a>
             </div>
         </div>
+    </div>
+    <div class="header-nav-group" style="display: flex; gap: 8px; margin-left: 15px;">
+        <button class="nav-btn" onclick="history.back()" title="Go Back">🔙</button>
+        <button class="nav-btn" onclick="history.forward()" title="Go Forward">⏩</button>
     </div>
 </div>
