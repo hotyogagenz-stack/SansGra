@@ -5,86 +5,340 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Q&A AI</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script defer src="script.js"></script>
-</head>
-<body>
-  <div id="site-header"></div>
-  <main class="container full-width">
-    <section class="sutras-page">
-      <h1>Q&amp;A AI</h1>
-      <p>Type a question. The system will try to answer from the local database first. You can optionally send the question to an external AI in future.</p>
+  <style>
+    /* ChatGPT-like Layout */
+    body {
+        margin: 0;
+        height: 100vh;
+        height: 100dvh; /* handle mobile address bar */
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* prevent body scroll */
+    }
+    
+    .chat-layout {
+        display: flex;
+        flex: 1;
+        width: 100%;
+        background-color: var(--bg-light);
+        overflow: hidden; /* prevents layout from growing past screen */
+    }
 
-      <div style="margin:18px 0;">
-        <label for="qnaInput">Your question</label>
-        <input id="qnaInput" type="text" placeholder="Type your question here..." oninput="answerFromLocal()" />
-        <div style="margin-top:10px;display:none;gap:8px;">
-          <button onclick="answerFromLocal()">Answer from DB</button>
-          <button onclick="sendToAI()">Send to AI (future)</button>
-        </div>
-        <div id="qnaResult" style="margin-top:18px;padding:12px;border:1px solid var(--border-light);border-radius:8px;background:var(--card-light);"></div>
+    /* Sidebar */
+    .chat-sidebar {
+        width: 260px;
+        background-color: #202123;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        transition: width 0.3s;
+        flex-shrink: 0;
+    }
+    
+    .sidebar-header {
+        padding: 10px;
+    }
+
+    .new-chat-btn {
+        width: 100%;
+        padding: 12px;
+        background-color: transparent;
+        border: 1px solid rgba(255,255,255,0.2);
+        color: white;
+        border-radius: 6px;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.2s;
+    }
+
+    .new-chat-btn:hover {
+        background-color: rgba(255,255,255,0.1);
+    }
+
+    .history-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    .history-item {
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 6px;
+        cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.9em;
+        color: #ececf1;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .history-item:hover {
+        background-color: #2a2b32;
+    }
+
+    /* Main Chat Area */
+    .chat-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background-color: #ffffff;
+        position: relative;
+    }
+
+    body.dark .chat-main {
+        background-color: #343541;
+    }
+
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding-bottom: 120px; /* space for input area */
+    }
+
+    .message-row {
+        padding: 24px 20%;
+        display: flex;
+        gap: 20px;
+    }
+
+    .message-row.user {
+        background-color: transparent;
+    }
+
+    .message-row.ai {
+        background-color: #f7f7f8;
+    }
+
+    body.dark .message-row.ai {
+        background-color: #444654;
+    }
+
+    .avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    .avatar.user { background-color: #10a37f; color: white; }
+    .avatar.ai { background-color: #701c1c; color: white; }
+
+    .message-content {
+        flex: 1;
+        line-height: 1.6;
+        color: #374151;
+        font-size: 16px;
+    }
+
+    body.dark .message-content {
+        color: #d1d5db;
+    }
+
+    /* Input Area */
+    .chat-input-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 24px 20%;
+        background-image: linear-gradient(180deg, rgba(255,255,255,0) 0%, #ffffff 50%);
+        box-sizing: border-box;
+    }
+
+    body.dark .chat-input-container {
+        background-image: linear-gradient(180deg, rgba(52,53,65,0) 0%, #343541 50%);
+    }
+
+    .chat-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background-color: #ffffff;
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    }
+
+    body.dark .chat-input-wrapper {
+        background-color: #40414f;
+        border-color: rgba(255,255,255,0.1);
+    }
+
+    .chat-input {
+        flex: 1;
+        padding: 16px;
+        padding-right: 50px;
+        border: none;
+        background: transparent;
+        font-size: 16px;
+        outline: none;
+        color: #374151;
+    }
+
+    body.dark .chat-input { color: #ececf1; }
+
+    .send-btn {
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        background: transparent;
+        border: none;
+        color: #10a37f;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 5px;
+    }
+
+    .send-btn:hover { color: #0d8a6a; }
+    
+    @media (max-width: 768px) {
+        .chat-sidebar { display: none; }
+        .message-row { padding: 15px; }
+        .chat-input-container { padding: 15px; }
+    }
+  </style>
+<body>
+  <div id="site-header" style="z-index:100; flex-shrink: 0;"></div>
+  <div class="chat-layout">
+    <aside class="chat-sidebar">
+      <div class="sidebar-header">
+        <button class="new-chat-btn" onclick="startNewChat()"><i class="fa-solid fa-plus"></i> New chat</button>
       </div>
-    </section>
-  </main>
-  <div id="site-footer"></div>
+      <div class="history-list" id="historyList">
+        <!-- History populates here -->
+      </div>
+    </aside>
+
+    <main class="chat-main">
+      <div class="chat-messages" id="chatMessages">
+        <div class="message-row ai">
+          <div class="avatar ai"><i class="fa-solid fa-robot"></i></div>
+          <div class="message-content">Hello! I am your Sanskrit AI Assistant. Ask me anything about Panini, grammar rules, or translations.</div>
+        </div>
+      </div>
+      
+      <div class="chat-input-container">
+        <div class="chat-input-wrapper">
+          <input type="text" class="chat-input" id="qnaInput" placeholder="Send a message..." onkeydown="handleEnter(event)" autocomplete="off">
+          <button class="send-btn" onclick="askQuestion()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </main>
+  </div>
 
   <script>
-    // Simple local answerer: searches dhatus, sutras, examples and pratyayas for matches
-    function answerFromLocal() {
-      const q = document.getElementById('qnaInput').value.trim().toLowerCase();
-      const out = document.getElementById('qnaResult');
-      if (!q) { out.innerHTML = '<em>Please enter a question.</em>'; return; }
-
-      // Basic search across loaded data
-      const results = [];
+    let qaData = [];
+    
+    // Load the QA Data
+    async function loadQA() {
       try {
-        // search sutras
-        if (window.sutrasData && window.sutrasData.sutras) {
-          window.sutrasData.sutras.forEach(s => {
-            if ((s.name||'').toLowerCase().includes(q) || (s.desc||'').toLowerCase().includes(q) || (s.id||'').toLowerCase().includes(q)) results.push({type:'sutra', item: s});
-          });
-        }
-        // search dhatus
-        if (window.sanskritDatabase && window.sanskritDatabase.dhatus) {
-          Object.entries(window.sanskritDatabase.dhatus).forEach(([k,d]) => {
-            if ((k||'').toLowerCase().includes(q) || (d.label||'').toLowerCase().includes(q) || (d.clean||'').toLowerCase().includes(q)) results.push({type:'dhatu', item: {key:k, ...d}});
-          });
-        }
-        // examples
-        if (window.sanskritDatabase && window.sanskritDatabase.examples) {
-          (window.sanskritDatabase.examples || []).forEach(ex => {
-            if ((ex.input||'').toLowerCase().includes(q) || (ex.output||'').toLowerCase().includes(q) || (ex.desc||'').toLowerCase().includes(q)) results.push({type:'example', item: ex});
-          });
-        }
-      } catch(e) { console.warn(e); }
-
-      if (results.length === 0) {
-        out.innerHTML = '<em>No strong match found locally. You can try "Send to AI" for an external answer.</em>';
-        return;
+        const res = await fetch('qa_data.json');
+        qaData = await res.json();
+      } catch (err) {
+        console.error("Failed to load QA Data", err);
       }
+    }
 
-      // show top 5
-      out.innerHTML = '';
-      results.slice(0,5).forEach(r => {
-        const el = document.createElement('div');
-        el.style.marginBottom = '10px';
-        if (r.type === 'sutra') {
-          el.innerHTML = `<strong>(${r.item.id}) ${r.item.name}</strong><div style="margin-top:6px">${r.item.desc || ''}</div>`;
-        } else if (r.type === 'dhatu') {
-          el.innerHTML = `<strong>Dhatu: ${r.item.key}</strong><div style="margin-top:6px">${r.item.label || ''}</div>`;
-        } else if (r.type === 'example') {
-          el.innerHTML = `<strong>Example:</strong><div style="margin-top:6px">${r.item.input || ''} → ${r.item.output || ''}</div>`;
+    function findAnswer(question) {
+        // Lowercase and trim for basic matching
+        const qLower = question.toLowerCase().trim();
+        
+        for(let item of qaData) {
+            // Check if the user's question is contained within the dataset question or vice-versa
+            if(item.q.toLowerCase().includes(qLower) || qLower.includes(item.q.toLowerCase())) {
+                return item.a;
+            }
         }
-        out.appendChild(el);
-      });
+        return "I'm sorry, I don't have an answer for that yet. Could you try asking something else about Sanskrit grammar or Panini?";
     }
 
-    // Placeholder: hook for future AI integration. Currently shows a message.
-    function sendToAI() {
-      const q = document.getElementById('qnaInput').value.trim();
-      const out = document.getElementById('qnaResult');
-      if (!q) { out.innerHTML = '<em>Please enter a question.</em>'; return; }
-      out.innerHTML = '<em>AI integration not configured. This will send the question to an AI service in future.</em>';
+    function appendMessage(sender, text) {
+        const msgContainer = document.getElementById('chatMessages');
+        const isUser = sender === 'user';
+        
+        const row = document.createElement('div');
+        row.className = \`message-row \${isUser ? 'user' : 'ai'}\`;
+        
+        const avatar = document.createElement('div');
+        avatar.className = \`avatar \${isUser ? 'user' : 'ai'}\`;
+        avatar.innerHTML = isUser ? '<i class="fa-solid fa-user"></i>' : '<i class="fa-solid fa-robot"></i>';
+        
+        const content = document.createElement('div');
+        content.className = 'message-content';
+        content.innerText = text;
+        
+        row.appendChild(avatar);
+        row.appendChild(content);
+        msgContainer.appendChild(row);
+        
+        // Scroll to bottom
+        msgContainer.scrollTop = msgContainer.scrollHeight;
     }
+
+    function addToHistory(question) {
+        const historyList = document.getElementById('historyList');
+        const item = document.createElement('div');
+        item.className = 'history-item';
+        item.innerHTML = \`<i class="fa-regular fa-message"></i> \${question}\`;
+        
+        // When clicking a history item, it puts the question back into the chat
+        item.onclick = function() {
+            document.getElementById('qnaInput').value = question;
+        };
+        
+        // Prepend so latest is on top
+        historyList.insertBefore(item, historyList.firstChild);
+    }
+
+    function askQuestion() {
+        const input = document.getElementById('qnaInput');
+        const text = input.value.trim();
+        if(!text) return;
+        
+        // 1. Show User Message
+        appendMessage('user', text);
+        
+        // 2. Add to History
+        addToHistory(text);
+        
+        // 3. Clear Input
+        input.value = '';
+        
+        // 4. Show AI answer...
+        setTimeout(() => {
+            const answer = findAnswer(text);
+            appendMessage('ai', answer);
+        }, 300);
+    }
+
+    function handleEnter(e) {
+        if(e.key === 'Enter') {
+            askQuestion();
+        }
+    }
+
+    function startNewChat() {
+        const msgContainer = document.getElementById('chatMessages');
+        msgContainer.innerHTML = \`
+        <div class="message-row ai">
+          <div class="avatar ai"><i class="fa-solid fa-robot"></i></div>
+          <div class="message-content">Hello! I am your Sanskrit AI Assistant. Ask me anything about Panini, grammar rules, or translations.</div>
+        </div>\`;
+    }
+
+    window.addEventListener('load', loadQA);
   </script>
 </body>
 </html>

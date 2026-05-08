@@ -1112,15 +1112,35 @@ function getSuggestions(query, type) {
     const maxResults = 10;
     let results = [];
 
+    // Convert query to Devanagari if it's Hinglish/English
+    let devanagariQuery = query;
+    if (!isDevanagari) {
+        // First check hinglishWordMap for common words
+        if (hinglishWordMap[lowerQuery]) {
+            devanagariQuery = hinglishWordMap[lowerQuery];
+        } else {
+            // Try transliteration
+            devanagariQuery = romanToDevanagari(query);
+        }
+    }
+
     if (type === 'upasarga') {
         const upasargas = sanskritDatabase.upasargas || [];
         results = upasargas.filter(u => {
             if (!u || !u.id) return false;
             const label = (u.label || '').toLowerCase();
             const id = (u.id || '').toLowerCase();
-            return label.includes(lowerQuery) || id.includes(lowerQuery);
+            // Search in Devanagari, romanized, and label
+            const romanId = devanagariToRomanAscii(u.id).toLowerCase();
+            const romanLabel = devanagariToRomanAscii(u.label || '').toLowerCase();
+            return label.includes(lowerQuery) ||
+                   id.includes(lowerQuery) ||
+                   romanId.includes(lowerQuery) ||
+                   romanLabel.includes(lowerQuery) ||
+                   u.id.includes(devanagariQuery) ||
+                   (u.label && u.label.includes(devanagariQuery));
         }).slice(0, maxResults);
-    } 
+    }
     else if (type === 'dhatu') {
         const dhatus = sanskritDatabase.dhatus || {};
         results = Object.entries(dhatus)
@@ -1128,9 +1148,15 @@ function getSuggestions(query, type) {
                 if (!d) return false;
                 const label = (d.label || '').toLowerCase();
                 const clean = (d.clean || '').toLowerCase();
-                return key.toLowerCase().includes(lowerQuery) || 
+                // Search in Devanagari, romanized key, and label
+                const romanKey = devanagariToRomanAscii(key).toLowerCase();
+                const romanLabel = devanagariToRomanAscii(d.label || '').toLowerCase();
+                return key.toLowerCase().includes(lowerQuery) ||
                        label.toLowerCase().includes(lowerQuery) ||
-                       clean.includes(lowerQuery);
+                       clean.includes(lowerQuery) ||
+                       romanKey.includes(lowerQuery) ||
+                       romanLabel.includes(lowerQuery) ||
+                       key.includes(devanagariQuery);
             })
             .slice(0, maxResults)
             .map(([key, d]) => ({ ...d, key, label: d.label }));
@@ -1140,7 +1166,13 @@ function getSuggestions(query, type) {
         results = Object.entries(pratyayas)
             .filter(([key, p]) => {
                 if (!p) return false;
-                return key.toLowerCase().includes(lowerQuery);
+                // Search in Devanagari, romanized key, and meaning
+                const romanKey = devanagariToRomanAscii(key).toLowerCase();
+                const meaning = `${p.real || ''} ${p.type || ''}`.toLowerCase();
+                return key.toLowerCase().includes(lowerQuery) ||
+                       romanKey.includes(lowerQuery) ||
+                       meaning.includes(lowerQuery) ||
+                       key.includes(devanagariQuery);
             })
             .slice(0, maxResults)
             .map(([key, p]) => ({ ...p, key }));
@@ -1160,30 +1192,46 @@ function renderSuggestions(suggestions, dropdown, dropdownId) {
     suggestions.forEach((item, index) => {
         let text = '';
         let label = '';
+        let hinglish = '';
         
         if (item.key && item.label) {
             // Dhatu format
             text = item.key;
             label = item.label;
+            hinglish = devanagariToRomanAscii(item.key);
         } else if (item.id) {
             // Upasarga format
             text = item.id;
             label = item.label || '';
+            hinglish = devanagariToRomanAscii(item.id);
         } else if (item.key) {
             // Pratyaya format
             text = item.key;
-            label = `type: ${item.type || ''} ${item.real ? '| real: ' + item.real : ''}`.trim();
+            label = `${item.real || ''} ${item.type || ''} ${item.lopa || ''}`.trim();
+            hinglish = devanagariToRomanAscii(item.key);
         }
 
         html += `
             <div class="suggestion-item" data-value="${text}" data-index="${index}" onclick="selectSuggestion('${dropdownId}', '${text.replace(/'/g, "\\'")}')">
-                <div>
-                    <div class="suggestion-text">${text}</div>
-                    <div class="suggestion-label">${label}</div>
+                <div class="suggestion-main">
+                    <div class="suggestion-devanagari sanskrit-text">${text}</div>
+                    <div class="suggestion-details">
+                        <div class="suggestion-hinglish">${hinglish}</div>
+                        <div class="suggestion-meaning">${label}</div>
+                    </div>
                 </div>
             </div>
         `;
     });
+
+    // Add keyboard navigation hint
+    html += `
+        <div class="suggestion-kbd-hint">
+            <span><kbd>↑</kbd> <kbd>↓</kbd> Navigate</span>
+            <span><kbd>Enter</kbd> Select</span>
+            <span><kbd>Esc</kbd> Close</span>
+        </div>
+    `;
 
     dropdown.innerHTML = html;
     dropdown.classList.add('show');
@@ -1251,21 +1299,13 @@ function closeAllSuggestions() {
     activeSuggestionIndex = -1;
 }
 
-// Initialize suggestion system
+// Initialize suggestion system - called after database is loaded
 function initSuggestionSystem() {
     // Check if we're on the builder page by looking for the input elements
     if (document.getElementById('upasarga') || document.getElementById('dhatu') || document.getElementById('pratyaya')) {
-        // DOM is already loaded or loading - set up listeners
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', setupSuggestionListeners);
-        } else {
-            // DOM is already loaded
-            setupSuggestionListeners();
-        }
+        setupSuggestionListeners();
     }
 }
-
-initSuggestionSystem();
 
 
 // Comprehensive translations for all pages
@@ -1853,6 +1893,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     // Ensure database is loaded before translations and search
     await loadDatabase();
+
+    // Initialize suggestion system after database is loaded
+    initSuggestionSystem();
 
     const saved = localStorage.getItem('siteLang') || 'hi';
     applyTranslationsExtended(saved);

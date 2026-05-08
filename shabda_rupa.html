@@ -49,16 +49,38 @@
       "व्यंजनान्त पुल्लिंग", "व्यंजनान्त स्त्रीलिंग", "व्यंजनान्त नपुंसकलिंग"
     ];
 
-    function renderShabdas() {
+    async function renderShabdas() {
       const container = document.getElementById('shabdaList');
       if (!container) return;
       container.innerHTML = '';
       
+      let shabdaData = {};
+      try {
+        const res = await fetch('shabda_rupa.json');
+        shabdaData = await res.json();
+      } catch(e) {
+        console.error("Could not load shabda_rupa.json", e);
+      }
+      
       shabdas.forEach(shabda => {
         const item = document.createElement('div');
         item.className = 'sutra-item sutra-card';
-        const header = document.createElement('div'); header.className = 'sutra-card-header sanskrit-text'; header.textContent = shabda;
-        const desc = document.createElement('div'); desc.className = 'sutra-card-desc'; desc.innerHTML = '<p style="margin:0;color:#c7c7c7;">रूपाणि शीघ्रमेव योजयिष्यन्ते।</p>';
+        const header = document.createElement('div'); header.className = 'sutra-card-header sanskrit-text'; header.innerHTML = `<span>${shabda}</span>`;
+        const desc = document.createElement('div'); desc.className = 'sutra-card-desc'; 
+        
+        if (shabdaData[shabda] && shabdaData[shabda].length > 0) {
+            let html = '<table style="width:100%;border-collapse:collapse;margin-top:10px;text-align:left;">';
+            html += '<thead style="background:var(--card-bg);"><tr><th style="padding:8px;border-bottom:2px solid var(--border-light);">विभक्ति</th><th style="padding:8px;border-bottom:2px solid var(--border-light);">एकवचनम्</th><th style="padding:8px;border-bottom:2px solid var(--border-light);">द्विवचनम्</th><th style="padding:8px;border-bottom:2px solid var(--border-light);">बहुवचनम्</th></tr></thead>';
+            html += '<tbody>';
+            shabdaData[shabda].forEach(r => {
+                html += `<tr><td style="padding:8px;border-bottom:1px solid var(--border-light);font-weight:600;">${r.vibhakti}</td><td style="padding:8px;border-bottom:1px solid var(--border-light);">${r.ekavachanam}</td><td style="padding:8px;border-bottom:1px solid var(--border-light);">${r.dvivachanam}</td><td style="padding:8px;border-bottom:1px solid var(--border-light);">${r.bahuvachanam}</td></tr>`;
+            });
+            html += '</tbody></table>';
+            desc.innerHTML = html;
+        } else {
+            desc.innerHTML = '<p style="margin:0;color:#c7c7c7;">रूपाणि शीघ्रमेव योजयिष्यन्ते।</p>';
+        }
+        
         item.appendChild(header); item.appendChild(desc); container.appendChild(item);
       });
 

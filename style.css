@@ -482,8 +482,8 @@ body.dark .sutras-page button:hover {
     padding-top: 0;
 }
 
-.sutra-card.active .sutra-card-desc {
-    max-height: 80vh;
+.sutra-card.active > .sutra-card-desc {
+    max-height: 2000px; /* higher max-height for adhyayas */
     overflow-y: auto;
     opacity: 1;
     padding-top: 10px;
@@ -550,7 +550,7 @@ body.dark .sutras-page button:hover {
     color: var(--text-light);
 }
 
-.sutra-item.active .sutra-card-desc {
+.sutra-item.active > .sutra-card-desc {
     max-height: 80vh;
     overflow-y: auto;
     opacity: 1;
@@ -559,9 +559,9 @@ body.dark .sutras-page button:hover {
 
 /* Make sutra list look denser on desktop */
 @media (min-width: 900px) {
-    .sutra-item .sutra-card-header { font-size: 17px; padding: 14px 18px; }
-    .sutra-item .sutra-card-desc { padding: 0 14px; }
-    .sutra-item.active .sutra-card-desc { padding: 14px 18px; }
+    .sutra-item > .sutra-card-header { font-size: 17px; padding: 14px 18px; }
+    .sutra-item > .sutra-card-desc { padding: 0 14px; }
+    .sutra-item.active > .sutra-card-desc { padding: 14px 18px; }
 }
 
 .sutra-card li {
@@ -1048,6 +1048,10 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 20px;
     margin-bottom: 30px;
+}
+
+.input-group {
+    position: relative;
 }
 
 .input-group label {
@@ -1698,8 +1702,9 @@ body.dark .suggestion-item:hover, body.dark .suggestion-item.active {
 
 .suggestion-main {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
 }
 
 .suggestion-hinglish {
@@ -2583,3 +2588,19 @@ body.dark .about-text-content p { color: #cbd5e1; }
 body.dark .team-member-formal { border-color: #334155; }
 body.dark .member-details-formal h4 { color: #f8fafc; }
 body.dark .about-header-formal { border-color: #ca8a04; }
+
+/* Hinglish suggestion styles */
+.suggestion-roman {
+    font-family: 'Baloo 2', cursive;
+    font-size: 0.9em;
+    color: #78350f;
+    background: rgba(202, 138, 4, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+body.dark .suggestion-roman {
+    color: #fcd34d;
+    background: rgba(252, 211, 77, 0.15);
+}
