@@ -29,32 +29,28 @@
 
 <div class="main-container" id="tool" style="position: relative; z-index: 10;">
     <div class="card premium-card">
-        <div class="input-grid">
-            <div class="input-group">
-                <label class="label-upa" data-i18n="label_upa"><i class="fa-solid fa-puzzle-piece"></i> उपसर्ग</label>
-                <input type="text" id="upasarga" class="sanskrit-text" list="upaList" data-i18n-placeholder="placeholder_upa" placeholder="चुनें या टाइप करें..." autocomplete="off">
-                <datalist id="upaList"></datalist>
-                <div class="suggestion-dropdown" id="upaSuggestions"></div>
-            </div>
-            
-            <div class="input-group">
-                <label class="label-dhatu" data-i18n="label_dhatu"><i class="fa-solid fa-seedling"></i> धातु (मूल)</label>
-                <input type="text" id="dhatu" class="sanskrit-text" list="dhatuList" data-i18n-placeholder="placeholder_dhatu" placeholder="उदा. कृ, पठ्, लिख्..." autocomplete="off">
-                <datalist id="dhatuList"></datalist>
-                <div class="suggestion-dropdown" id="dhatuSuggestions"></div>
-            </div>
-            
-            <div class="input-group">
-                <label class="label-prat" data-i18n="label_prat"><i class="fa-solid fa-link"></i> प्रत्यय</label>
-                <input type="text" id="pratyaya" class="sanskrit-text" list="pratList" data-i18n-placeholder="placeholder_prat" placeholder="उदा. तव्यत्, क्त्वा..." autocomplete="off">
-                <datalist id="pratList"></datalist>
-                <div class="suggestion-dropdown" id="pratSuggestions"></div>
+        <div style="max-width:900px;margin:0 auto;">
+            <div style="background:var(--card-light);border-radius:18px;padding:20px 22px;box-shadow:var(--shadow);border:1px solid var(--border-light);">
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start;">
+                    <div>
+                        <label class="sanskrit-text" style="display:block;font-weight:800;color:#7a3410;margin-bottom:8px;">उपसर्ग</label>
+                        <input type="text" id="taddhit_upa" class="sanskrit-text pill-input" placeholder="उपसर्ग (यदि हो)" aria-label="उपसर्ग">
+                    </div>
+                    <div>
+                        <label class="sanskrit-text" style="display:block;font-weight:800;color:#7a3410;margin-bottom:8px;">प्रातिपादिक</label>
+                        <input type="text" id="taddhit_pratipadika" class="sanskrit-text pill-input" placeholder="प्रातिपादिक (उदा. गुरु...)" aria-label="प्रातिपादिक">
+                    </div>
+                    <div>
+                        <label class="sanskrit-text" style="display:block;font-weight:800;color:#7a3410;margin-bottom:8px;">तद्धित प्रत्यय</label>
+                        <input type="text" id="taddhit_pratyaya" class="sanskrit-text pill-input" placeholder="तद्धित प्रत्यय (उदा. कन्...)" aria-label="प्रत्यय">
+                    </div>
+                </div>
+
+                <div style="margin-top:20px;display:flex;justify-content:center;">
+                    <button id="taddhitMakeBtn" class="btn-generate maroon-full" onclick="makeTaddhit()" style="width:78%;padding:20px 30px;border-radius:14px;font-size:1.05rem;">शब्द बनाओ</button>
+                </div>
             </div>
         </div>
-
-        <button class="btn-generate" onclick="generateKridanta()" data-i18n="generate_word">
-            <i class="fa-solid fa-bolt"></i> शब्द बनाओ!
-        </button>
 
         <div class="result-section" id="resultSection">
             <div class="result-box" onclick="togglePrakriya()">

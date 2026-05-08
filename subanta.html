@@ -29,32 +29,17 @@
 
 <div class="main-container" id="tool" style="position: relative; z-index: 10;">
     <div class="card premium-card">
-        <div class="input-grid">
-            <div class="input-group">
-                <label class="label-upa" data-i18n="label_upa"><i class="fa-solid fa-puzzle-piece"></i> उपसर्ग</label>
-                <input type="text" id="upasarga" class="sanskrit-text" list="upaList" data-i18n-placeholder="placeholder_upa" placeholder="चुनें या टाइप करें..." autocomplete="off">
-                <datalist id="upaList"></datalist>
-                <div class="suggestion-dropdown" id="upaSuggestions"></div>
+        <div style="max-width:760px;margin:0 auto;">
+            <div class="pill-input-row" style="display:flex;gap:12px;align-items:center;justify-content:center;">
+                <input type="text" id="subanta_pratipadika" class="sanskrit-text pill-input" placeholder="प्रातिपादिक (उदा. राम...)" aria-label="प्रातिपादिक">
+                <input type="text" id="subanta_upa" class="sanskrit-text pill-input" placeholder="उपसर्ग (उदा. सु, निग...)" aria-label="उपसर्ग">
+                <input type="text" id="subanta_pratyaya" class="sanskrit-text pill-input" placeholder="प्रत्यय (उदा. नि, अण्...)" aria-label="प्रत्यय">
             </div>
-            
-            <div class="input-group">
-                <label class="label-dhatu" data-i18n="label_dhatu"><i class="fa-solid fa-seedling"></i> धातु (मूल)</label>
-                <input type="text" id="dhatu" class="sanskrit-text" list="dhatuList" data-i18n-placeholder="placeholder_dhatu" placeholder="उदा. कृ, पठ्, लिख्..." autocomplete="off">
-                <datalist id="dhatuList"></datalist>
-                <div class="suggestion-dropdown" id="dhatuSuggestions"></div>
-            </div>
-            
-            <div class="input-group">
-                <label class="label-prat" data-i18n="label_prat"><i class="fa-solid fa-link"></i> प्रत्यय</label>
-                <input type="text" id="pratyaya" class="sanskrit-text" list="pratList" data-i18n-placeholder="placeholder_prat" placeholder="उदा. तव्यत्, क्त्वा..." autocomplete="off">
-                <datalist id="pratList"></datalist>
-                <div class="suggestion-dropdown" id="pratSuggestions"></div>
+
+            <div style="margin-top:14px;">
+                <button id="subantaMakeBtn" class="btn-generate maroon-full" onclick="makeSubanta()">शब्द बनाओ</button>
             </div>
         </div>
-
-        <button class="btn-generate" onclick="generateKridanta()" data-i18n="generate_word">
-            <i class="fa-solid fa-bolt"></i> शब्द बनाओ!
-        </button>
 
         <div class="result-section" id="resultSection">
             <div class="result-box" onclick="togglePrakriya()">

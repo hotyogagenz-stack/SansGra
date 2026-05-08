@@ -22,6 +22,18 @@
       <p>शब्दानां लिङ्ग-अन्त-अनुसारं वर्गीकरणम्</p>
       <div id="shabdaList" class="sutra-list">
       </div>
+      <!-- Declension pills and generated table area -->
+      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;" id="declensionPills">
+        <button class="pill" onclick="renderDeclensionFor('अकारान्त')">अकारान्त</button>
+        <button class="pill" onclick="renderDeclensionFor('इकारान्त')">इकारान्त</button>
+        <button class="pill" onclick="renderDeclensionFor('उकारान्त')">उकारान्त</button>
+      </div>
+      <div id="declensionArea" style="margin-top:12px"></div>
+      <div id="prakriyaBox" style="display:none;margin-top:12px;">
+        <h4>प्रक्रिया</h4>
+        <div id="finalOutput" style="font-size:1.2rem;font-weight:700;margin-bottom:8px"></div>
+        <ol id="prakriyaSteps"></ol>
+      </div>
     </section>
   </main>
   <div id="site-footer"></div>

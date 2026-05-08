@@ -9,15 +9,15 @@
 </head>
 <body>
   <div id="site-header"></div>
-  <main class="container">
+  <main class="container full-width">
     <section class="sutras-page">
       <h1>Q&amp;A AI</h1>
       <p>Type a question. The system will try to answer from the local database first. You can optionally send the question to an external AI in future.</p>
 
-      <div style="max-width:800px;margin:18px auto;">
+      <div style="margin:18px 0;">
         <label for="qnaInput">Your question</label>
-        <input id="qnaInput" type="text" placeholder="Type your question here..." />
-        <div style="margin-top:10px;display:flex;gap:8px;">
+        <input id="qnaInput" type="text" placeholder="Type your question here..." oninput="answerFromLocal()" />
+        <div style="margin-top:10px;display:none;gap:8px;">
           <button onclick="answerFromLocal()">Answer from DB</button>
           <button onclick="sendToAI()">Send to AI (future)</button>
         </div>
