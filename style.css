@@ -540,16 +540,28 @@ body.dark .sutras-page button:hover {
 }
 
 .sutra-item .sutra-card-desc {
-    padding: 12px 14px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 320ms ease, opacity 220ms ease, padding 220ms ease;
+    padding: 0 12px;
     border-bottom: 1px solid var(--border-light);
     background: var(--card-light);
     color: var(--text-light);
 }
 
+.sutra-item.active .sutra-card-desc {
+    max-height: 80vh;
+    overflow-y: auto;
+    opacity: 1;
+    padding: 12px 14px;
+}
+
 /* Make sutra list look denser on desktop */
 @media (min-width: 900px) {
     .sutra-item .sutra-card-header { font-size: 17px; padding: 14px 18px; }
-    .sutra-item .sutra-card-desc { padding: 14px 18px; }
+    .sutra-item .sutra-card-desc { padding: 0 14px; }
+    .sutra-item.active .sutra-card-desc { padding: 14px 18px; }
 }
 
 .sutra-card li {

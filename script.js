@@ -2364,3 +2364,102 @@ window.addEventListener('click', (e) => {
     }
 });
 window.handleContactSubmit = handleContactSubmit;
+
+// --- Lightweight Subanta/Taddhit generators & UI helpers ---
+function makeSubanta() {
+    const prat = document.getElementById('subanta_pratipadika')?.value.trim() || '';
+    const upa = document.getElementById('subanta_upa')?.value.trim() || '';
+    const pratya = document.getElementById('subanta_pratyaya')?.value.trim() || '';
+    const outEl = document.getElementById('finalOutput');
+    const stepsEl = document.getElementById('prakriyaSteps');
+    if(!outEl) return alert('Result area not found');
+    const generated = `${upa ? upa + '-' : ''}${prat}${pratya ? '-' + pratya : ''}`;
+    outEl.textContent = generated;
+    if(stepsEl) {
+        stepsEl.innerHTML = '';
+        const s1 = document.createElement('li'); s1.textContent = `प्रातिपादिक: ${prat || '(निरूपित नहीं)'} `; stepsEl.appendChild(s1);
+        const s2 = document.createElement('li'); s2.textContent = `उपसर्ग (यदि): ${upa || 'नहीं'}`; stepsEl.appendChild(s2);
+        const s3 = document.createElement('li'); s3.textContent = `प्रत्यय: ${pratya || '(निरूपित नहीं)'}`; stepsEl.appendChild(s3);
+        const s4 = document.createElement('li'); s4.textContent = `निष्कर्ष: प्रारम्भिक रूप प्रदर्शित किया गया`; stepsEl.appendChild(s4);
+    }
+}
+
+function makeTaddhit() {
+    const prat = document.getElementById('taddhit_pratipadika')?.value.trim() || '';
+    const upa = document.getElementById('taddhit_upa')?.value.trim() || '';
+    const pratya = document.getElementById('taddhit_pratyaya')?.value.trim() || '';
+    const outEl = document.getElementById('finalOutput');
+    const stepsEl = document.getElementById('prakriyaSteps');
+    if(!outEl) return alert('Result area not found');
+    const generated = `${prat}${pratya ? '-' + pratya : ''}${upa ? '-' + upa : ''}`;
+    outEl.textContent = generated;
+    if(stepsEl) {
+        stepsEl.innerHTML = '';
+        const s1 = document.createElement('li'); s1.textContent = `प्रातिपादिक: ${prat || '(निरूपित नहीं)'} `; stepsEl.appendChild(s1);
+        const s2 = document.createElement('li'); s2.textContent = `तद्धित प्रत्यय: ${pratya || 'नहीं'}`; stepsEl.appendChild(s2);
+        const s3 = document.createElement('li'); s3.textContent = `उपसर्ग (यदि): ${upa || 'नहीं'}`; stepsEl.appendChild(s3);
+        const s4 = document.createElement('li'); s4.textContent = `निष्कर्ष: प्रारम्भिक तद्धित रूप प्रदर्शित किया गया`; stepsEl.appendChild(s4);
+    }
+}
+
+function togglePrakriya() {
+    const box = document.getElementById('prakriyaBox');
+    if(!box) return;
+    box.classList.toggle('visible');
+}
+
+function makeTinnanta() {
+    const upa = document.getElementById('tinnanta_upa')?.value.trim() || '';
+    const dhatu = document.getElementById('tinnanta_dhatu')?.value.trim() || '';
+    const lakar = document.getElementById('tinnanta_lakar')?.value.trim() || '';
+    const pratya = document.getElementById('tinnanta_pratyaya')?.value.trim() || '';
+    const outEl = document.getElementById('finalOutput');
+    const stepsEl = document.getElementById('prakriyaSteps');
+    if(!outEl) return alert('Result area not found');
+    const generated = `${upa ? upa + '-' : ''}${dhatu}${lakar ? '-' + lakar : ''}${pratya ? '-' + pratya : ''}`;
+    outEl.textContent = generated;
+    if(stepsEl) {
+        stepsEl.innerHTML = '';
+        const s1 = document.createElement('li'); s1.textContent = `उपसर्ग: ${upa || 'नहीं'}`; stepsEl.appendChild(s1);
+        const s2 = document.createElement('li'); s2.textContent = `धातु: ${dhatu || '(निरूपित नहीं)'}`; stepsEl.appendChild(s2);
+        const s3 = document.createElement('li'); s3.textContent = `लकार: ${lakar || '(निरूपित नहीं)'}`; stepsEl.appendChild(s3);
+        const s4 = document.createElement('li'); s4.textContent = `प्रत्यय: ${pratya || '(निरूपित नहीं)'}`; stepsEl.appendChild(s4);
+    }
+}
+
+// --- Shabda Rupa declension helper (safe defaults + renderer) ---
+const declensionTemplates = {
+    'अकारान्त': [ ['रामः','रामौ','रामा:'], ['रामस्य','रामयोः','रामाणाम्'], ['रामे','रामयोः','रामे'], ['रामे','रामे','रामे'], ['—','—','—'], ['—','—','—'], ['—','—','—'], ['हे राम','हे रामौ','हे रामा:'] ],
+    'इकारान्त': [ ['कवि','कवयः','कवयः'], ['कवेर्','कवयोः','कवाणाम्'], ['कवये','कवयोः','कवयः'], ['कवये','कवये','कवये'], ['—','—','—'], ['—','—','—'], ['—','—','—'], ['हे कवि','हे कवयौ','हे कवयः'] ],
+    'उकारान्त': [ ['जनकु','जनकौ','जनकुः'], ['जनकुर्न','जनकुर्लो','जनकुर्ला'], ['जनकु','जनकौ','जनकुः'], ['जनकु','जनकु','जनकु'], ['—','—','—'], ['—','—','—'], ['—','—','—'], ['हे जनकु','हे जनकौ','हे जनकुः'] ]
+};
+
+function renderDeclensionFor(endingType) {
+    const tableRoot = document.getElementById('declensionArea');
+    if (!tableRoot) return;
+    const rows = ['प्रथमा', 'द्वितीया', 'तृतीया', 'चतुर्थी', 'पञ्चमी', 'षष्ठी', 'सप्तमी', 'सम्बोधनम्'];
+    const cols = ['एकवचनम्','द्विवचनम्','बहुवचनम्'];
+    const examples = declensionTemplates[endingType] || Array(8).fill(['—','—','—']);
+    let html = '<div class="declension-card" style="margin-top:12px;padding:12px;border-radius:8px;border:1px solid var(--border-light);background:var(--card-light);">';
+    html += '<table style="width:100%;border-collapse:collapse;font-family:\'Noto Sans Devanagari\', sans-serif;">';
+    html += '<thead><tr><th style="text-align:left;padding:8px"></th>' + cols.map(c=>`<th style="padding:8px;border-bottom:1px solid var(--border-light);text-align:left;">${c}</th>`).join('') + '</tr></thead>';
+    html += '<tbody>';
+    for (let r=0;r<8;r++) {
+        html += `<tr><td style="padding:8px;border-bottom:1px solid var(--border-light);font-weight:700">${rows[r]}</td>`;
+        const exRow = examples[r] || ['—','—','—'];
+        for (let c=0;c<3;c++) html += `<td style="padding:8px;border-bottom:1px solid var(--border-light);">${exRow[c] || '—'}</td>`;
+        html += '</tr>';
+    }
+    html += '</tbody></table></div>';
+    tableRoot.innerHTML = html;
+}
+
+function renderPrakriyaSteps(steps) {
+    const el = document.getElementById('prakriyaSteps');
+    if (!el) return;
+    el.innerHTML = '';
+    steps.forEach(s => {
+        const li = document.createElement('li'); li.textContent = s; el.appendChild(li);
+    });
+    const box = document.getElementById('prakriyaBox'); if (box) box.style.display = 'block';
+}
