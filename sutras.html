@@ -111,8 +111,8 @@
             sutraItem.className = 'sutra-item sutra-card sub-card';
             const sHeader = document.createElement('div');
             sHeader.className = 'sutra-card-header sanskrit-text';
-            const idSpan = s.id ? `<span class="sutra-id">${s.id}</span> ` : '';
-            sHeader.innerHTML = `${idSpan}${s.name}`;
+            const idSpan = s.id ? `<span class="sutra-id" style="margin-left:8px; font-size:0.9em; opacity:0.8;">${s.id}</span>` : '';
+            sHeader.innerHTML = `<div style="display:flex; align-items:center; gap:8px;"><span class="sutra-name">${s.name}</span>${idSpan}</div>`;
             const sDesc = document.createElement('div');
             sDesc.className = 'sutra-card-desc sanskrit-text';
             sDesc.textContent = s.desc || '';

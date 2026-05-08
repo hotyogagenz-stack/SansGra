@@ -519,12 +519,11 @@ body.dark .sutras-page button:hover {
 
 .sutra-item .sutra-card-header .sutra-id {
     display: inline-block;
-    width: 110px;
-    min-width: 90px;
+    min-width: 60px;
     color: #9a3412;
     font-weight: 800;
-    margin-right: 12px;
-    text-align: left;
+    margin-left: 12px;
+    text-align: right;
 }
 
 .sutra-item .sutra-card-header::after {
