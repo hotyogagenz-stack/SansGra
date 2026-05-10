@@ -11,6 +11,9 @@
         input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--border-light); font-size: clamp(16px, 3vw, 20px); font-weight: 600; outline: none; transition: 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
         input[type="text"]:focus { border-color: #9a3412; box-shadow: 0 0 8px rgba(154, 52, 18, 0.2); }
         .sutra-desc p { margin-bottom: 8px; line-height: 1.6; }
+    /* ensure equal spacing and column sizing for input grids */
+    .input-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; align-items: stretch; justify-items: stretch; }
+    .input-grid > div { min-width: 0; display: flex; flex-direction: column; }
     </style>
 </head>
 <body>
@@ -31,7 +34,7 @@
     <div class="card premium-card">
         <div style="max-width:900px;margin:0 auto;">
             <div style="background:var(--card-light);border-radius:18px;padding:20px 22px;box-shadow:var(--shadow);border:1px solid var(--border-light);">
-                <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:start;">
+                <div class="input-grid">
                     <div>
                         <label class="sanskrit-text" style="display:block;font-weight:800;color:#7a3410;margin-bottom:8px;">उपसर्ग</label>
                         <input type="text" id="tinnanta_upa" class="sanskrit-text pill-input" placeholder="उपसर्ग (यदि)" aria-label="उपसर्ग">
