@@ -67,16 +67,33 @@
         const desc = document.createElement('div');
         desc.className = 'sutra-card-desc';
         
-        if (ganasData[gana] && ganasData[gana].length > 0) {
-            let html = '<table style="width:100%;border-collapse:collapse;margin-top:10px;">';
-            html += '<thead><tr><th style="text-align:left;border-bottom:1px solid var(--border-light);padding:6px;">Dhatu</th><th style="text-align:left;border-bottom:1px solid var(--border-light);padding:6px;">Form</th><th style="text-align:left;border-bottom:1px solid var(--border-light);padding:6px;">Meaning</th></tr></thead>';
-            html += '<tbody>';
-            ganasData[gana].forEach(d => {
-                html += `<tr><td style="padding:6px;">${d.dhatu}</td><td style="padding:6px;">${d.form}</td><td style="padding:6px;">${d.meaning}</td></tr>`;
-            });
-            html += '</tbody></table>';
-            desc.innerHTML = html;
-        } else {
+  if (ganasData[gana] && ganasData[gana].length > 0) {
+      let html = '<table style="width:100%;border-collapse:collapse;margin-top:10px;">';
+      html += '<thead><tr>' +
+        '<th style="text-align:left;border-bottom:1px solid var(--border-light);padding:6px;width:40px;">#</th>' +
+        '<th style="text-align:left;border-bottom:1px solid var(--border-light);padding:6px;">Mul Dhatu</th>' +
+        '<th style="text-align:left;border-bottom:1px solid var(--border-light);padding:6px;">Dhatu</th>' +
+        '<th style="text-align:left;border-bottom:1px solid var(--border-light);padding:6px;">Meaning</th>' +
+        '<th style="text-align:left;border-bottom:1px solid var(--border-light);padding:6px;">Gana</th>' +
+        '<th style="text-align:left;border-bottom:1px solid var(--border-light);padding:6px;">Padi</th>' +
+        '</tr></thead>';
+      html += '<tbody>';
+      ganasData[gana].forEach((d, idx) => {
+    // use d.form as Mul Dhatu if available; ganha (gana) comes from the outer key; padi may be missing
+    const mul = d.form || '';
+    const padi = d.padi || '';
+    html += `<tr>` +
+      `<td style="padding:6px;">${idx + 1}</td>` +
+      `<td style="padding:6px;">${mul}</td>` +
+      `<td style="padding:6px;">${d.dhatu}</td>` +
+      `<td style="padding:6px;">${d.meaning}</td>` +
+      `<td style="padding:6px;">${gana}</td>` +
+      `<td style="padding:6px;">${padi}</td>` +
+      `</tr>`;
+      });
+      html += '</tbody></table>';
+      desc.innerHTML = html;
+  } else {
             desc.innerHTML = '<p style="margin:0;color:#c7c7c7;">अस्मिन् गणे धातवः शीघ्रमेव योजयिष्यन्ते।</p>';
         }
 

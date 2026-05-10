@@ -790,7 +790,7 @@ body {
     color: #fcd34d; /* Ancient Gold */
     padding: 6px 20px; /* More compact */
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid #ca8a04;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
