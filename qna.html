@@ -240,7 +240,231 @@
 
   <script>
     let qaData = [];
-    
+
+    // Hinglish to Sanskrit/Devanagari word mapping for common casual spellings
+    const hinglishMap = {
+        // Panini related
+        'panini': 'पाणिनि', 'pāṇini': 'पाणिनि', 'paniniji': 'पाणिनिजी', 'paninidas': 'पाणिनिदास',
+        'ashtadhyayi': 'अष्टाध्यायी', 'ashtadhyaya': 'अष्टाध्यायी', 'astadhyayi': 'अष्टाध्यायी',
+        'mahabhashya': 'महाभाष्य', 'mahabhashyam': 'महाभाष्यम्',
+        'katyayana': 'कात्यायन', 'katyayanaji': 'कात्यायनजी',
+        'shalatura': 'शलातुर', 'shalatoor': 'शलातुर',
+        // Grammar terms (Sanskrit)
+        'sutra': 'सूत्र', 'sutram': 'सूत्रम्', 'sutras': 'सूत्राणि',
+        'sandhi': 'संधि', 'sandhih': 'संधिः',
+        'samasa': 'समास', 'samāsā': 'समासः',
+        'dhatu': 'धातु', 'dhatuh': 'धातुः', 'root': 'धातु',
+        'pratyaya': 'प्रत्यय', 'pratyayah': 'प्रत्ययः', 'suffix': 'प्रत्यय',
+        'upasarga': 'उपसर्ग', 'upasargah': 'उपसर्गः', 'prefix': 'उपसर्ग',
+        'karaka': 'कारक', 'karakam': 'कारकम्', 'case': 'कारक',
+        'kart': 'कर्ता', 'karta': 'कर्ता', 'subject': 'कर्ता',
+        'karma': 'कर्म', 'karmam': 'कर्मम्', 'object': 'कर्म',
+        'karana': 'करण', 'karanam': 'करणम्', 'instrument': 'करण',
+        'sampradan': 'सम्प्रदान', 'sampradāna': 'सम्प्रदान', 'dative': 'सम्प्रदान',
+        'apadan': 'अपादान', 'apādāna': 'अपादान', 'ablative': 'अपादान',
+        'sambandh': 'संबंध', 'sambandha': 'संबंध', 'genitive': 'संबंध',
+        'adhikaran': 'अधिकरण', 'adhikaraṇa': 'अधिकरण', 'locative': 'अधिकरण',
+        'ling': 'लिंग', 'lingam': 'लिंगम्', 'gender': 'लिंग',
+        'vachan': 'वचन', 'vachanam': 'वचनम्', 'number': 'वचन',
+        'vibhakti': 'विभक्ति', 'case ending': 'विभक्ति',
+        'lakar': 'लकार', 'lakāra': 'लकार', 'tense': 'लकार',
+        'lat': 'लट्', 'lṭ': 'लट्', 'present': 'वर्तमान',
+        'lang': 'लङ्', 'lṅ': 'लङ्', 'past': 'भूत',
+        'lrit': 'लृट्', 'lṛṭ': 'लृट्', 'future': 'भविष्यत',
+        'vidhi': 'विधि', 'vidhih': 'विधिः', 'rule': 'विधि',
+        'nishedh': 'निषेध', 'niṣedha': 'निषेध', 'prohibition': 'निषेध',
+        'samjna': 'संज्ञा', 'saṃjñā': 'संज्ञा', 'noun': 'संज्ञा',
+        'sarvnam': 'सर्वनाम', 'sarvanāma': 'सर्वनाम', 'pronoun': 'सर्वनाम',
+        'visheshan': 'विशेषण', 'viśeṣaṇa': 'विशेषण', 'adjective': 'विशेषण',
+        'avyay': 'अव्यय', 'avyayam': 'अव्ययम्', 'indeclinable': 'अव्यय',
+        'tatpurush': 'तत्पुरुष', 'tatpuruṣa': 'तत्पुरुष',
+        'dvandv': 'द्वंद्व', 'dvandva': 'द्वंद्व',
+        'bahuvrihi': 'बहुव्रीहि', 'bahuvrīhi': 'बहुव्रीहि',
+        'karmadharay': 'कर्मधारय', 'karmadhāraya': 'कर्मधारय',
+        'dviguh': 'द्विगु', 'dvigu': 'द्विगु',
+        // Common words
+        'kya': 'क्या', 'kya hai': 'क्या है',
+        'kaise': 'कैसे', 'kaisa': 'कैसा',
+        'kyun': 'क्यों', 'kyon': 'क्यों', 'karan': 'कारण',
+        'kab': 'कब', 'kitna': 'कितना', 'kitne': 'कितने',
+        'kaun': 'कौन', 'kaha': 'कहाँ', 'kahan': 'कहाँ',
+        'hai': 'है', 'hain': 'हैं', 'tha': 'था', 'thi': 'थी',
+        'ka': 'का', 'ki': 'की', 'ke': 'के',
+        'mein': 'में', 'me': 'में',
+        'se': 'से', 'ko': 'को', 'par': 'पर', 'ke liye': 'के लिए',
+        'aur': 'और', 'ya': 'या', 'lekin': 'लेकिन', 'parantu': 'परन्तु',
+        'kya aap': 'क्या आप',
+        // Time
+        'kal': 'कल', 'aaj': 'आज', 'parso': 'पर्सो',
+        'subah': 'सुबह', 'dopahar': 'दोपहर', 'shaam': 'शाम', 'raat': 'रात',
+        // Numbers
+        'ek': 'एक', 'do': 'दो', 'teen': 'तीन', 'char': 'चार', 'panch': 'पाँच',
+        'chh': 'छः', 'sat': 'सात', 'aath': 'आठ', 'nau': 'नौ', 'das': 'दस',
+        // Common verbs
+        'karna': 'करना', 'kare': 'करे', 'karega': 'करेगा',
+        'hona': 'होना', 'hoga': 'होगा', 'hai': 'है',
+        'janna': 'जानना', 'jane': 'जाने', 'janta': 'जानता',
+        'bata': 'बताए', 'bataye': 'बताए', 'batao': 'बताओ',
+        'puchna': 'पूछना', 'puchte': 'पूछते',
+        'dekhna': 'देखना', 'dekho': 'देखो',
+        'sunna': 'सुनना', 'suno': 'सुनो',
+        // Pronouns
+        'main': 'मैं', 'mein': 'मैं',
+        'aap': 'आप', 'tum': 'तुम', 'tu': 'तू',
+        'woh': 'वह', 've': 'वे', 'ye': 'ये', 'is': 'इस',
+        'mera': 'मेरा', 'meri': 'मेरी', 'mere': 'मेरे',
+        'tera': 'तेरा', 'teri': 'तेरी', 'tere': 'तेरे',
+        'uska': 'उसका', 'uski': 'उसकी', 'uske': 'उसके',
+        // Questions
+        'sawal': 'सवाल', 'sawaal': 'सवाल', 'question': 'प्रश्न',
+        'jawab': 'जवाब', 'javab': 'जवाब', 'answer': 'उत्तर',
+        'matlab': 'मतलब', 'meaning': 'अर्थ',
+        'vyakaran': 'व्याकरण', 'vyakarana': 'व्याकरण', 'grammar': 'व्याकरण',
+        'sanskrit': 'संस्कृत', 'samskrit': 'संस्कृत',
+        'paniniye': 'पाणिनीय', 'paniniya': 'पाणिनीय',
+        // Common transliterations
+        'sh': 'श', 'shri': 'श्री', 'shree': 'श्री',
+        'ri': 'री', 'di': 'दी', 'ki': 'की',
+        'v': 'व', 'b': 'ब', 'm': 'म',
+        // Devanagari common
+        'kah': 'कः', 'kim': 'किम्', 'kaha': 'कहाँ',
+        'katham': 'कथम्', 'kasmin': 'कस्मिन्',
+        'sati': 'सति',
+        // Sanskrit words (common spellings)
+        'namah': 'नमः', 'namo': 'नमो',
+        'swami': 'स्वामी', 'swamiji': 'स्वामीजी',
+        'pandit': 'पण्डित', 'panditji': 'पण्डितजी',
+        'acharya': 'आचार्य', 'acharyaji': 'आचार्यजी',
+        'bhagwan': 'भगवान', 'bhagavan': 'भगवान्',
+        'dev': 'देव', 'deva': 'देवः', 'devi': 'देवी',
+        'rishi': 'ऋषि', 'rsi': 'ऋषि',
+        'muni': 'मुनि', 'muniji': 'मुनिजी',
+        'yogi': 'योगी', 'yogin': 'योगिन्',
+        'sadhu': 'साधु', 'sadhuji': 'साधुजी',
+        'mantra': 'मन्त्र', 'mantram': 'मन्त्रम्',
+        'stotra': 'स्तोत्र', 'stotram': 'स्तोत्रम्',
+        'bhajan': 'भजन', 'bhajanam': 'भजनम्',
+        'kirtan': 'कीर्तन', 'kirtanam': 'कीर्तनम्',
+        'yajna': 'यज्ञ', 'yajnam': 'यज्ञम्', 'hawan': 'हवन',
+        'homa': 'होम', 'homam': 'होमम्',
+        'tirth': 'तीर्थ', 'tirtha': 'तीर्थ', 'tirthyatra': 'तीर्थयात्रा',
+        'darshan': 'दर्शन', 'darshanam': 'दर्शनम्',
+        'prasad': 'प्रसाद', 'prasadam': 'प्रसादम्',
+        'aarti': 'आरती', 'arti': 'आरती',
+        'pooja': 'पूजा', 'puja': 'पूजा', 'pujaji': 'पूजाजी',
+        'bhakti': 'भक्ति', 'bhaktih': 'भक्तिः',
+        'prem': 'प्रेम', 'priya': 'प्रिय',
+        'shanti': 'शान्ति', 'shantih': 'शान्तिः',
+        'sukha': 'सुख', 'dukh': 'दुख', 'dukkha': 'दुःख',
+        'moksh': 'मोक्ष', 'moksha': 'मोक्ष', 'nirvan': 'निर्वाण', 'nirvana': 'निर्वाण',
+        'karma': 'कर्म', 'karmam': 'कर्मम्',
+        'dharma': 'धर्म', 'dharmah': 'धर्मः',
+        'artha': 'अर्थ', 'kam': 'काम',
+        // Letters/alphabets
+        'swar': 'स्वर', 'vowel': 'स्वर',
+        'vyanjan': 'व्यंजन', 'consonant': 'व्यंजन',
+        'maatra': 'मात्रा', 'matra': 'मात्रा',
+        'varn': 'वर्ण', 'varnam': 'वर्णम्',
+        'akshar': 'अक्षर', 'aksharam': 'अक्षरम्',
+        // Grammar concepts
+        'sandhi vigrah': 'संधि विग्रह', 'vigrah': 'विग्रह', 'split': 'विग्रह',
+        'pratyay vigrah': 'प्रत्यय विग्रह',
+        'dhatu gan': 'धातु गण', 'gan': 'गण', 'group': 'गण',
+        'dhatu path': 'धातुपाठ', 'dhatupath': 'धातुपाठ',
+        'gan path': 'गणपाठ', 'ganpath': 'गणपाठ',
+        // Dhatu categories
+        'parasmaipadi': 'परasmaipada', 'parasmai': 'परasmaipada',
+        'atmanepadi': 'आत्मनेपदी', 'atmane': 'आत्मनेपदी',
+        'ubhay': 'उभय', 'ubhaya': 'उभय',
+        // Tenses
+        'vartman': 'वर्तमान', 'bhavishy': 'भविष्यत', 'bhut': 'भूत',
+        // Cases
+        'nominative': 'प्रथमा', 'accusative': 'द्वितीया',
+        'instrumental': 'तृतीया', 'dative': 'चतुर्थी',
+        'ablative': 'पञ्चमी', 'genitive': 'षष्ठी',
+        'locative': 'सप्तमी', 'vocative': 'सम्बोधन',
+        // Numbers
+        'ekvachan': 'एकवचन', 'ekavachan': 'एकवचन', 'singular': 'एकवचन',
+        'dvivachan': 'द्विवचन', 'dwi': 'द्वि', 'dual': 'द्विवचन',
+        'bahuvachan': 'बहुवचन', 'bahu': 'बहु', 'plural': 'बहुवचन',
+        // Persons
+        'prathama': 'प्रथम', 'first': 'प्रथम',
+        'madhyama': 'मध्यम', 'second': 'मध्यम',
+        'uttama': 'उत्तम', 'third': 'उत्तम',
+        // Moods
+        'vidhi': 'विधि', 'ashirvad': 'आशीर्वाद', 'blessing': 'आशीर्वाद',
+        'prayog': 'प्रयोग', 'usage': 'प्रयोग',
+        // Other
+        'sandhi vigrah': 'संधि विग्रह',
+        'sutra meaning': 'सूत्रार्थ',
+        'panini sutra': 'पाणिनीय सूत्र',
+        'ashtadhyayi sutra': 'अष्टाध्यायी सूत्र',
+        'shiva sutra': 'शिवसूत्र',
+        'maheshwar sutra': 'माहेश्वरसूत्र',
+        'shiva sutrani': 'शिवसूत्राणि',
+        // Common question patterns
+        'kya hai': 'क्या है', 'kya h': 'क्या है',
+        'ka matlab': 'का मतलब', 'matlab kya': 'मतलब क्या',
+        'kise': 'किसे', 'kisko': 'किसको',
+        'kiske': 'किसके', 'kiski': 'किसकी',
+        'isme': 'इसमें', 'ismein': 'इसमें',
+        'usme': 'उसमें', 'usmein': 'उसमें',
+        'isme kya': 'इसमें क्या',
+    };
+
+    // Normalize Hinglish/mixed query to standard form
+    function normalizeQuery(query) {
+        if (!query) return "";
+
+        let normalized = query.toLowerCase().trim();
+
+        // Replace common punctuation/spaces
+        normalized = normalized.replace(/[।॥\.\?\!\,]/g, ' '); // Devanagari dandas and punctuation
+        normalized = normalized.replace(/[?.!,]/g, ' ');
+        normalized = normalized.replace(/\s+/g, ' ').trim();
+
+        // Tokenize and map each word
+        const tokens = normalized.split(' ');
+        const mappedTokens = tokens.map(token => {
+            // Check exact match in map
+            if (hinglishMap[token]) {
+                return hinglishMap[token];
+            }
+            // Check partial matches for compound words
+            for (let [key, value] of Object.entries(hinglishMap)) {
+                if (token.includes(key) || key.includes(token)) {
+                    return value;
+                }
+            }
+            return token;
+        });
+
+        // Rejoin - try both original order and Devanagari
+        let result = mappedTokens.join(' ');
+        return result;
+    }
+
+    // Calculate similarity score between two strings
+    function similarityScore(str1, str2) {
+        const s1 = str1.toLowerCase().trim();
+        const s2 = str2.toLowerCase().trim();
+
+        // Exact match
+        if (s1 === s2) return 100;
+
+        // Contains match
+        if (s1.includes(s2) || s2.includes(s1)) return 80;
+
+        // Word-level overlap
+        const words1 = new Set(s1.split(/\s+/).filter(w => w.length > 1));
+        const words2 = new Set(s2.split(/\s+/).filter(w => w.length > 1));
+        if (words1.size === 0 || words2.size === 0) return 0;
+
+        const common = new Set([...words1].filter(x => words2.has(x)));
+        const score = (common.size / Math.max(words1.size, words2.size)) * 60;
+        return score;
+    }
+
     // Load the QA Data
     async function loadQA() {
       try {
@@ -252,15 +476,36 @@
     }
 
     function findAnswer(question) {
-        // Lowercase and trim for basic matching
-        const qLower = question.toLowerCase().trim();
-        
+        if (!question || !question.trim()) {
+            return "कृपया एक प्रश्न पूछें। Please ask a question.";
+        }
+
+        const normalizedQuery = normalizeQuery(question);
+        let bestMatch = null;
+        let bestScore = 0;
+
         for(let item of qaData) {
-            // Check if the user's question is contained within the dataset question or vice-versa
-            if(item.q.toLowerCase().includes(qLower) || qLower.includes(item.q.toLowerCase())) {
-                return item.a;
+            // Compare with original question
+            const score1 = similarityScore(question, item.q);
+            // Compare with normalized query
+            const score2 = similarityScore(normalizedQuery, item.q);
+            // Also compare normalized query with normalized version of item
+            const normalizedItemQ = normalizeQuery(item.q);
+            const score3 = similarityScore(normalizedQuery, normalizedItemQ);
+
+            const maxScore = Math.max(score1, score2, score3);
+
+            if (maxScore > bestScore) {
+                bestScore = maxScore;
+                bestMatch = item;
             }
         }
+
+        // Threshold: require at least 25% similarity or some word overlap
+        if (bestScore >= 25 || bestScore > 0) {
+            return bestMatch.a;
+        }
+
         return "I'm sorry, I don't have an answer for that yet. Could you try asking something else about Sanskrit grammar or Panini?";
     }
 
