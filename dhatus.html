@@ -11,6 +11,9 @@
   <script defer src="script.js"></script>
   <style>
     .sub-card { margin-top: 10px; margin-left: 15px; border-left: 3px solid #b45309; }
+  .gana-btn { background:none;border:1px solid var(--border-light);padding:8px 12px;border-radius:8px;font-weight:700;cursor:pointer; }
+  .gana-btn:hover { background: rgba(154,52,18,0.04); }
+  .dhatu-table th, .dhatu-table td { vertical-align: middle; }
   </style>
 </head>
   <body>
@@ -56,62 +59,66 @@
         console.error('Failed to load ganas.json', err);
       }
 
-      ganas.forEach(gana => {
+      // create a card for each gana and render that gana's table inside the card desc
+      ganas.forEach(ganaName => {
         const item = document.createElement('div');
         item.className = 'sutra-item sutra-card';
 
         const header = document.createElement('div');
         header.className = 'sutra-card-header sanskrit-text';
-        header.innerHTML = `<span>${gana}</span>`;
+        header.setAttribute('tabindex', '0');
+        header.setAttribute('role', 'button');
+        header.setAttribute('aria-expanded', 'false');
+        header.innerHTML = `<span>${ganaName}</span>`;
 
         const desc = document.createElement('div');
         desc.className = 'sutra-card-desc';
-        
-  if (ganasData[gana] && ganasData[gana].length > 0) {
-      let html = '<table style="width:100%;border-collapse:collapse;margin-top:10px;">';
-      html += '<thead><tr>' +
-        '<th style="text-align:left;border-bottom:1px solid var(--border-light);padding:6px;width:40px;">#</th>' +
-        '<th style="text-align:left;border-bottom:1px solid var(--border-light);padding:6px;">Mul Dhatu</th>' +
-        '<th style="text-align:left;border-bottom:1px solid var(--border-light);padding:6px;">Dhatu</th>' +
-        '<th style="text-align:left;border-bottom:1px solid var(--border-light);padding:6px;">Meaning</th>' +
-        '<th style="text-align:left;border-bottom:1px solid var(--border-light);padding:6px;">Gana</th>' +
-        '<th style="text-align:left;border-bottom:1px solid var(--border-light);padding:6px;">Padi</th>' +
-        '</tr></thead>';
-      html += '<tbody>';
-      ganasData[gana].forEach((d, idx) => {
-    // use d.form as Mul Dhatu if available; ganha (gana) comes from the outer key; padi may be missing
-    const mul = d.form || '';
-    const padi = d.padi || '';
-    html += `<tr>` +
-      `<td style="padding:6px;">${idx + 1}</td>` +
-      `<td style="padding:6px;">${mul}</td>` +
-      `<td style="padding:6px;">${d.dhatu}</td>` +
-      `<td style="padding:6px;">${d.meaning}</td>` +
-      `<td style="padding:6px;">${gana}</td>` +
-      `<td style="padding:6px;">${padi}</td>` +
-      `</tr>`;
-      });
-      html += '</tbody></table>';
-      desc.innerHTML = html;
-  } else {
-            desc.innerHTML = '<p style="margin:0;color:#c7c7c7;">अस्मिन् गणे धातवः शीघ्रमेव योजयिष्यन्ते।</p>';
+
+        // build table for this gana
+        const ganaArr = Array.isArray(ganasData[ganaName]) ? ganasData[ganaName] : [];
+        // always render the table headers so every gana shows the same layout
+        let html = '<div style="overflow:auto;">';
+        html += '<table class="dhatu-table" style="width:100%;border-collapse:collapse;margin-top:10px;min-width:800px;table-layout:fixed;">';
+        html += '<thead><tr>' +
+                '<th style="width:12.5%;text-align:left;border-bottom:1px solid var(--border-light);padding:8px;">id</th>' +
+                '<th style="width:12.5%;text-align:left;border-bottom:1px solid var(--border-light);padding:8px;">dhatuId</th>' +
+                '<th style="width:12.5%;text-align:left;border-bottom:1px solid var(--border-light);padding:8px;">muladhatu</th>' +
+                '<th style="width:12.5%;text-align:left;border-bottom:1px solid var(--border-light);padding:8px;">dhatu</th>' +
+                '<th style="width:12.5%;text-align:left;border-bottom:1px solid var(--border-light);padding:8px;">meaning</th>' +
+                '<th style="width:12.5%;text-align:left;border-bottom:1px solid var(--border-light);padding:8px;">gana</th>' +
+                '<th style="width:12.5%;text-align:left;border-bottom:1px solid var(--border-light);padding:8px;">padi</th>' +
+                '<th style="width:12.5%;text-align:left;border-bottom:1px solid var(--border-light);padding:8px;">it</th>' +
+                '</tr></thead>';
+        html += '<tbody>';
+        if (ganaArr.length === 0) {
+          html += `<tr><td colspan="8" style="padding:8px;color:#9ca3af;border-bottom:1px solid var(--border-light);">अस्मिन् गणे धातवः शीघ्रमेव योजयिष्यन्ते।</td></tr>`;
+        } else {
+          ganaArr.forEach((d, idx) => {
+            const id = d.id ?? `${ganaName}-${idx+1}`;
+            const dhatuId = d.dhatuId ?? d.id ?? `${ganaName}-${idx+1}`;
+            const mul = d.form ?? d.muladhatu ?? '';
+            const dh = d.dhatu ?? '';
+            const meaning = d.meaning ?? '';
+            const padi = d.padi ?? '';
+            const it = d.it ?? '';
+            html += `<tr>` +
+                    `<td style="padding:8px;border-bottom:1px solid var(--border-light);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${id}</td>` +
+                    `<td style="padding:8px;border-bottom:1px solid var(--border-light);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${dhatuId}</td>` +
+                    `<td style="padding:8px;border-bottom:1px solid var(--border-light);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${mul}</td>` +
+                    `<td style="padding:8px;border-bottom:1px solid var(--border-light);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${dh}</td>` +
+                    `<td style="padding:8px;border-bottom:1px solid var(--border-light);overflow:hidden;text-overflow:ellipsis;">${meaning}</td>` +
+                    `<td style="padding:8px;border-bottom:1px solid var(--border-light);">${ganaName}</td>` +
+                    `<td style="padding:8px;border-bottom:1px solid var(--border-light);">${padi}</td>` +
+                    `<td style="padding:8px;border-bottom:1px solid var(--border-light);">${it}</td>` +
+                    `</tr>`;
+          });
         }
+        html += '</tbody></table></div>';
+        desc.innerHTML = html;
 
-        item.appendChild(header);
-        item.appendChild(desc);
-        container.appendChild(item);
-      });
-
-      // wire compact-item toggles: expand only clicked item, collapse others
-      container.querySelectorAll('.sutra-item').forEach(item => {
-        const hdr = item.querySelector('.sutra-card-header');
-        if (!hdr) return;
-        hdr.setAttribute('tabindex', '0');
-        hdr.setAttribute('role', 'button');
-        hdr.setAttribute('aria-expanded', 'false');
-        hdr.addEventListener('click', (ev) => {
+        // wire header toggles: expand only clicked item, collapse others
+        header.addEventListener('click', (ev) => {
           ev.stopPropagation();
-          // collapse others
           container.querySelectorAll('.sutra-item.active').forEach(act => {
             if (act !== item) {
               act.classList.remove('active');
@@ -119,9 +126,13 @@
             }
           });
           const becoming = item.classList.toggle('active');
-          hdr.setAttribute('aria-expanded', becoming ? 'true' : 'false');
+          header.setAttribute('aria-expanded', becoming ? 'true' : 'false');
         });
-        hdr.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); hdr.click(); } });
+        header.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); header.click(); } });
+
+        item.appendChild(header);
+        item.appendChild(desc);
+        container.appendChild(item);
       });
     }
 
