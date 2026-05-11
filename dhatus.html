@@ -79,8 +79,8 @@
         // always render the table headers so every gana shows the same layout
         let html = '<div style="overflow:auto;">';
         html += '<table class="dhatu-table" style="width:100%;border-collapse:collapse;margin-top:10px;min-width:800px;table-layout:fixed;">';
-        html += '<thead><tr>' +
-                '<th style="width:12.5%;text-align:left;border-bottom:1px solid var(--border-light);padding:8px;">id</th>' +
+  html += '<thead><tr>' +
+    '<th style="width:6%;text-align:left;border-bottom:1px solid var(--border-light);padding:8px;">S.No</th>' +
                 '<th style="width:12.5%;text-align:left;border-bottom:1px solid var(--border-light);padding:8px;">dhatuId</th>' +
                 '<th style="width:12.5%;text-align:left;border-bottom:1px solid var(--border-light);padding:8px;">muladhatu</th>' +
                 '<th style="width:12.5%;text-align:left;border-bottom:1px solid var(--border-light);padding:8px;">dhatu</th>' +
@@ -101,8 +101,8 @@
             const meaning = d.meaning ?? '';
             const padi = d.padi ?? '';
             const it = d.it ?? '';
-            html += `<tr>` +
-                    `<td style="padding:8px;border-bottom:1px solid var(--border-light);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${id}</td>` +
+      html += `<tr>` +
+        `<td style="padding:8px;border-bottom:1px solid var(--border-light);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${idx+1}</td>` +
                     `<td style="padding:8px;border-bottom:1px solid var(--border-light);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${dhatuId}</td>` +
                     `<td style="padding:8px;border-bottom:1px solid var(--border-light);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${mul}</td>` +
                     `<td style="padding:8px;border-bottom:1px solid var(--border-light);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${dh}</td>` +
