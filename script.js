@@ -2348,11 +2348,7 @@ function setupAutocomplete(inputId, dropdownId, type) {
 
     input.addEventListener('input', (e) => {
         const value = e.target.value.toLowerCase().trim();
-        if (!value) {
-            dropdown.classList.remove('show');
-            return;
-        }
-
+        
         // Smart Matching: Match Hinglish OR transliterated Devanagari
         const devQuery = romanToDevanagari(value);
         
@@ -2371,6 +2367,17 @@ function setupAutocomplete(inputId, dropdownId, type) {
         }).slice(0, 10); 
 
         renderSuggestions(matches, dropdown, input, value);
+    });
+
+    // Show all suggestions on focus/click
+    input.addEventListener('focus', () => {
+        // Trigger input event to show all suggestions when empty
+        input.dispatchEvent(new Event('input'));
+    });
+
+    input.addEventListener('click', () => {
+        // Trigger input event to show all suggestions when empty
+        input.dispatchEvent(new Event('input'));
     });
 
     input.addEventListener('keydown', (e) => {
