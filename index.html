@@ -185,6 +185,29 @@
 <script src="ashtadhyayi_engine.js"></script>
 <script src="animations.js"></script>
 <script src="script.js"></script>
+<script>
+    // Make each book selectable: clicking brings it forward and reveals text clearly.
+    document.addEventListener('DOMContentLoaded', () => {
+        const books = Array.from(document.querySelectorAll('.book-item'));
+        books.forEach(b => {
+            b.addEventListener('click', (ev) => {
+                // If anchor, allow normal navigation when user explicitly clicks the inner link target
+                ev.preventDefault();
+                // toggle active state
+                const isActive = b.classList.contains('active');
+                books.forEach(x => x.classList.remove('active'));
+                if (!isActive) {
+                    b.classList.add('active');
+                    // ensure visible on small screens
+                    b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+            // keyboard accessibility
+            b.setAttribute('tabindex', '0');
+            b.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); b.click(); } });
+        });
+    });
+</script>
 
 </body>
 </html>

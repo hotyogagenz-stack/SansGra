@@ -133,6 +133,7 @@ body.dark header {
     align-items: center;
     gap: 8px;
     background: var(--gradient-btn);
+    background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
 }
@@ -429,6 +430,14 @@ body.dark #qnaResult em {
     .sutras-page, .sutra-item { box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
 }
 
+/* Dhatus page: place search at right of header on larger screens */
+.sutra-hero-row { display:flex; align-items:center; }
+.sutra-hero-row #dhatuSearchWrapper { margin-left: auto; }
+@media (max-width: 720px) {
+    .sutra-hero-row #dhatuSearchWrapper { margin-left: 0; width:100%; display:block; margin-top:10px; }
+    .sutra-hero-row #dhatuSearchWrapper input { width:100% !important; max-width:none !important; }
+}
+
 @media (max-width: 600px) {
     :root { --shadow: 0 6px 14px rgba(0,0,0,0.06); }
     header { height: 60px; padding: 10px 3%; }
@@ -450,6 +459,20 @@ body.dark #qnaResult em {
     /* increase tap targets */
     .gana-btn, .menu-mini-btn { padding: 12px 14px; }
 }
+
+/* Dhatus search input styling (green theme) */
+#dhatuSearch {
+    border: 2px solid #16a34a;
+    background: #f0fff4;
+    color: #064e3b;
+    padding: 10px 12px;
+    border-radius: 10px;
+    box-shadow: inset 0 1px 0 rgba(0,0,0,0.02);
+}
+#dhatuSearch:focus { outline: none; box-shadow: 0 0 10px rgba(16,185,129,0.12); border-color: #059669; }
+
+/* highlight matched row lightly */
+.dhatu-table tbody tr.match { background: rgba(16,185,129,0.04); }
 
 /* Accessibility: improve focus outlines for keyboard and touch navigation */
 button:focus, a:focus, input:focus, textarea:focus {
@@ -823,6 +846,29 @@ body.dark .sutra-note-title {
     border-radius: 6px;
     color: #f8e6d6;
     font-weight: 900;
+}
+/* Active book: bring forward, enlarge, and make text fully readable */
+.book-item.active {
+    transform: translateY(-18px) scale(1.12) rotateX(6deg);
+    z-index: 50;
+    box-shadow: 0 28px 70px rgba(0,0,0,0.28);
+}
+.book-item.active .book-cover { transform: translateY(-6px); }
+.book-item .book-cover { transition: transform 260ms ease; }
+.book-item .book-text { transition: transform 200ms ease, font-size 160ms ease, background 160ms ease; }
+.book-item.active .book-text {
+    background: rgba(0,0,0,0.2);
+    padding: 12px 14px;
+    font-size: 1.05em;
+    letter-spacing: 1px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* On small screens, ensure active book doesn't overflow viewport */
+@media (max-width: 720px) {
+    .book-item.active { transform: translateY(-10px) scale(1.06); }
+    .book-item .book-text { font-size: 0.95em; }
 }
 /* make the book grid responsive */
 @media (max-width: 720px) {
@@ -2046,7 +2092,10 @@ body.dark .suggestion-kbd-hint kbd {
     }
     .ancient-book .book-text {
         font-size: 16px;
-        -webkit-line-clamp: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    /* standard equivalent: line-clamp not widely supported; using -webkit-line-clamp as primary */
     }
 }
 
