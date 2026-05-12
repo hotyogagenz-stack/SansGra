@@ -31,9 +31,18 @@
     <div class="card premium-card">
         <div style="max-width:760px;margin:0 auto;">
             <div class="pill-input-row" style="display:flex;gap:12px;align-items:center;justify-content:center;">
-                <input type="text" id="subanta_upa" class="sanskrit-text pill-input" placeholder="उपसर्ग (उदा. सु, निग...)" aria-label="उपसर्ग">
-                <input type="text" id="subanta_pratipadika" class="sanskrit-text pill-input" placeholder="प्रातिपादिक (उदा. राम...)" aria-label="प्रातिपादिक">
-                <input type="text" id="subanta_pratyaya" class="sanskrit-text pill-input" placeholder="प्रत्यय (उदा. नि, अण्...)" aria-label="प्रत्यय">
+                                <div class="field-wrap">
+                                    <input type="text" id="subanta_upa" class="sanskrit-text pill-input" placeholder="उपसर्ग (उदा. सु, निग...)" aria-label="उपसर्ग">
+                                    <ul class="dropdown" id="dd-subanta_upa"></ul>
+                                </div>
+                                <div class="field-wrap">
+                                    <input type="text" id="subanta_pratipadika" class="sanskrit-text pill-input" placeholder="प्रातिपादिक (उदा. राम...)" aria-label="प्रातिपादिक">
+                                    <ul class="dropdown" id="dd-subanta_pratipadika"></ul>
+                                </div>
+                                <div class="field-wrap">
+                                    <input type="text" id="subanta_pratyaya" class="sanskrit-text pill-input" placeholder="प्रत्यय (उदा. नि, अण्...)" aria-label="प्रत्यय">
+                                    <ul class="dropdown" id="dd-subanta_pratyaya"></ul>
+                                </div>
             </div>
 
             <div style="margin-top:14px;">
@@ -79,6 +88,51 @@
 <script src="ashtadhyayi_engine.js"></script>
 <script src="animations.js"></script>
 <script src="script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    ['subanta_upa','subanta_pratipadika','subanta_pratyaya'].forEach(id=>{
+        const inp = document.getElementById(id); if(!inp) return; const dd = document.getElementById('dd-'+id); if(!dd) return;
+    function render(items){ dd.innerHTML = items.length? items.map(it=>`<li class="dropdown-item">${it.label||it.id||it.key||it.ex||''}</li>`).join('') : '<li class="no-results">कोई परिणाम नहीं मिला</li>'; dd.classList.add('open'); dd.querySelectorAll('.dropdown-item').forEach(li=>li.addEventListener('mousedown',(ev)=>{ ev.preventDefault(); inp.value = li.textContent; inp.focus(); dd.classList.remove('open'); })); }
+        inp.addEventListener('focus', ()=>{ fetch('examples.json').then(r=>r.json()).then(j=>{
+            const items=(j.examples||[]).slice(0,12);
+            let parts = [];
+            items.forEach(it=>{ const ex = it.ex||''; ex.split(/[,;]+/).map(s=>s.trim()).filter(Boolean).forEach(p=>parts.push(p)); });
+            render(parts.map(p=>({ex:p})).slice(0,12));
+        }).catch(()=>{}); });
+        inp.addEventListener('input', ()=>{ const q=inp.value.trim().toLowerCase(); fetch('examples.json').then(r=>r.json()).then(j=>{ const items=(j.examples||[]); let parts=[]; items.forEach(it=>{ const ex=it.ex||''; ex.split(/[,;]+/).map(s=>s.trim()).filter(Boolean).forEach(p=>parts.push({ex:p})); }); const filtered = q? parts.filter(it=> (it.ex||'').toLowerCase().includes(q)): parts; render(filtered.slice(0,12)); }).catch(()=>{}); });
+        inp.addEventListener('blur', ()=> setTimeout(()=>dd.classList.remove('open'),150));
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function showSuggestionsWhenReady(input, type, dd) {
+        const tryShow = () => {
+            if (typeof sanskritDatabase !== 'undefined' && sanskritDatabase) { handleInput(input, type, dd); return; }
+            const deadline = Date.now() + 3000;
+            const poll = setInterval(() => {
+                if (typeof sanskritDatabase !== 'undefined' && sanskritDatabase) { clearInterval(poll); handleInput(input, type, dd); }
+                else if (Date.now() > deadline) { clearInterval(poll); fetch('examples.json').then(r=>r.json()).then(j=>{
+                    const items = (j && j.examples)? j.examples.slice(0,8):[];
+                    let parts=[]; items.forEach(it=>{ const ex=it.ex||''; ex.split(/[,;]+/).map(s=>s.trim()).filter(Boolean).forEach(p=>parts.push(p)); });
+                    const html = parts.map(p=>`<div class="suggestion-item" data-val="${p.replace(/"/g,'\"')}">${p}</div>`).join('');
+                    if (dd) { dd.innerHTML = html || '<div class="no-suggestions">कोई परिणाम नहीं मिला</div>'; dd.classList.add('show'); dd.querySelectorAll('.suggestion-item').forEach(el=>el.addEventListener('mousedown', ev=>{ ev.preventDefault(); const v = el.getAttribute('data-val'); document.getElementById(input.id).value = v; closeAllSuggestions(); })); }
+                }).catch(()=>{ if (dd) { dd.innerHTML = '<div class="no-suggestions">डेटाबेस लोड हो रहा है...</div>'; dd.classList.add('show'); } }); }
+            }, 140);
+        };
+        tryShow();
+    }
+
+    ['subanta_upa','subanta_pratipadika','subanta_pratyaya'].forEach(id => {
+        const input = document.getElementById(id);
+        if (!input) return;
+        const type = detectInputTypeFromId(input.id) || null;
+        const dd = ensureSuggestionDropdownForInput(input, type);
+        input.addEventListener('focus', () => showSuggestionsWhenReady(input, type, dd));
+        input.addEventListener('click', () => showSuggestionsWhenReady(input, type, dd));
+    });
+});
+</script>
 
 </body>
 </html>

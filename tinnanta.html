@@ -35,22 +35,34 @@
         <div style="max-width:900px;margin:0 auto;">
             <div style="background:var(--card-light);border-radius:18px;padding:20px 22px;box-shadow:var(--shadow);border:1px solid var(--border-light);">
                 <div class="input-grid">
-                    <div>
-                        <label class="sanskrit-text" style="display:block;font-weight:800;color:#7a3410;margin-bottom:8px;">उपसर्ग</label>
-                        <input type="text" id="tinnanta_upa" class="sanskrit-text pill-input" placeholder="उपसर्ग (यदि)" aria-label="उपसर्ग">
-                    </div>
-                    <div>
-                        <label class="sanskrit-text" style="display:block;font-weight:800;color:#7a3410;margin-bottom:8px;">धातु (मूल)</label>
-                        <input type="text" id="tinnanta_dhatu" class="sanskrit-text pill-input" placeholder="धातु (उदा. पठ्)" aria-label="धातु">
-                    </div>
-                    <div>
-                        <label class="sanskrit-text" style="display:block;font-weight:800;color:#7a3410;margin-bottom:8px;">लकार</label>
-                        <input type="text" id="tinnanta_lakar" class="sanskrit-text pill-input" placeholder="लकार (उदा. लट्, लङ्)" aria-label="लकार">
-                    </div>
-                    <div>
-                        <label class="sanskrit-text" style="display:block;font-weight:800;color:#7a3410;margin-bottom:8px;">प्रत्यय</label>
-                        <input type="text" id="tinnanta_pratyaya" class="sanskrit-text pill-input" placeholder="प्रत्यय (उदा. त्)" aria-label="प्रत्यय">
-                    </div>
+                                        <div>
+                                                <label class="sanskrit-text" style="display:block;font-weight:800;color:#7a3410;margin-bottom:8px;">उपसर्ग</label>
+                                                <div class="field-wrap">
+                                                    <input type="text" id="tinnanta_upa" class="sanskrit-text pill-input" placeholder="उपसर्ग (यदि)" aria-label="उपसर्ग">
+                                                    <ul class="dropdown" id="dd-tinnanta_upa"></ul>
+                                                </div>
+                                        </div>
+                                        <div>
+                                                <label class="sanskrit-text" style="display:block;font-weight:800;color:#7a3410;margin-bottom:8px;">धातु (मूल)</label>
+                                                <div class="field-wrap">
+                                                    <input type="text" id="tinnanta_dhatu" class="sanskrit-text pill-input" placeholder="धातु (उदा. पठ्)" aria-label="धातु">
+                                                    <ul class="dropdown" id="dd-tinnanta_dhatu"></ul>
+                                                </div>
+                                        </div>
+                                        <div>
+                                                <label class="sanskrit-text" style="display:block;font-weight:800;color:#7a3410;margin-bottom:8px;">लकार</label>
+                                                <div class="field-wrap">
+                                                    <input type="text" id="tinnanta_lakar" class="sanskrit-text pill-input" placeholder="लकार (उदा. लट्, लङ्)" aria-label="लकार">
+                                                    <ul class="dropdown" id="dd-tinnanta_lakar"></ul>
+                                                </div>
+                                        </div>
+                                        <div>
+                                                <label class="sanskrit-text" style="display:block;font-weight:800;color:#7a3410;margin-bottom:8px;">प्रत्यय</label>
+                                                <div class="field-wrap">
+                                                    <input type="text" id="tinnanta_pratyaya" class="sanskrit-text pill-input" placeholder="प्रत्यय (उदा. त्)" aria-label="प्रत्यय">
+                                                    <ul class="dropdown" id="dd-tinnanta_pratyaya"></ul>
+                                                </div>
+                                        </div>
                 </div>
 
                 <div style="margin-top:20px;display:flex;justify-content:center;">
@@ -97,6 +109,57 @@
 <script src="ashtadhyayi_engine.js"></script>
 <script src="animations.js"></script>
 <script src="script.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    ['tinnanta_upa','tinnanta_dhatu','tinnanta_lakar','tinnanta_pratyaya'].forEach(id=>{
+        const inp = document.getElementById(id); if(!inp) return; const dd = document.getElementById('dd-'+id);
+        if(!dd) return;
+    function render(items){ dd.innerHTML = items.length? items.map(it=>`<li class="dropdown-item">${it.label||it.id||it.key||it.ex||''}</li>`).join('') : '<li class="no-results">कोई परिणाम नहीं मिला</li>'; dd.classList.add('open'); dd.querySelectorAll('.dropdown-item').forEach(li=>li.addEventListener('mousedown',(ev)=>{ ev.preventDefault(); inp.value = li.textContent; inp.focus(); dd.classList.remove('open'); })); }
+        inp.addEventListener('focus', ()=>{ const items = (sanskritDatabase && sanskritDatabase.dhatus)? Object.entries(sanskritDatabase.dhatus).slice(0,12).map(([k,v])=>({key:k,label:v.label||k})):[]; if(items.length) render(items); else fetch('examples.json').then(r=>r.json()).then(j=>{
+            const items = (j && j.examples)? j.examples.slice(0,10):[];
+            let parts = [];
+            items.forEach(it => { const ex = it.ex || ''; ex.split(/[,;]+/).map(s=>s.trim()).filter(Boolean).forEach(p=>parts.push(p)); });
+            const flat = parts.map(p=>({label:p}));
+            render(flat);
+        }).catch(()=>{}); });
+        inp.addEventListener('input', ()=>{ const q = inp.value.trim().toLowerCase(); const items = (sanskritDatabase && sanskritDatabase.dhatus)? Object.entries(sanskritDatabase.dhatus).map(([k,v])=>({key:k,label:v.label||k})):[]; const filtered = q? items.filter(it=> (it.key+ ' '+it.label).toLowerCase().includes(q)): items.slice(0,12); render(filtered.slice(0,12)); });
+        inp.addEventListener('blur', ()=> setTimeout(()=>dd.classList.remove('open'),150));
+    });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function showSuggestionsWhenReady(input, type, dd) {
+        const tryShow = () => {
+            if (typeof sanskritDatabase !== 'undefined' && sanskritDatabase) { handleInput(input, type, dd); return; }
+            const deadline = Date.now() + 3000;
+            const poll = setInterval(() => {
+                if (typeof sanskritDatabase !== 'undefined' && sanskritDatabase) { clearInterval(poll); handleInput(input, type, dd); }
+                else if (Date.now() > deadline) { clearInterval(poll); fetch('examples.json').then(r=>r.json()).then(j=>{
+                    const items = (j && j.examples)? j.examples.slice(0,8):[];
+                    let parts = [];
+                    items.forEach(it => { const ex = it.ex || ''; ex.split(/[,;]+/).map(s=>s.trim()).filter(Boolean).forEach(p=>parts.push(p)); });
+                    const html = parts.map(p => `<div class="suggestion-item" data-val="${p.replace(/"/g,'\"')}">${p}</div>`).join('');
+                    if (dd) {
+                        dd.innerHTML = html || '<div class="no-suggestions">कोई परिणाम नहीं मिला</div>'; dd.classList.add('show');
+                        dd.querySelectorAll('.suggestion-item').forEach(el=>el.addEventListener('mousedown', ev=>{ ev.preventDefault(); const v = el.getAttribute('data-val'); document.getElementById(input.id).value = v; closeAllSuggestions(); }));
+                    }
+                }).catch(()=>{ if (dd) { dd.innerHTML = '<div class="no-suggestions">डेटाबेस लोड हो रहा है...</div>'; dd.classList.add('show'); } }); }
+            }, 140);
+        };
+        tryShow();
+    }
+
+    ['tinnanta_upa','tinnanta_dhatu','tinnanta_lakar','tinnanta_pratyaya'].forEach(id => {
+        const input = document.getElementById(id);
+        if (!input) return;
+        const type = detectInputTypeFromId(input.id) || null;
+        const dd = ensureSuggestionDropdownForInput(input, type);
+        input.addEventListener('focus', () => showSuggestionsWhenReady(input, type, dd));
+        input.addEventListener('click', () => showSuggestionsWhenReady(input, type, dd));
+    });
+});
+</script>
 
 </body>
 </html>
