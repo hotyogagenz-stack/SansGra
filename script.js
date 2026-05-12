@@ -1,6 +1,25 @@
 let sanskritDatabase = {};
 let pratyayaDB = {}; 
 
+// Responsive menu toggle (for .hamburger and .menu-mini-btn)
+document.addEventListener('DOMContentLoaded', () => {
+    function toggleResponsiveNav() {
+        const header = document.querySelector('header');
+        if (!header) return;
+        header.classList.toggle('nav-open');
+        // if nav is hidden in CSS, toggling nav-open can show it
+        const nav = header.querySelector('nav');
+        if (nav) nav.classList.toggle('show-mobile');
+    }
+
+    document.querySelectorAll('.hamburger, .menu-mini-btn').forEach(btn => {
+        btn.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            toggleResponsiveNav();
+        });
+    });
+});
+
 // Hinglish/common word mappings - for casual English spellings of Hindi/Sanskrit words
 const hinglishWordMap = {
     'ram': 'राम', 'krishna': 'कृष्ण', 'shiva': 'शिव', 'ganesh': 'गणेश',

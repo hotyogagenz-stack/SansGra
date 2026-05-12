@@ -398,7 +398,67 @@ body.dark #qnaResult em {
     overflow-y: auto;
     padding: 6px 6px;
     box-shadow: var(--shadow-hover);
+
 }
+
+/* ----------------------------
+     Responsive / Mobile rules
+     ---------------------------- */
+@media (max-width: 900px) {
+    header {
+        padding: 10px 4%;
+        height: 64px;
+    }
+    header.nav-open { z-index: 1201; }
+    header.nav-open nav { display: block; position: absolute; left: 0; right: 0; top: 64px; background: var(--card-light); padding: 12px; border-top: 1px solid var(--border-light); box-shadow: var(--shadow); }
+    .logo { font-size: clamp(18px, 6vw, 22px); }
+    nav { display: none; }
+    nav.show-mobile { display: block; }
+    .hamburger { display: block; }
+    .container { margin: 76px 12px 24px; padding: 12px; }
+    .sutras-page { padding: 18px; }
+    .sutras-page h1 { font-size: clamp(20px, 6vw, 26px); }
+    .sutra-list { gap: 12px; }
+    .sutra-item { border-radius: 10px; }
+    .sutra-item .sutra-card-desc { max-height: 55vh; }
+    /* suggestion dropdowns should stretch full width on small screens */
+    .field-wrap .dropdown { position: static; width: 100%; max-height: 40vh; box-shadow: none; border-radius: 6px; margin-top: 8px; }
+    /* make inputs and buttons fill width */
+    input, textarea, select, .gana-btn, nav a, nav button { width: 100%; box-sizing: border-box; }
+    /* card shadows lighter */
+    .sutras-page, .sutra-item { box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+}
+
+@media (max-width: 600px) {
+    :root { --shadow: 0 6px 14px rgba(0,0,0,0.06); }
+    header { height: 60px; padding: 10px 3%; }
+    .logo { font-size: clamp(16px, 7vw, 20px); }
+    .hamburger { font-size: 22px; }
+    .container { margin: 72px 8px 16px; padding: 8px; }
+    .sutras-page { padding: 12px; border-radius: 8px; }
+    /* make tables horizontally scrollable instead of forcing a wide layout */
+    .dhatu-table { width: 100%; min-width: 0 !important; table-layout: auto; }
+    .dhatu-table thead, .dhatu-table th, .dhatu-table td { white-space: normal; word-break: break-word; }
+    .dhatu-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .dhatu-table table { width: 100%; }
+    /* reduce padding in table cells for small screens */
+    .dhatu-table td, .dhatu-table th { padding: 10px 8px !important; font-size: 13px; }
+    /* dropdown suggestion items larger for touch */
+    .dropdown .dropdown-item { padding: 12px 10px; font-size: 15px; }
+    /* ensure footer & floating elements don't overlap content */
+    main.container { padding-bottom: 120px; }
+    /* increase tap targets */
+    .gana-btn, .menu-mini-btn { padding: 12px 14px; }
+}
+
+/* Accessibility: improve focus outlines for keyboard and touch navigation */
+button:focus, a:focus, input:focus, textarea:focus {
+    outline: 3px solid rgba(154,52,18,0.18);
+    outline-offset: 2px;
+}
+
+/* Small utility: reduce very large min-widths used by specific pages so responsive rules can take effect */
+.dhatu-table[style] { min-width: 0 !important; }
 .dropdown.open { display: block; }
 .dropdown .dropdown-item {
     list-style: none;
