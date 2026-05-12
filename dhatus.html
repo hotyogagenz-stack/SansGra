@@ -24,9 +24,13 @@
       <div class="sutra-hero-row" style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
         <button class="menu-mini-btn" aria-hidden="true" onclick="toggleMiniMenu(event)" style="background:none;border:none;font-size:20px;">☰</button>
         <h1 style="margin:0;">धातवः (Dhatus)</h1>
+        <!-- right-aligned search box -->
+        <div id="dhatuSearchWrapper" style="margin-left:auto;">
+          <input id="dhatuSearch" type="search" placeholder="खोजें: धातु, मूलधातु, अर्थ, Hindi या English" aria-label="Search dhatus" style="width:320px;max-width:40vw;padding:8px 10px;border-radius:10px;border:2px solid #16a34a;background:#ecfdf5;color:#064e3b;box-shadow: inset 0 1px 0 rgba(0,0,0,0.02);"> 
+        </div>
       </div>
       <p style="text-align: left;">धातुगणानुसारम्</p>
-       <div id="dhatuList" class="sutra-list" style="text-align: left;">
+      <div id="dhatuList" class="sutra-list" style="text-align: left;">
       </div>
 
     </section>
@@ -306,6 +310,43 @@
     }
 
     window.addEventListener('load', renderGanas);
+    // setup search — defined below; called after render completes
+
+    function setupDhatuSearch() {
+      const input = document.getElementById('dhatuSearch');
+      const container = document.getElementById('dhatuList');
+      if (!input || !container) return;
+
+      // normalizer for search (handles Devanagari combining marks when supported)
+      function normalizeForSearch(str) {
+        if (!str) return '';
+        try {
+          return str.toString().replace(/\p{M}/gu, '').toLowerCase().replace(/[^\p{L}\p{N}\s]/gu, ' ').replace(/\s+/g,' ').trim();
+        } catch (e) {
+          return str.toString().replace(/[\u093C-\u094D\u0951-\u0954]/g, '').toLowerCase().replace(/[^\w\s\u0900-\u097F]/g, ' ').replace(/\s+/g,' ').trim();
+        }
+      }
+
+      // build searchable index on all rows
+      const rows = Array.from(container.querySelectorAll('.dhatu-table tbody tr'));
+      rows.forEach(row => {
+        const cells = Array.from(row.querySelectorAll('td'));
+        const texts = cells.slice(1,7).map(td => td.textContent || td.innerText || '').join(' | '); // dhatuId..English
+        row.dataset.search = normalizeForSearch(texts);
+      });
+
+      input.addEventListener('input', (ev) => {
+        const q = normalizeForSearch(ev.target.value || '');
+        if (!q) {
+          rows.forEach(r => r.style.display = '');
+          return;
+        }
+        rows.forEach(r => {
+          const hay = r.dataset.search || '';
+          r.style.display = hay.includes(q) ? '' : 'none';
+        });
+      });
+    }
   </script>
 </body>
 </html>
