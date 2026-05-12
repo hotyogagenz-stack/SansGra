@@ -71,24 +71,59 @@
       }
 
       // helper to extract Hindi/English from dhatus.json label like: "भू (सत्तायाम् - होना | to exist, to become)"
+      // Robust: handles missing '|' by looking for Latin text as English, falls back to parts around '-' or ';'.
       function parseLabelForTranslations(label) {
         if (!label || typeof label !== 'string') return { h: '', e: '' };
-        const paren = label.match(/\((.*)\)/);
-        if (!paren) return { h: '', e: '' };
-        const inside = paren[1];
-        const parts = inside.split('|').map(s => s.trim());
-        const left = parts[0] ?? '';
-        const right = parts[1] ?? '';
-        let h = '';
-        if (left.includes('-')) {
-          const lp = left.split('-').map(s => s.trim());
-          h = lp[1] ?? lp[0] ?? '';
-        } else {
-          const tokens = left.split(';').pop().trim();
-          h = tokens || '';
+        // prefer content inside parentheses
+        const paren = label.match(/\(([^)]+)\)/);
+        const content = paren ? paren[1].trim() : label.trim();
+
+        // If there's an explicit pipe separator, use it.
+        if (content.includes('|')) {
+          const parts = content.split('|').map(s => s.trim());
+          const left = parts[0] ?? '';
+          const right = parts.slice(1).join('|') ?? '';
+          // Hindi: try text after '-' in left or last semicolon-separated token
+          let h = '';
+          if (left.includes('-')) {
+            const lp = left.split('-').map(s => s.trim());
+            h = lp[1] ?? lp[0] ?? '';
+          } else if (left.includes(';')) {
+            h = left.split(';').pop().trim();
+          } else {
+            h = left;
+          }
+          const e = right;
+          return { h, e };
         }
-        const e = right;
-        return { h, e };
+
+        // No pipe — attempt to detect English (Latin letters) inside content
+        const latinMatch = content.match(/[A-Za-z][A-Za-z ,\-]*/);
+        if (latinMatch) {
+          const e = latinMatch[0].trim();
+          // Hindi is content before the latin part, cleaned of trailing separators
+          const hRaw = content.slice(0, latinMatch.index).replace(/[-|;:]$/, '').trim();
+          // If there's a '-' in the Hindi raw, prefer text after '-' as the Hindi gloss
+          let h = hRaw;
+          if (!h && content.includes('-')) {
+            const parts = content.split('-').map(s => s.trim());
+            h = parts[1] ?? parts[0] ?? '';
+          } else if (h && h.includes(';')) {
+            h = h.split(';').pop().trim();
+          }
+          return { h: h || '', e: e || '' };
+        }
+
+        // Final fallback: split on '-' or ';' heuristically
+        if (content.includes('-')) {
+          const parts = content.split('-').map(s => s.trim());
+          return { h: parts[1] ?? parts[0] ?? '', e: '' };
+        }
+        if (content.includes(';')) {
+          const parts = content.split(';').map(s => s.trim());
+          return { h: parts.pop() || '', e: '' };
+        }
+        return { h: content, e: '' };
       }
 
       // load dhatus.json once for fallback lookups when gana entries miss `dhatu` or have malformed keys
@@ -118,9 +153,10 @@
 
         // build table for this gana
         const ganaArr = Array.isArray(ganasData[ganaName]) ? ganasData[ganaName] : [];
-        // always render the table headers so every gana shows the same layout
-        let html = '<div style="overflow:auto;">';
-        html += '<table class="dhatu-table" style="width:100%;border-collapse:collapse;margin-top:10px;min-width:800px;table-layout:fixed;">';
+  // always render the table headers so every gana shows the same layout
+  let html = '<div style="overflow:auto;">';
+  // remove hard min-width so table can shrink on small screens; container will scroll
+  html += '<table class="dhatu-table" style="width:100%;border-collapse:collapse;margin-top:10px;table-layout:fixed;">';
   html += '<thead><tr>' +
     '<th style="width:6%;text-align:left;border-bottom:1px solid var(--border-light);padding:8px;">S.No</th>' +
                 '<th style="width:12.5%;text-align:left;border-bottom:1px solid var(--border-light);padding:8px;">dhatuId</th>' +
@@ -198,15 +234,33 @@
             let hindi = d.hindi ?? '';
             let english = d.english ?? '';
             if ((!hindi || !english) && dhatusDb && typeof dhatusDb === 'object') {
-              const candidates = [dh, dhatuId, mul];
+              const candidates = [dh, dhatuId, mul, meaning];
               const nCandidates = candidates.map(c => normalizeDev(c || ''));
               let foundEntry = null;
               for (const key in dhatusDb) {
                 const entry = dhatusDb[key];
                 if (!entry) continue;
-                if (candidates.includes(key) || nCandidates.includes(normalizeDev(key))) { foundEntry = entry; break; }
-                const entryClean = normalizeDev(entry.clean || entry.label || '');
-                if (nCandidates.some(nc => nc && (entryClean === nc || entryClean.includes(nc) || nc.includes(entryClean)))) { foundEntry = entry; break; }
+                // quick exact key match
+                if (candidates.includes(key)) { foundEntry = entry; break; }
+                const nKey = normalizeDev(key || '');
+                if (nCandidates.includes(nKey)) { foundEntry = entry; break; }
+
+                const entryClean = normalizeDev(entry.clean || '');
+                const entryLabel = normalizeDev(entry.label || '');
+                // match by cleaned variations
+                for (const nc of nCandidates) {
+                  if (!nc) continue;
+                  if (entryClean === nc || entryClean.startsWith(nc) || nc.startsWith(entryClean)) { foundEntry = entry; break; }
+                  if (entryLabel.includes(nc) || nc.includes(entryLabel)) { foundEntry = entry; break; }
+                }
+                if (foundEntry) break;
+
+                // fallback: check if original label contains the mul or meaning (non-normalized)
+                const rawLabel = (entry.label || '').toString();
+                if (mul && rawLabel.includes(mul)) { foundEntry = entry; break; }
+                if (meaning && rawLabel.includes(meaning)) { foundEntry = entry; break; }
+                // small prefix match on dh (Devanagari)
+                if (dh && (rawLabel.startsWith(dh) || (entry.clean && entry.clean.startsWith && entry.clean.startsWith(dh)))) { foundEntry = entry; break; }
               }
               if (foundEntry) {
                 const parsed = parseLabelForTranslations(foundEntry.label || '');
