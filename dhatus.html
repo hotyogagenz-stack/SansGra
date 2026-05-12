@@ -58,8 +58,29 @@
       } catch (err) {
         console.error('Failed to load ganas.json', err);
       }
+      // helper: normalize Devanagari strings by removing combining marks and non-Devanagari chars
+      function normalizeDev(str) {
+        if (!str || typeof str !== 'string') return '';
+        try {
+          // remove Unicode combining marks (diacritics) and keep Devanagari letters
+          return str.replace(/\p{M}/gu, '').replace(/[^\u0900-\u097F]/g, '').trim();
+        } catch (e) {
+          // fallback for engines without Unicode property escapes
+          return str.replace(/[\u093C-\u094D\u0951-\u0954]/g, '').replace(/[^\u0900-\u097F]/g, '').trim();
+        }
+      }
 
-      // create a card for each gana and render that gana's table inside the card desc
+      // load dhatus.json once for fallback lookups when gana entries miss `dhatu` or have malformed keys
+      let dhatusDb = {};
+      try {
+        const dhResp = await fetch('dhatus.json');
+        const dhData = await dhResp.json();
+        dhatusDb = dhData.dhatus || {};
+      } catch (err) {
+        // non-fatal — we'll simply not be able to lookup from dhatus.json
+        // console.warn('Failed to load dhatus.json for fallback lookup', err);
+      }
+  // create a card for each gana and render that gana's table inside the card desc
       ganas.forEach(ganaName => {
         const item = document.createElement('div');
         item.className = 'sutra-item sutra-card';
@@ -97,10 +118,57 @@
             const id = d.id ?? `${ganaName}-${idx+1}`;
             const dhatuId = d.dhatuId ?? d.id ?? `${ganaName}-${idx+1}`;
             const mul = d.form ?? d.muladhatu ?? '';
-            const dh = d.dhatu ?? '';
             const meaning = d.meaning ?? '';
             const padi = d.padi ?? '';
             const it = d.it ?? '';
+
+            // compute dhatu value with multiple fallbacks:
+            // 1. standard key d.dhatu
+            // 2. any object key that contains the Devanagari character 'ध' (covers misspelled keys like 'धतु' etc)
+            // 3. lookup in dhatus.json by dhatuId
+            // 4. lookup in dhatus.json by mul (form) matching the .clean field
+            let dh = '';
+            if (d && typeof d === 'object') {
+              if (d.dhatu) dh = d.dhatu;
+              // look for keys that include the Devanagari character 'ध' (U+0927)
+              if (!dh) {
+                for (const k of Object.keys(d)) {
+                  if (k.includes('\u0927')) {
+                    // prefer string values
+                    const val = d[k];
+                    if (val && typeof val === 'string') { dh = val; break; }
+                  }
+                }
+              }
+            }
+            // fallback: lookup in dhatus.json by dhatuId
+            if (!dh && dhatuId && dhatusDb && typeof dhatusDb === 'object') {
+              // dhatus.json uses Devanagari keys (clean forms) as keys; some dhatuIds might match clean forms
+              if (dhatusDb[dhatuId]) {
+                dh = dhatusDb[dhatuId].clean || dhatusDb[dhatuId].label || dhatuId;
+              }
+            }
+            // fallback: lookup by mul/form value against dhatusDb entries' clean field
+            if (!dh && mul && dhatusDb && typeof dhatusDb === 'object') {
+              // exact match first
+              if (dhatusDb[mul]) {
+                dh = dhatusDb[mul].clean || dhatusDb[mul].label || mul;
+              } else {
+                const nMul = normalizeDev(mul);
+                for (const key in dhatusDb) {
+                  const entry = dhatusDb[key];
+                  if (!entry) continue;
+                  const nEntry = normalizeDev(entry.clean || entry.label || '');
+                  if (!nEntry) continue;
+                  if (nEntry === nMul || nEntry.startsWith(nMul) || nMul.startsWith(nEntry) || (nEntry.includes(nMul) || nMul.includes(nEntry))) {
+                    dh = entry.clean || entry.label || key;
+                    break;
+                  }
+                }
+              }
+            }
+            // final fallback: use dhatuId string so cell is not empty
+            if (!dh) dh = dhatuId;
       html += `<tr>` +
         `<td style="padding:8px;border-bottom:1px solid var(--border-light);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${idx+1}</td>` +
                     `<td style="padding:8px;border-bottom:1px solid var(--border-light);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${dhatuId}</td>` +
