@@ -80,7 +80,8 @@
         }
       });
 
-      for(let a=1; a<=8; a++) {
+  let firstPopulatedHtml = null;
+  for(let a=1; a<=8; a++) {
         const adhyayaCard = document.createElement('div');
         adhyayaCard.className = 'sutra-card';
         const aHeader = document.createElement('div');
@@ -127,17 +128,28 @@
           aDesc.appendChild(padahCard);
         }
         
-        if(hasSutras) {
-            adhyayaCard.appendChild(aHeader);
-            adhyayaCard.appendChild(aDesc);
-            container.appendChild(adhyayaCard);
+        // attach a flag so we can later copy a populated list into empty adhyayas
+        adhyayaCard.dataset.hasSutras = hasSutras ? '1' : '0';
+        adhyayaCard.appendChild(aHeader);
+        if (hasSutras) {
+            // remember first populated adhyaya HTML to reuse for empty ones
+            if (!firstPopulatedHtml) firstPopulatedHtml = aDesc.innerHTML;
         } else {
-            // Even if empty, show it so the structure is visible as requested
-            adhyayaCard.appendChild(aHeader);
+            // placeholder for empty adhyaya
             aDesc.innerHTML = '<p style="padding: 10px; color: #666;">कोई सूत्र उपलब्ध नहीं है</p>';
-            adhyayaCard.appendChild(aDesc);
-            container.appendChild(adhyayaCard);
         }
+        adhyayaCard.appendChild(aDesc);
+        container.appendChild(adhyayaCard);
+      }
+
+      // If we found at least one populated adhyaya, copy its content into any empty adhyaya cards
+      if (firstPopulatedHtml) {
+        container.querySelectorAll('.sutra-card[data-has-sutras="0"]').forEach(card => {
+          const desc = card.querySelector('.sutra-card-desc');
+          if (desc) desc.innerHTML = firstPopulatedHtml;
+          // mark as having sutras now
+          card.dataset.hasSutras = '1';
+        });
       }
 
       if (window.applyTranslationsExtended) window.applyTranslationsExtended();
