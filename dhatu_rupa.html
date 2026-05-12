@@ -118,5 +118,57 @@
 
     window.addEventListener('load', renderLakaras);
   </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      function attach() {
+        document.querySelectorAll('input[id^="dhatuInput_"]').forEach(inp=>{
+          if (inp.__dd) return; const ddId = 'dd-' + inp.id; let dd = document.getElementById(ddId); if(!dd){ dd = document.createElement('ul'); dd.id = ddId; dd.className = 'dropdown'; inp.parentElement.appendChild(dd); }
+          function render(items){ dd.innerHTML = items.length? items.map(it=>`<li class="dropdown-item">${it.label||it.key||it.ex||''}</li>`).join('') : '<li class="no-results">कोई परिणाम नहीं मिला</li>'; dd.classList.add('open'); dd.querySelectorAll('.dropdown-item').forEach(li=>li.addEventListener('mousedown',(ev)=>{ ev.preventDefault(); inp.value = li.textContent; inp.focus(); dd.classList.remove('open'); })); }
+      inp.addEventListener('focus', ()=>{ const items = (sanskritDatabase && sanskritDatabase.dhatus)? Object.entries(sanskritDatabase.dhatus).slice(0,12).map(([k,v])=>({key:k,label:v.label||k})):[]; if(items.length) render(items); else fetch('examples.json').then(r=>r.json()).then(j=>{
+        const items = (j && j.examples)? j.examples.slice(0,10):[]; let parts=[]; items.forEach(it=>{ const ex=it.ex||''; ex.split(/[,;]+/).map(s=>s.trim()).filter(Boolean).forEach(p=>parts.push(p)); }); render(parts.map(p=>({label:p})).slice(0,12));
+      }).catch(()=>{}); });
+          inp.addEventListener('input', ()=>{ const q=inp.value.trim().toLowerCase(); const items=(sanskritDatabase && sanskritDatabase.dhatus)? Object.entries(sanskritDatabase.dhatus).map(([k,v])=>({key:k,label:v.label||k})):[]; const filtered = q? items.filter(it=> (it.key+' '+it.label).toLowerCase().includes(q)): items.slice(0,12); render(filtered.slice(0,12)); });
+          inp.addEventListener('blur', ()=> setTimeout(()=>dd.classList.remove('open'),150));
+          inp.__dd = true;
+        });
+      }
+      setTimeout(attach, 300);
+      const mo = new MutationObserver(attach); mo.observe(document.getElementById('lakaraList'), { childList:true, subtree:true });
+    });
+  </script>
+  <script>
+    // Attach suggestion dropdowns to dynamically created dhatu input fields inside lakara cards
+    document.addEventListener('DOMContentLoaded', function() {
+      const attach = () => {
+        document.querySelectorAll('input[id^="dhatuInput_"]').forEach(inp => {
+          if (inp.__suggestionsWired) return;
+          const type = detectInputTypeFromId(inp.id) || 'dhatu';
+          const dd = ensureSuggestionDropdownForInput(inp, type);
+          function showSuggestionsWhenReady(input, type, dd) {
+            const tryShow = () => {
+                if (typeof sanskritDatabase !== 'undefined' && sanskritDatabase) { handleInput(input, type, dd); return; }
+                const deadline = Date.now() + 3000;
+                const poll = setInterval(() => {
+                    if (typeof sanskritDatabase !== 'undefined' && sanskritDatabase) { clearInterval(poll); handleInput(input, type, dd); }
+          else if (Date.now() > deadline) { clearInterval(poll); fetch('examples.json').then(r=>r.json()).then(j=>{
+            const items = (j && j.examples)? j.examples.slice(0,8):[]; let parts=[]; items.forEach(it=>{ const ex=it.ex||''; ex.split(/[,;]+/).map(s=>s.trim()).filter(Boolean).forEach(p=>parts.push(p)); });
+            const html = parts.map(p=>`<div class="suggestion-item" data-val="${p.replace(/"/g,'\"')}">${p}</div>`).join('');
+            if (dd) { dd.innerHTML = html || '<div class="no-suggestions">कोई परिणाम नहीं मिला</div>'; dd.classList.add('show'); dd.querySelectorAll('.suggestion-item').forEach(el=>el.addEventListener('mousedown', ev=>{ ev.preventDefault(); const v=el.getAttribute('data-val'); document.getElementById(input.id).value = v; closeAllSuggestions(); })); }
+          }).catch(()=>{ if (dd) { dd.innerHTML = '<div class="no-suggestions">डेटाबेस लोड हो रहा है...</div>'; dd.classList.add('show'); } }); }
+                }, 140);
+            };
+            tryShow();
+          }
+          inp.addEventListener('focus', () => showSuggestionsWhenReady(inp, type, dd));
+          inp.addEventListener('click', () => showSuggestionsWhenReady(inp, type, dd));
+          inp.__suggestionsWired = true;
+        });
+      };
+      // run after render
+      setTimeout(attach, 300);
+      const mo = new MutationObserver(attach);
+      mo.observe(document.getElementById('lakaraList'), { childList: true, subtree: true });
+    });
+  </script>
 </body>
 </html>

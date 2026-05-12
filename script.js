@@ -2349,6 +2349,30 @@ function setupAutocomplete(inputId, dropdownId, type) {
     input.addEventListener('input', (e) => {
         const value = e.target.value.toLowerCase().trim();
         
+        // If input is empty, show a helpful list of suggestions so users know what to add
+        if (value.length === 0) {
+            // If database not ready, show a loading / hint state
+            if (!sanskritDatabase) {
+                dropdown.innerHTML = '<div class="no-suggestions">\u0921\u0947\u091f\u093e\u092c\u0947\u0938 \u0932\u094b\u0921 \u0939\u094b \u0930\u0939\u093e \u0939\u0948...</div>';
+                dropdown.classList.add('show');
+                return;
+            }
+
+            let suggestions = [];
+            if (type === 'upasarga') {
+                suggestions = (sanskritDatabase.upasargas && Array.isArray(sanskritDatabase.upasargas) ? sanskritDatabase.upasargas.slice(0, 10) : (suggestionData.upasargas || []).slice(0, 10));
+            } else if (type === 'dhatu') {
+                const dh = sanskritDatabase.dhatus || {};
+                suggestions = Object.entries(dh).slice(0, 10).map(([key, d]) => ({ ...d, key, label: d.label || '' }));
+            } else if (type === 'pratyaya') {
+                const pd = pratyayaDB || {};
+                suggestions = Object.entries(pd).slice(0, 10).map(([key, p]) => ({ ...p, key, real: p.real || '', type: p.type || '', lopa: p.lopa || '' }));
+            }
+
+            renderSuggestions(suggestions, dropdown, input, value);
+            return;
+        }
+        
         // Smart Matching: Match Hinglish OR transliterated Devanagari
         const devQuery = romanToDevanagari(value);
         
