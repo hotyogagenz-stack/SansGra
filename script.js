@@ -1068,7 +1068,8 @@ function setupSuggestionListeners() {
         if (!input) return;
 
         input.addEventListener('input', () => handleInput(input, type, dropdownId));
-        input.addEventListener('focus', () => handleInput(input, type, dropdownId));
+    input.addEventListener('focus', () => handleInput(input, type, dropdownId));
+    input.addEventListener('click', () => handleInput(input, type, dropdownId));
         input.addEventListener('keydown', (e) => handleKeydown(e, type, dropdownId));
     });
 
@@ -1080,14 +1081,144 @@ function setupSuggestionListeners() {
     });
 }
 
+// Generic wiring: find other inputs across pages and attach the same suggestion behavior.
+function detectInputTypeFromId(id) {
+    if (!id) return null;
+    const lid = id.toLowerCase();
+    if (lid.includes('upa') || lid.includes('upasarga')) return 'upasarga';
+    if (lid.includes('dhatu')) return 'dhatu';
+    if (lid.includes('prat') || lid.includes('pratyaya') || lid.includes('pratipad')) return 'pratyaya';
+    if (lid.includes('lakar') || lid.includes('lakaras') || lid.includes('lakara')) return 'lakar';
+    return null;
+}
+
+function ensureSuggestionDropdownForInput(input, type) {
+    if (!input || !type) return null;
+    const parent = input.closest('.input-group') || input.parentElement;
+    // Ensure parent is positioned so the absolute suggestion-dropdown aligns correctly
+    try {
+        const cs = window.getComputedStyle(parent);
+        if (cs && cs.position === 'static') parent.style.position = 'relative';
+    } catch (e) { /* ignore */ }
+    const dropdownId = `${input.id || input.name}Suggestions`;
+    if (!document.getElementById(dropdownId)) {
+        const dd = document.createElement('div');
+        dd.className = 'suggestion-dropdown';
+        dd.id = dropdownId;
+        if (input.nextElementSibling) input.parentElement.insertBefore(dd, input.nextElementSibling);
+        else parent.appendChild(dd);
+    }
+    return dropdownId;
+}
+
+const COMMON_LAKARAS = [
+    { id: 'लट्', label: 'वर्तमान काल' },
+    { id: 'लङ्', label: 'भूतकाल (अनद्यतन)' },
+    { id: 'लिट्', label: 'परोक्ष भूतकाल' },
+    { id: 'लुट्', label: 'अनद्यतन भविष्यत्' },
+    { id: 'लृट्', label: 'साधारण भविष्यत्' },
+    { id: 'लोट्', label: 'आज्ञार्थक' },
+    { id: 'विधिलिङ्', label: 'संभावना/इच्छा' },
+    { id: 'आशीर्लिङ्', label: 'आशीर्वाद' }
+];
+
+function wireAllPageInputsForSuggestions() {
+    if ((window.location.pathname || '').toLowerCase().includes('examples')) return;
+
+    const allInputs = Array.from(document.querySelectorAll('input[type="text"], input[type="search"]'));
+    allInputs.forEach(input => {
+        if (!input.id) return;
+        const type = detectInputTypeFromId(input.id);
+        if (!type) return;
+        const dropdownId = ensureSuggestionDropdownForInput(input, type);
+        if (input.__suggestionsWired) return;
+
+    input.addEventListener('input', () => {
+            if (type === 'lakar') {
+                const q = input.value.trim();
+                const dropdown = document.getElementById(dropdownId);
+                if (!dropdown) return;
+                if (!q) {
+                    const items = COMMON_LAKARAS.map((it) => ({ key: it.id, label: it.label }));
+                    currentSuggestions = items;
+                    currentSuggestionType = type;
+                    activeSuggestionIndex = -1;
+                    renderSuggestions(items, dropdown, dropdownId);
+                } else {
+                    const filtered = COMMON_LAKARAS.filter(l => l.id.includes(q) || (l.label || '').toLowerCase().includes(q.toLowerCase())).map(l=>({ key: l.id, label: l.label }));
+                    renderSuggestions(filtered, document.getElementById(dropdownId), dropdownId);
+                }
+                return;
+            }
+            handleInput(input, type, dropdownId);
+        });
+
+    input.addEventListener('focus', () => {
+            if (type === 'lakar') {
+                const dropdown = document.getElementById(dropdownId);
+                currentSuggestions = COMMON_LAKARAS.map(l=>({ key: l.id, label: l.label }));
+                currentSuggestionType = type;
+                activeSuggestionIndex = -1;
+                renderSuggestions(currentSuggestions, dropdown, dropdownId);
+                return;
+            }
+            handleInput(input, type, dropdownId);
+        });
+
+    input.addEventListener('keydown', (e) => handleKeydown(e, type, dropdownId));
+    input.addEventListener('click', () => handleInput(input, type, dropdownId));
+        input.__suggestionsWired = true;
+    });
+
+    const mo = new MutationObserver(() => {
+        Array.from(document.querySelectorAll('input[type="text"]')).forEach(inp => {
+            if (!inp.id) return;
+            if (inp.__suggestionsWired) return;
+            const t = detectInputTypeFromId(inp.id);
+            if (t) {
+                const dd = ensureSuggestionDropdownForInput(inp, t);
+                inp.addEventListener('input', () => handleInput(inp, t, dd));
+                inp.addEventListener('focus', () => handleInput(inp, t, dd));
+                inp.addEventListener('click', () => handleInput(inp, t, dd));
+                inp.addEventListener('keydown', (e) => handleKeydown(e, t, dd));
+                inp.__suggestionsWired = true;
+            }
+        });
+    });
+    mo.observe(document.body, { childList: true, subtree: true });
+}
+
 function handleInput(input, type, dropdownId) {
     const query = input.value.trim();
     const dropdown = document.getElementById(dropdownId);
     
     if (!dropdown) return;
 
+    // If input is empty, show a helpful list of suggestions so users know what to add
     if (query.length === 0) {
-        dropdown.classList.remove('show');
+        // If database not ready, show a loading / hint state
+        if (!sanskritDatabase) {
+            dropdown.innerHTML = '<div class="no-suggestions">\u0921\u0947\u091f\u093e\u092c\u0947\u0938 \u0932\u094b\u0921 \u0939\u094b \u0930\u0939\u093e \u0939\u0948...</div>';
+            dropdown.classList.add('show');
+            return;
+        }
+
+        let suggestions = [];
+        if (type === 'upasarga') {
+            suggestions = (sanskritDatabase.upasargas && Array.isArray(sanskritDatabase.upasargas) ? sanskritDatabase.upasargas.slice(0, 10) : (suggestionData.upasargas || []).slice(0, 10));
+        } else if (type === 'dhatu') {
+            const dh = sanskritDatabase.dhatus || {};
+            suggestions = Object.entries(dh).slice(0, 10).map(([key, d]) => ({ ...d, key, label: d.label || '' }));
+        } else if (type === 'pratyaya') {
+            const pd = pratyayaDB || {};
+            suggestions = Object.entries(pd).slice(0, 10).map(([key, p]) => ({ ...p, key, real: p.real || '', type: p.type || '', lopa: p.lopa || '' }));
+        }
+
+        currentSuggestions = suggestions;
+        currentSuggestionType = type;
+        activeSuggestionIndex = -1;
+
+        renderSuggestions(suggestions, dropdown, dropdownId);
         return;
     }
 
@@ -1305,6 +1436,8 @@ function initSuggestionSystem() {
     if (document.getElementById('upasarga') || document.getElementById('dhatu') || document.getElementById('pratyaya')) {
         setupSuggestionListeners();
     }
+    // Wire suggestions for other pages' inputs (tinnanta, subanta, taddhitanta, dhatu_rupa etc.)
+    try { wireAllPageInputsForSuggestions(); } catch (e) { /* ignore */ }
 }
 
 
