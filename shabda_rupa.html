@@ -68,15 +68,62 @@
         const header = document.createElement('div'); header.className = 'sutra-card-header sanskrit-text'; header.innerHTML = `<span>${shabda}</span>`;
         const desc = document.createElement('div'); desc.className = 'sutra-card-desc'; 
         
-        if (shabdaData[shabda] && shabdaData[shabda].length > 0) {
-            let html = '<table style="width:100%;border-collapse:collapse;margin-top:10px;text-align:left;">';
-            html += '<thead style="background:var(--card-bg);"><tr><th style="padding:8px;border-bottom:2px solid var(--border-light);">विभक्ति</th><th style="padding:8px;border-bottom:2px solid var(--border-light);">एकवचनम्</th><th style="padding:8px;border-bottom:2px solid var(--border-light);">द्विवचनम्</th><th style="padding:8px;border-bottom:2px solid var(--border-light);">बहुवचनम्</th></tr></thead>';
-            html += '<tbody>';
-            shabdaData[shabda].forEach(r => {
-                html += `<tr><td style="padding:8px;border-bottom:1px solid var(--border-light);font-weight:600;">${r.vibhakti}</td><td style="padding:8px;border-bottom:1px solid var(--border-light);">${r.ekavachanam}</td><td style="padding:8px;border-bottom:1px solid var(--border-light);">${r.dvivachanam}</td><td style="padding:8px;border-bottom:1px solid var(--border-light);">${r.bahuvachanam}</td></tr>`;
+        const wordArr = shabdaData[shabda] && Array.isArray(shabdaData[shabda]) ? shabdaData[shabda] : [];
+        
+        if (wordArr.length > 0) {
+            // Container for word selection pills
+            const pillsDiv = document.createElement('div');
+            pillsDiv.style.cssText = 'display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; border-bottom: 1px solid var(--border-light); padding-bottom: 12px;';
+            
+            // Container for explanation table
+            const tableDiv = document.createElement('div');
+            tableDiv.className = 'shabda-explanation-area';
+            
+            // Function to render table for a specific word object
+            const renderWordTable = (wObj) => {
+                let html = `<div style="font-size: 0.95em; color: var(--text-color); opacity: 0.9; margin-bottom: 10px; font-weight: 500;">अर्थः / Meaning: ${wObj.meaning || ''}</div>`;
+                html += '<table style="width:100%;border-collapse:collapse;margin-top:5px;text-align:left;">';
+                html += '<thead style="background:var(--card-bg);"><tr><th style="padding:8px;border-bottom:2px solid var(--border-light);">विभक्ति</th><th style="padding:8px;border-bottom:2px solid var(--border-light);">एकवचनम्</th><th style="padding:8px;border-bottom:2px solid var(--border-light);">द्विवचनम्</th><th style="padding:8px;border-bottom:2px solid var(--border-light);">बहुवचनम्</th></tr></thead>';
+                html += '<tbody>';
+                (wObj.declension || []).forEach(r => {
+                    html += `<tr><td style="padding:8px;border-bottom:1px solid var(--border-light);font-weight:600;color:var(--text-color);">${r.vibhakti}</td><td style="padding:8px;border-bottom:1px solid var(--border-light);">${r.ekavachanam}</td><td style="padding:8px;border-bottom:1px solid var(--border-light);">${r.dvivachanam}</td><td style="padding:8px;border-bottom:1px solid var(--border-light);">${r.bahuvachanam}</td></tr>`;
+                });
+                html += '</tbody></table>';
+                tableDiv.innerHTML = html;
+            };
+
+            // Build pills
+            wordArr.forEach((wObj, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `pill shabda-opt-btn ${idx === 0 ? 'active' : ''}`;
+                btn.style.cssText = 'padding: 6px 14px; font-size: 14px; border-radius: 20px; border: 1px solid rgba(252,211,77,0.4); background: transparent; color: var(--text-color); cursor: pointer; transition: all 0.2s;';
+                if (idx === 0) {
+                    btn.style.background = 'linear-gradient(135deg, #701c1c, #4a1010)';
+                    btn.style.color = '#fcd34d';
+                    btn.style.borderColor = '#fcd34d';
+                }
+                btn.innerText = wObj.word;
+                btn.addEventListener('click', (ev) => {
+                    ev.stopPropagation();
+                    pillsDiv.querySelectorAll('.shabda-opt-btn').forEach(b => {
+                        b.classList.remove('active');
+                        b.style.background = 'transparent';
+                        b.style.color = 'var(--text-color)';
+                        b.style.borderColor = 'rgba(252,211,77,0.4)';
+                    });
+                    btn.classList.add('active');
+                    btn.style.background = 'linear-gradient(135deg, #701c1c, #4a1010)';
+                    btn.style.color = '#fcd34d';
+                    btn.style.borderColor = '#fcd34d';
+                    renderWordTable(wObj);
+                });
+                pillsDiv.appendChild(btn);
             });
-            html += '</tbody></table>';
-            desc.innerHTML = html;
+
+            // Initialize first word table
+            renderWordTable(wordArr[0]);
+            desc.appendChild(pillsDiv);
+            desc.appendChild(tableDiv);
         } else {
             desc.innerHTML = '<p style="margin:0;color:#c7c7c7;">रूपाणि शीघ्रमेव योजयिष्यन्ते।</p>';
         }

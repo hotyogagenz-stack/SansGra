@@ -1,242 +1,582 @@
 {
   "अकारान्त पुल्लिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "राम (Rama)",
+      "meaning": "भगवान राम / Lord Rama",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "रामः", "dvivachanam": "रामौ", "bahuvachanam": "रामाः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "रामम्", "dvivachanam": "रामौ", "bahuvachanam": "रामान्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "रामेण", "dvivachanam": "रामाभ्याम्", "bahuvachanam": "रामैः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "रामाय", "dvivachanam": "रामाभ्याम्", "bahuvachanam": "रामेभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "रामात्", "dvivachanam": "रामाभ्याम्", "bahuvachanam": "रामेभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "रामस्य", "dvivachanam": "रामयोः", "bahuvachanam": "रामाणाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "रामे", "dvivachanam": "रामयोः", "bahuvachanam": "रामेषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे राम", "dvivachanam": "हे रामौ", "bahuvachanam": "हे रामाः" }
+      ]
+    },
+    {
+      "word": "बालक (Balaka)",
+      "meaning": "लड़का / Boy",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "बालकः", "dvivachanam": "बालकौ", "bahuvachanam": "बालकाः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "बालकम्", "dvivachanam": "बालकौ", "bahuvachanam": "बालकान्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "बालकेन", "dvivachanam": "बालकाभ्याम्", "bahuvachanam": "बालकैः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "बालकाय", "dvivachanam": "बालकाभ्याम्", "bahuvachanam": "बालकेभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "बालकात्", "dvivachanam": "बालकाभ्याम्", "bahuvachanam": "बालकेभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "बालकस्य", "dvivachanam": "बालकयोः", "bahuvachanam": "बालकानाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "बालके", "dvivachanam": "बालकयोः", "bahuvachanam": "बालकेषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे बालक", "dvivachanam": "हे बालकौ", "bahuvachanam": "हे बालकाः" }
+      ]
+    },
+    {
+      "word": "वृक्ष (Vriksha)",
+      "meaning": "पेड़ / Tree",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "वृक्षः", "dvivachanam": "वृक्षौ", "bahuvachanam": "वृक्षाः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "वृक्षम्", "dvivachanam": "वृक्षौ", "bahuvachanam": "वृक्षान्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "वृक्षेण", "dvivachanam": "वृक्षाभ्याम्", "bahuvachanam": "वृक्षैः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "वृक्षाय", "dvivachanam": "वृक्षाभ्याम्", "bahuvachanam": "वृक्षेभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "वृक्षात्", "dvivachanam": "वृक्षाभ्याम्", "bahuvachanam": "वृक्षेभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "वृक्षस्य", "dvivachanam": "वृक्षयोः", "bahuvachanam": "वृक्षाणाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "वृक्षे", "dvivachanam": "वृक्षयोः", "bahuvachanam": "वृक्षेषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे वृक्ष", "dvivachanam": "हे वृक्षौ", "bahuvachanam": "हे वृक्षाः" }
+      ]
+    }
   ],
   "अकारान्त स्त्रीलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "अकारान्त रूप (Template)",
+      "meaning": "स्त्रीलिंग अकारान्त सामान्य रूप",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+      ]
+    }
   ],
   "अकारान्त नपुंसकलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "फल (Phala)",
+      "meaning": "फल / Fruit",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "फलम्", "dvivachanam": "फले", "bahuvachanam": "फलानि" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "फलम्", "dvivachanam": "फले", "bahuvachanam": "फलानि" },
+        { "vibhakti": "तृतीया", "ekavachanam": "फलेन", "dvivachanam": "फलाभ्याम्", "bahuvachanam": "फलैः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "फलाय", "dvivachanam": "फलाभ्याम्", "bahuvachanam": "फलेभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "फलात्", "dvivachanam": "फलाभ्याम्", "bahuvachanam": "फलेभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "फलस्य", "dvivachanam": "फलयोः", "bahuvachanam": "फलानाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "फले", "dvivachanam": "फलयोः", "bahuvachanam": "फलेषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे फल", "dvivachanam": "हे फले", "bahuvachanam": "हे फलानि" }
+      ]
+    },
+    {
+      "word": "वन (Vana)",
+      "meaning": "जंगल / Forest",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "वनम्", "dvivachanam": "वने", "bahuvachanam": "वनानि" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "वनम्", "dvivachanam": "वने", "bahuvachanam": "वनानि" },
+        { "vibhakti": "तृतीया", "ekavachanam": "वनेन", "dvivachanam": "वनाभ्याम्", "bahuvachanam": "वनैः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "वनाय", "dvivachanam": "वनाभ्याम्", "bahuvachanam": "वनेभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "वनात्", "dvivachanam": "वनाभ्याम्", "bahuvachanam": "वनेभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "वनस्य", "dvivachanam": "वनयोः", "bahuvachanam": "वनानाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "वने", "dvivachanam": "वनयोः", "bahuvachanam": "वनेषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे वन", "dvivachanam": "हे वने", "bahuvachanam": "हे वनानि" }
+      ]
+    },
+    {
+      "word": "पुस्तक (Pustaka)",
+      "meaning": "किताब / Book",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "पुस्तकम्", "dvivachanam": "पुस्तके", "bahuvachanam": "पुस्तकानि" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "पुस्तकम्", "dvivachanam": "पुस्तके", "bahuvachanam": "पुस्तकानि" },
+        { "vibhakti": "तृतीया", "ekavachanam": "पुस्तकेन", "dvivachanam": "पुस्तकाभ्याम्", "bahuvachanam": "पुस्तकैः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "पुस्तकाय", "dvivachanam": "पुस्तकाभ्याम्", "bahuvachanam": "पुस्तकेभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "पुस्तकात्", "dvivachanam": "पुस्तकाभ्याम्", "bahuvachanam": "पुस्तकेभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "पुस्तकस्य", "dvivachanam": "पुस्तकयोः", "bahuvachanam": "पुस्तकानाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "पुस्तके", "dvivachanam": "पुस्तकयोः", "bahuvachanam": "पुस्तकेषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे पुस्तक", "dvivachanam": "हे पुस्तके", "bahuvachanam": "हे पुस्तकानि" }
+      ]
+    }
   ],
   "आकारान्त पुल्लिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "विश्पला (Vishpala)",
+      "meaning": "विश्पला / A Vedic character",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "विश्पला", "dvivachanam": "विश्पले", "bahuvachanam": "विश्पलाः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "विश्पलाम्", "dvivachanam": "विश्पले", "bahuvachanam": "विश्पलाः" },
+        { "vibhakti": "तृतीया", "ekavachanam": "विश्पलया", "dvivachanam": "विश्पलाभ्याम्", "bahuvachanam": "विश्पलाभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "विश्पलायै", "dvivachanam": "विश्पलाभ्याम्", "bahuvachanam": "विश्पलाभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "विश्पलायाः", "dvivachanam": "विश्पलाभ्याम्", "bahuvachanam": "विश्पलाभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "विश्पलायाः", "dvivachanam": "विश्पलयोः", "bahuvachanam": "विश्पलानाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "विश्पलायाम्", "dvivachanam": "विश्पलयोः", "bahuvachanam": "विश्पलासु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे विश्पले", "dvivachanam": "हे विश्पले", "bahuvachanam": "हे विश्पलाः" }
+      ]
+    }
   ],
   "आकारान्त स्त्रीलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "लता (Lata)",
+      "meaning": "बेल / Creeper",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "लता", "dvivachanam": "लते", "bahuvachanam": "लताः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "लताम्", "dvivachanam": "लते", "bahuvachanam": "लताः" },
+        { "vibhakti": "तृतीया", "ekavachanam": "लतया", "dvivachanam": "लताभ्याम्", "bahuvachanam": "लताभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "लतायै", "dvivachanam": "लताभ्याम्", "bahuvachanam": "लताभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "लतायाः", "dvivachanam": "लताभ्याम्", "bahuvachanam": "लताभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "लतायाः", "dvivachanam": "लतयोः", "bahuvachanam": "लतानाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "लतायाम्", "dvivachanam": "लतयोः", "bahuvachanam": "लतासु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे लते", "dvivachanam": "हे लते", "bahuvachanam": "हे लताः" }
+      ]
+    },
+    {
+      "word": "रमा (Ramaa)",
+      "meaning": "लक्ष्मी / Goddess Lakshmi",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "रमा", "dvivachanam": "रमे", "bahuvachanam": "रमाः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "रमाम्", "dvivachanam": "रमे", "bahuvachanam": "रमाः" },
+        { "vibhakti": "तृतीया", "ekavachanam": "रमया", "dvivachanam": "रमाभ्याम्", "bahuvachanam": "रमाभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "रमायै", "dvivachanam": "रमाभ्याम्", "bahuvachanam": "रमाभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "रमायाः", "dvivachanam": "रमाभ्याम्", "bahuvachanam": "रमाभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "रमायाः", "dvivachanam": "रमयोः", "bahuvachanam": "रमानाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "रमायाम्", "dvivachanam": "रमयोः", "bahuvachanam": "रमासु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे रमे", "dvivachanam": "हे रमे", "bahuvachanam": "हे रमाः" }
+      ]
+    },
+    {
+      "word": "विद्या (Vidya)",
+      "meaning": "ज्ञान / Knowledge",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "विद्या", "dvivachanam": "विद्ये", "bahuvachanam": "विद्याः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "विद्याम्", "dvivachanam": "विद्ये", "bahuvachanam": "विद्याः" },
+        { "vibhakti": "तृतीया", "ekavachanam": "विद्यया", "dvivachanam": "विद्याभ्याम्", "bahuvachanam": "विद्याभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "विद्यायै", "dvivachanam": "विद्याभ्याम्", "bahuvachanam": "विद्याभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "विद्यायाः", "dvivachanam": "विद्याभ्याम्", "bahuvachanam": "विद्याभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "विद्यायाः", "dvivachanam": "विद्ययोः", "bahuvachanam": "विद्यानाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "विद्यायाम्", "dvivachanam": "विद्ययोः", "bahuvachanam": "विद्यासु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे विद्ये", "dvivachanam": "हे विद्ये", "bahuvachanam": "हे विद्याः" }
+      ]
+    }
   ],
   "आकारान्त नपुंसकलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "आकारान्त रूप (Template)",
+      "meaning": "नपुंसकलिंग आकारान्त सामान्य रूप",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+      ]
+    }
   ],
   "इकारान्त पुल्लिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "हरि (Hari)",
+      "meaning": "भगवान विष्णु / Lord Vishnu",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "हरिः", "dvivachanam": "हरी", "bahuvachanam": "हरयः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "हरिम्", "dvivachanam": "हरी", "bahuvachanam": "हरीन्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "हरिणा", "dvivachanam": "हरिभ्याम्", "bahuvachanam": "हरिभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "हरये", "dvivachanam": "हरिभ्याम्", "bahuvachanam": "हरिभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "हरेः", "dvivachanam": "हरिभ्याम्", "bahuvachanam": "हरिभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "हरेः", "dvivachanam": "हर्योः", "bahuvachanam": "हरीणाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "हरौ", "dvivachanam": "हर्योः", "bahuvachanam": "हरिषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे हरे", "dvivachanam": "हे हरी", "bahuvachanam": "हे हरयः" }
+      ]
+    },
+    {
+      "word": "कवि (Kavi)",
+      "meaning": "कवि / Poet",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "कविः", "dvivachanam": "कवी", "bahuvachanam": "कवयः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "कविम्", "dvivachanam": "कवी", "bahuvachanam": "कवीन्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "कविना", "dvivachanam": "कविभ्याम्", "bahuvachanam": "कविभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "कवये", "dvivachanam": "कविभ्याम्", "bahuvachanam": "कविभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "कवेः", "dvivachanam": "कविभ्याम्", "bahuvachanam": "कविभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "कवेः", "dvivachanam": "कव्योः", "bahuvachanam": "कवीनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "कवौ", "dvivachanam": "कव्योः", "bahuvachanam": "कविषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे कवे", "dvivachanam": "हे कवी", "bahuvachanam": "हे कवयः" }
+      ]
+    },
+    {
+      "word": "मुनि (Muni)",
+      "meaning": "साधु / Sage",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "मुनिः", "dvivachanam": "मुनी", "bahuvachanam": "मुनयः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "मुनिम्", "dvivachanam": "मुनी", "bahuvachanam": "मुनीन्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "मुनिना", "dvivachanam": "मुनिभ्याम्", "bahuvachanam": "मुनिभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "मुनये", "dvivachanam": "मुनिभ्याम्", "bahuvachanam": "मुनिभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "मुनेः", "dvivachanam": "मुनिभ्याम्", "bahuvachanam": "मुनिभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "मुनेः", "dvivachanam": "मुन्योः", "bahuvachanam": "मुनीनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "मुनौ", "dvivachanam": "मुन्योः", "bahuvachanam": "मुनिषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे मुने", "dvivachanam": "हे मुनी", "bahuvachanam": "हे मुनयः" }
+      ]
+    }
   ],
   "इकारान्त स्त्रीलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "मति (Mati)",
+      "meaning": "बुद्धि / Intellect",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "मतिः", "dvivachanam": "मती", "bahuvachanam": "मतयः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "मतिम्", "dvivachanam": "मती", "bahuvachanam": "मतीः" },
+        { "vibhakti": "तृतीया", "ekavachanam": "मत्या", "dvivachanam": "मतिभ्याम्", "bahuvachanam": "मतिभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "मत्यै, मतये", "dvivachanam": "मतिभ्याम्", "bahuvachanam": "मतिभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "मत्याः, मतेः", "dvivachanam": "मतिभ्याम्", "bahuvachanam": "मतिभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "मत्याः, मतेः", "dvivachanam": "मत्योः", "bahuvachanam": "मतीनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "मत्याम्, मतौ", "dvivachanam": "मत्योः", "bahuvachanam": "मतिषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे मते", "dvivachanam": "हे मती", "bahuvachanam": "हे मतयः" }
+      ]
+    },
+    {
+      "word": "गति (Gati)",
+      "meaning": "चाल / Motion",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "गतिः", "dvivachanam": "गती", "bahuvachanam": "गतयः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "गतिम्", "dvivachanam": "गती", "bahuvachanam": "गतीः" },
+        { "vibhakti": "तृतीया", "ekavachanam": "गत्या", "dvivachanam": "गतिभ्याम्", "bahuvachanam": "गतिभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "गत्यै, गतये", "dvivachanam": "गतिभ्याम्", "bahuvachanam": "गतिभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "गत्याः, गतेः", "dvivachanam": "गतिभ्याम्", "bahuvachanam": "गतिभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "गत्याः, गतेः", "dvivachanam": "गत्योः", "bahuvachanam": "गतीनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "गत्याम्, गतौ", "dvivachanam": "गत्योः", "bahuvachanam": "गतिषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे गते", "dvivachanam": "हे गती", "bahuvachanam": "हे गतयः" }
+      ]
+    }
   ],
   "इकारान्त नपुंसकलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "वारि (Vaari)",
+      "meaning": "जल / Water",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "वारि", "dvivachanam": "वारिणी", "bahuvachanam": "वारीणि" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "वारि", "dvivachanam": "वारिणी", "bahuvachanam": "वारीणि" },
+        { "vibhakti": "तृतीया", "ekavachanam": "वारिणा", "dvivachanam": "वारिभ्याम्", "bahuvachanam": "वारिभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "वारिणे", "dvivachanam": "वारिभ्याम्", "bahuvachanam": "वारिभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "वारिणः", "dvivachanam": "वारिभ्याम्", "bahuvachanam": "वारिभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "वारिणः", "dvivachanam": "वारिणोः", "bahuvachanam": "वारीणाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "वारिणि", "dvivachanam": "वारिणोः", "bahuvachanam": "वारिषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे वारि", "dvivachanam": "हे वारिणी", "bahuvachanam": "हे वारीणि" }
+      ]
+    },
+    {
+      "word": "दधि (Dadhi)",
+      "meaning": "दही / Curd",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "दधि", "dvivachanam": "दधिनी", "bahuvachanam": "दधीनि" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "दधि", "dvivachanam": "दधिनी", "bahuvachanam": "दधीनि" },
+        { "vibhakti": "तृतीया", "ekavachanam": "दध्ना", "dvivachanam": "दधिभ्याम्", "bahuvachanam": "दधिभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "दध्ने", "dvivachanam": "दधिभ्याम्", "bahuvachanam": "दधिभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "दध्नः", "dvivachanam": "दधिभ्याम्", "bahuvachanam": "दधिभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "दध्नः", "dvivachanam": "दध्नोः", "bahuvachanam": "दधीनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "दध्नि, दधिनि", "dvivachanam": "दध्नोः", "bahuvachanam": "दधिषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे दधि", "dvivachanam": "हे दधिनी", "bahuvachanam": "हे दधीनि" }
+      ]
+    }
   ],
   "ईकारान्त पुल्लिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "सुधी (Sudhee)",
+      "meaning": "विद्वान / Intelligent man",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "सुधीः", "dvivachanam": "सुधियौ", "bahuvachanam": "सुधियः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "सुधियम्", "dvivachanam": "सुधियौ", "bahuvachanam": "सुधियः" },
+        { "vibhakti": "तृतीया", "ekavachanam": "सुधिया", "dvivachanam": "सुधीभ्याम्", "bahuvachanam": "सुधीभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "सुधिये", "dvivachanam": "सुधीभ्याम्", "bahuvachanam": "सुधीभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "सुधियः", "dvivachanam": "सुधीभ्याम्", "bahuvachanam": "सुधीभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "सुधियः", "dvivachanam": "सुधियोः", "bahuvachanam": "सुधीनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "सुधियि", "dvivachanam": "सुधियोः", "bahuvachanam": "सुधीषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे सुधीः", "dvivachanam": "हे सुधियौ", "bahuvachanam": "हे सुधियः" }
+      ]
+    }
   ],
   "ईकारान्त स्त्रीलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "नदी (Nadi)",
+      "meaning": "नदी / River",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "नदी", "dvivachanam": "नद्यौ", "bahuvachanam": "नद्यः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "नदीम्", "dvivachanam": "नद्यौ", "bahuvachanam": "नदीः" },
+        { "vibhakti": "तृतीया", "ekavachanam": "नद्या", "dvivachanam": "नदीभ्याम्", "bahuvachanam": "नदीभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "नद्यै", "dvivachanam": "नदीभ्याम्", "bahuvachanam": "नदीभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "नद्याः", "dvivachanam": "नदीभ्याम्", "bahuvachanam": "नदीभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "नद्याः", "dvivachanam": "नद्योः", "bahuvachanam": "नदीनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "नद्याम्", "dvivachanam": "नद्योः", "bahuvachanam": "नदीसु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे नदि", "dvivachanam": "हे नद्यौ", "bahuvachanam": "हे नद्यः" }
+      ]
+    },
+    {
+      "word": "गौरी (Gauri)",
+      "meaning": "पार्वती / Goddess Parvati",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "गौरी", "dvivachanam": "गौर्यौ", "bahuvachanam": "गौर्यः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "गौरीम्", "dvivachanam": "गौर्यौ", "bahuvachanam": "गौरीः" },
+        { "vibhakti": "तृतीया", "ekavachanam": "गौर्या", "dvivachanam": "गौरीभ्याम्", "bahuvachanam": "गौरीभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "गौर्यै", "dvivachanam": "गौरीभ्याम्", "bahuvachanam": "गौरीभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "गौर्याः", "dvivachanam": "गौरीभ्याम्", "bahuvachanam": "गौरीभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "गौर्याः", "dvivachanam": "गौर्योः", "bahuvachanam": "गौरीणाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "गौर्याम्", "dvivachanam": "गौर्योः", "bahuvachanam": "गौरीसु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे गौरि", "dvivachanam": "हे गौर्यौ", "bahuvachanam": "हे गौर्यः" }
+      ]
+    }
   ],
   "ईकारान्त नपुंसकलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "ईकारान्त रूप (Template)",
+      "meaning": "नपुंसकलिंग ईकारान्त सामान्य रूप",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+      ]
+    }
   ],
   "उकारान्त पुल्लिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "गुरु (Guru)",
+      "meaning": "शिक्षक / Teacher",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "गुरुः", "dvivachanam": "गुरू", "bahuvachanam": "गुरवः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "गुरुम्", "dvivachanam": "गुरू", "bahuvachanam": "गुरून्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "गुरुणा", "dvivachanam": "गुरुभ्याम्", "bahuvachanam": "गुरुभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "गुरवे", "dvivachanam": "गुरुभ्याम्", "bahuvachanam": "गुरुभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "गुरोः", "dvivachanam": "गुरुभ्याम्", "bahuvachanam": "गुरुभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "गुरोः", "dvivachanam": "गुर्वोः", "bahuvachanam": "गुरूणाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "गुरौ", "dvivachanam": "गुर्वोः", "bahuvachanam": "गुरुषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे गुरो", "dvivachanam": "हे गुरू", "bahuvachanam": "हे गुरवः" }
+      ]
+    },
+    {
+      "word": "भानु (Bhanu)",
+      "meaning": "सूर्य / Sun",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "भानुः", "dvivachanam": "भानू", "bahuvachanam": "भानवः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "भानुम्", "dvivachanam": "भानू", "bahuvachanam": "भानून्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "भानुना", "dvivachanam": "भानुभ्याम्", "bahuvachanam": "भानुभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "भानवे", "dvivachanam": "भानुभ्याम्", "bahuvachanam": "भानुभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "भानोः", "dvivachanam": "भानुभ्याम्", "bahuvachanam": "भानुभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "भानोः", "dvivachanam": "भान्वोः", "bahuvachanam": "भानूनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "भानौ", "dvivachanam": "भान्वोः", "bahuvachanam": "भानुषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे भानो", "dvivachanam": "हे भानू", "bahuvachanam": "हे भानवः" }
+      ]
+    }
   ],
   "उकारान्त स्त्रीलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "धेनु (Dhenu)",
+      "meaning": "गाय / Cow",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "धेनुः", "dvivachanam": "धेनू", "bahuvachanam": "धेनवः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "धेनुम्", "dvivachanam": "धेनू", "bahuvachanam": "धेनूः" },
+        { "vibhakti": "तृतीया", "ekavachanam": "धेन्वा", "dvivachanam": "धेनुभ्याम्", "bahuvachanam": "धेनुभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "धेन्वै, धेनवे", "dvivachanam": "धेनुभ्याम्", "bahuvachanam": "धेनुभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "धेन्वाः, धेनोः", "dvivachanam": "धेनुभ्याम्", "bahuvachanam": "धेनुभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "धेन्वाः, धेनोः", "dvivachanam": "धेन्वोः", "bahuvachanam": "धेनूनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "धेन्वाम्, धेनौ", "dvivachanam": "धेन्वोः", "bahuvachanam": "धेनुषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे धेनो", "dvivachanam": "हे धेनू", "bahuvachanam": "हे धेनवः" }
+      ]
+    }
   ],
   "उकारान्त नपुंसकलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "मधु (Madhu)",
+      "meaning": "शहद / Honey",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "मधु", "dvivachanam": "मधुनी", "bahuvachanam": "मधूनि" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "मधु", "dvivachanam": "मधुनी", "bahuvachanam": "मधूनि" },
+        { "vibhakti": "तृतीया", "ekavachanam": "मथुना", "dvivachanam": "मधुभ्याम्", "bahuvachanam": "मधुभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "मधुने", "dvivachanam": "मधुभ्याम्", "bahuvachanam": "मधुभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "मधुनः", "dvivachanam": "मधुभ्याम्", "bahuvachanam": "मधुभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "मधुनः", "dvivachanam": "मधुनोः", "bahuvachanam": "मधूनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "मधुनि", "dvivachanam": "मधुनोः", "bahuvachanam": "मधुषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे मधु", "dvivachanam": "हे मधुनी", "bahuvachanam": "हे मधूनि" }
+      ]
+    }
   ],
   "ऊकारान्त पुल्लिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "ऊकारान्त रूप (Template)",
+      "meaning": "पुल्लिंग ऊकारान्त सामान्य रूप",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+      ]
+    }
   ],
   "ऊकारान्त स्त्रीलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "वधू (Vadhu)",
+      "meaning": "बहू / Bride",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "वधूः", "dvivachanam": "वध्वौ", "bahuvachanam": "वध्वः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "वधूम्", "dvivachanam": "वध्वौ", "bahuvachanam": "वधूः" },
+        { "vibhakti": "तृतीया", "ekavachanam": "वध्वा", "dvivachanam": "वधूभ्याम्", "bahuvachanam": "वधूभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "वध्वै", "dvivachanam": "वधूभ्याम्", "bahuvachanam": "वधूभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "वध्वाः", "dvivachanam": "वधूभ्याम्", "bahuvachanam": "वधूभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "वध्वाः", "dvivachanam": "वध्वोः", "bahuvachanam": "वधूनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "वध्वाम्", "dvivachanam": "वध्वोः", "bahuvachanam": "वधूषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे वधु", "dvivachanam": "हे वध्वौ", "bahuvachanam": "हे वध्वः" }
+      ]
+    }
   ],
   "ऊकारान्त नपुंसकलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "ऊकारान्त रूप (Template)",
+      "meaning": "नपुंसकलिंग ऊकारान्त सामान्य रूप",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+      ]
+    }
   ],
   "ऋकारान्त पुल्लिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "पितृ (Pitri)",
+      "meaning": "पिता / Father",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "पिता", "dvivachanam": "पितरौ", "bahuvachanam": "पितरः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "पितरम्", "dvivachanam": "पितरौ", "bahuvachanam": "पितॄन्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "पित्रा", "dvivachanam": "पितृभ्याम्", "bahuvachanam": "पितृभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "पित्रे", "dvivachanam": "पितृभ्याम्", "bahuvachanam": "पितृभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "पितुः", "dvivachanam": "पितृभ्याम्", "bahuvachanam": "पितृभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "पितुः", "dvivachanam": "पित्रोः", "bahuvachanam": "पितॄणाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "पितरि", "dvivachanam": "पित्रोः", "bahuvachanam": "पितृषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे पितः", "dvivachanam": "हे पितरौ", "bahuvachanam": "हे पितरः" }
+      ]
+    },
+    {
+      "word": "भ्रातृ (Bhratri)",
+      "meaning": "भाई / Brother",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "भ्राता", "dvivachanam": "भ्रातरौ", "bahuvachanam": "भ्रातरः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "भ्रातरम्", "dvivachanam": "भ्रातरौ", "bahuvachanam": "भ्रातॄन्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "भ्रात्रा", "dvivachanam": "भ्रातृभ्याम्", "bahuvachanam": "भ्रातृभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "भ्रात्रे", "dvivachanam": "भ्रातृभ्याम्", "bahuvachanam": "भ्रातृभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "भ्रातुः", "dvivachanam": "भ्रातृभ्याम्", "bahuvachanam": "भ्रातृभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "भ्रातुः", "dvivachanam": "भ्रात्रोः", "bahuvachanam": "भ्रातॄणाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "भ्रातरि", "dvivachanam": "भ्रात्रोः", "bahuvachanam": "भ्रातृषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे भ्रातः", "dvivachanam": "हे भ्रातरौ", "bahuvachanam": "हे भ्रातरः" }
+      ]
+    }
   ],
   "ऋकारान्त स्त्रीलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "मातृ (Matri)",
+      "meaning": "माता / Mother",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "माता", "dvivachanam": "मातरौ", "bahuvachanam": "मातरः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "मातरम्", "dvivachanam": "मातरौ", "bahuvachanam": "मातॄः" },
+        { "vibhakti": "तृतीया", "ekavachanam": "मात्रा", "dvivachanam": "मातृभ्याम्", "bahuvachanam": "मातृभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "मात्रे", "dvivachanam": "मातृभ्याम्", "bahuvachanam": "मातृभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "मातुः", "dvivachanam": "मातृभ्याम्", "bahuvachanam": "मातृभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "मातुः", "dvivachanam": "मात्रोः", "bahuvachanam": "मातॄणाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "मातरि", "dvivachanam": "मात्रोः", "bahuvachanam": "मातृषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे मातः", "dvivachanam": "हे मातरौ", "bahuvachanam": "हे मातरः" }
+      ]
+    }
   ],
   "ऋकारान्त नपुंसकलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "ऋकारान्त रूप (Template)",
+      "meaning": "नपुंसकलिंग ऋकारान्त सामान्य रूप",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
+        { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+      ]
+    }
   ],
   "व्यंजनान्त पुल्लिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "राजन् (Rajan)",
+      "meaning": "राजा / King",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "राजा", "dvivachanam": "राजानौ", "bahuvachanam": "राजानः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "राजानम्", "dvivachanam": "राजानौ", "bahuvachanam": "राज्ञः" },
+        { "vibhakti": "तृतीया", "ekavachanam": "राज्ञा", "dvivachanam": "राजभ्याम्", "bahuvachanam": "राजभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "राज्ञे", "dvivachanam": "राजभ्याम्", "bahuvachanam": "राजभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "राज्ञः", "dvivachanam": "राजभ्याम्", "bahuvachanam": "राजभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "राज्ञः", "dvivachanam": "राज्ञोः", "bahuvachanam": "राज्ञाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "राज्ञि, राजनि", "dvivachanam": "राज्ञोः", "bahuvachanam": "राजसु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे राजन्", "dvivachanam": "हे राजानौ", "bahuvachanam": "हे राजानः" }
+      ]
+    },
+    {
+      "word": "आत्मन् (Atman)",
+      "meaning": "आत्मा / Soul",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "आत्मा", "dvivachanam": "आत्मानौ", "bahuvachanam": "आत्मानः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "आत्मानम्", "dvivachanam": "आत्मानौ", "bahuvachanam": "आत्मनः" },
+        { "vibhakti": "तृतीया", "ekavachanam": "आत्मना", "dvivachanam": "आत्मभ्याम्", "bahuvachanam": "आत्मभिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "आत्मने", "dvivachanam": "आत्मभ्याम्", "bahuvachanam": "आत्मभ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "आत्मनः", "dvivachanam": "आत्मभ्याम्", "bahuvachanam": "आत्मभ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "आत्मनः", "dvivachanam": "आत्मनोः", "bahuvachanam": "आत्मनाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "आत्मनि", "dvivachanam": "आत्मनोः", "bahuvachanam": "आत्मसु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे आत्मन्", "dvivachanam": "हे आत्मानौ", "bahuvachanam": "हे आत्मानः" }
+      ]
+    }
   ],
   "व्यंजनान्त स्त्रीलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "वाच् (Vaach)",
+      "meaning": "वाणी / Speech",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "वाक्, वाग्", "dvivachanam": "वाचौ", "bahuvachanam": "वाचः" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "वाचम्", "dvivachanam": "वाचौ", "bahuvachanam": "वाचः" },
+        { "vibhakti": "तृतीया", "ekavachanam": "वाचा", "dvivachanam": "वाग्भ्याम्", "bahuvachanam": "वाग्भिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "वाचे", "dvivachanam": "वाग्भ्याम्", "bahuvachanam": "वाग्भ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "वाचः", "dvivachanam": "वाग्भ्याम्", "bahuvachanam": "वाग्भ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "वाचः", "dvivachanam": "वाचोः", "bahuvachanam": "वाचाम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "वाचि", "dvivachanam": "वाचोः", "bahuvachanam": "वाक्षु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे वाक्, हे वाग्", "dvivachanam": "हे वाचौ", "bahuvachanam": "हे वाचः" }
+      ]
+    }
   ],
   "व्यंजनान्त नपुंसकलिंग": [
-    { "vibhakti": "प्रथमा", "ekavachanam": "अः", "dvivachanam": "औ", "bahuvachanam": "आः" },
-    { "vibhakti": "द्वितीया", "ekavachanam": "अम्", "dvivachanam": "औ", "bahuvachanam": "आन्" },
-    { "vibhakti": "तृतीया", "ekavachanam": "एन", "dvivachanam": "आभ्याम्", "bahuvachanam": "ऐः" },
-    { "vibhakti": "चतुर्थी", "ekavachanam": "आय", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "पञ्चमी", "ekavachanam": "आद्, आत्", "dvivachanam": "आभ्याम्", "bahuvachanam": "एभ्यः" },
-    { "vibhakti": "षष्ठी", "ekavachanam": "अस्य", "dvivachanam": "अयोः", "bahuvachanam": "आनाम्" },
-    { "vibhakti": "सप्तमी", "ekavachanam": "ए", "dvivachanam": "अयोः", "bahuvachanam": "एषु" },
-    { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे अ", "dvivachanam": "हे औ", "bahuvachanam": "हे आः" }
+    {
+      "word": "जगत् (Jagat)",
+      "meaning": "संसार / Universe",
+      "declension": [
+        { "vibhakti": "प्रथमा", "ekavachanam": "जगत्, जगद्", "dvivachanam": "जगती", "bahuvachanam": "जगन्ति" },
+        { "vibhakti": "द्वितीया", "ekavachanam": "जगत्, जगद्", "dvivachanam": "जगती", "bahuvachanam": "जगन्ति" },
+        { "vibhakti": "तृतीया", "ekavachanam": "जगता", "dvivachanam": "जगद्भ्याम्", "bahuvachanam": "जगद्भिः" },
+        { "vibhakti": "चतुर्थी", "ekavachanam": "जगते", "dvivachanam": "जगद्भ्याम्", "bahuvachanam": "जगद्भ्यः" },
+        { "vibhakti": "पञ्चमी", "ekavachanam": "जगतः", "dvivachanam": "जगद्भ्याम्", "bahuvachanam": "जगद्भ्यः" },
+        { "vibhakti": "षष्ठी", "ekavachanam": "जगतः", "dvivachanam": "जगतोः", "bahuvachanam": "जगताम्" },
+        { "vibhakti": "सप्तमी", "ekavachanam": "जगति", "dvivachanam": "जगतोः", "bahuvachanam": "जगत्सु" },
+        { "vibhakti": "सम्बोधनम्", "ekavachanam": "हे जगत्, हे जगद्", "dvivachanam": "हे जगती", "bahuvachanam": "हे जगन्ति" }
+      ]
+    }
   ]
 }
