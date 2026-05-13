@@ -1224,13 +1224,13 @@ function handleInput(input, type, dropdownId) {
 
         let suggestions = [];
         if (type === 'upasarga') {
-            suggestions = (sanskritDatabase.upasargas && Array.isArray(sanskritDatabase.upasargas) ? sanskritDatabase.upasargas.slice(0, 10) : (suggestionData.upasargas || []).slice(0, 10));
+            suggestions = (sanskritDatabase.upasargas && Array.isArray(sanskritDatabase.upasargas) ? sanskritDatabase.upasargas.slice(0, 50) : (suggestionData.upasargas || []).slice(0, 50));
         } else if (type === 'dhatu') {
             const dh = sanskritDatabase.dhatus || {};
-            suggestions = Object.entries(dh).slice(0, 10).map(([key, d]) => ({ ...d, key, label: d.label || '' }));
+            suggestions = Object.entries(dh).slice(0, 50).map(([key, d]) => ({ ...d, key, label: d.label || '' }));
         } else if (type === 'pratyaya') {
             const pd = pratyayaDB || {};
-            suggestions = Object.entries(pd).slice(0, 10).map(([key, p]) => ({ ...p, key, real: p.real || '', type: p.type || '', lopa: p.lopa || '' }));
+            suggestions = Object.entries(pd).slice(0, 50).map(([key, p]) => ({ ...p, key, real: p.real || '', type: p.type || '', lopa: p.lopa || '' }));
         }
 
         currentSuggestions = suggestions;
@@ -1259,7 +1259,7 @@ function handleInput(input, type, dropdownId) {
 function getSuggestions(query, type) {
     const lowerQuery = query.toLowerCase();
     const isDevanagari = hasDevanagari(query);
-    const maxResults = 10;
+    const maxResults = 50;
     let results = [];
 
     // Convert query to Devanagari if it's Hinglish/English
@@ -1387,20 +1387,18 @@ function renderSuggestions(suggestions, dropdown, dropdownId) {
     dropdown.classList.add('show');
 }
 
-function selectSuggestion(dropdownId, value) {
+function selectSuggestion(id, value) {
     const inputMap = {
         'upaSuggestions': 'upasarga',
         'dhatuSuggestions': 'dhatu',
         'pratSuggestions': 'pratyaya'
     };
-
-    const inputId = inputMap[dropdownId];
-    if (!inputId) return;
-
+    const inputId = inputMap[id] || (id.endsWith('Suggestions') ? id.replace('Suggestions', '') : id);
     const input = document.getElementById(inputId);
     if (input) {
         input.value = value;
         input.focus();
+        input.dispatchEvent(new Event('input', { bubbles: true }));
     }
 
     closeAllSuggestions();
@@ -1464,7 +1462,7 @@ function initSuggestionSystem() {
 const TRANSLATIONS = {
     en: {
         // Brand & basic nav
-        brand: 'Sanskrit',
+        brand: '|| Vande Sanskritam ||',
         home: 'Home',
         search_examples: 'Search Examples',
         builder: 'Builder',
@@ -1605,7 +1603,7 @@ const TRANSLATIONS = {
     },
     hi: {
         // Brand & basic nav
-        brand: 'संस्कृत',
+        brand: '॥ वन्दे संस्कृतम् ॥',
         home: 'होम',
         search_examples: 'उदाहरण खोजें',
         builder: 'शब्द निर्माण',
@@ -1746,7 +1744,7 @@ const TRANSLATIONS = {
     },
     sa: {
         // Brand & basic nav
-        brand: 'संस्कृत',
+        brand: '॥ वन्दे संस्कृतम् ॥',
         home: 'गृहम्',
         search_examples: 'उदाहरणान्वेषणम्',
         builder: 'निर्माणकार्यम्',
@@ -2379,13 +2377,13 @@ function setupAutocomplete(inputId, dropdownId, type) {
 
             let suggestions = [];
             if (type === 'upasarga') {
-                suggestions = (sanskritDatabase.upasargas && Array.isArray(sanskritDatabase.upasargas) ? sanskritDatabase.upasargas.slice(0, 10) : (suggestionData.upasargas || []).slice(0, 10));
+                suggestions = (sanskritDatabase.upasargas && Array.isArray(sanskritDatabase.upasargas) ? sanskritDatabase.upasargas.slice(0, 50) : (suggestionData.upasargas || []).slice(0, 50));
             } else if (type === 'dhatu') {
                 const dh = sanskritDatabase.dhatus || {};
-                suggestions = Object.entries(dh).slice(0, 10).map(([key, d]) => ({ ...d, key, label: d.label || '' }));
+                suggestions = Object.entries(dh).slice(0, 50).map(([key, d]) => ({ ...d, key, label: d.label || '' }));
             } else if (type === 'pratyaya') {
                 const pd = pratyayaDB || {};
-                suggestions = Object.entries(pd).slice(0, 10).map(([key, p]) => ({ ...p, key, real: p.real || '', type: p.type || '', lopa: p.lopa || '' }));
+                suggestions = Object.entries(pd).slice(0, 50).map(([key, p]) => ({ ...p, key, real: p.real || '', type: p.type || '', lopa: p.lopa || '' }));
             }
 
             renderSuggestions(suggestions, dropdown, input, value);
@@ -2407,7 +2405,7 @@ function setupAutocomplete(inputId, dropdownId, type) {
             if (a.hinglish.startsWith(value) && !b.hinglish.startsWith(value)) return -1;
             if (b.hinglish.startsWith(value) && !a.hinglish.startsWith(value)) return 1;
             return 0;
-        }).slice(0, 10); 
+        }).slice(0, 50); 
 
         renderSuggestions(matches, dropdown, input, value);
     });
@@ -2487,10 +2485,15 @@ function highlightMatch(text, query) {
 
 function selectSuggestion(inputId, value) {
     const input = document.getElementById(inputId);
-    input.value = value;
+    if (input) {
+        input.value = value;
+        input.focus();
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
     const dropdownId = inputId === 'upasarga' ? 'upaSuggestions' : (inputId === 'dhatu' ? 'dhatuSuggestions' : 'pratSuggestions');
-    document.getElementById(dropdownId).classList.remove('show');
-    input.focus();
+    const dd = document.getElementById(dropdownId);
+    if (dd) dd.classList.remove('show');
+    document.querySelectorAll('.suggestion-dropdown, .dropdown').forEach(el => el.classList.remove('show', 'open'));
 }
 
 function updateActiveItem(items, index) {

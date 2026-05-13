@@ -307,10 +307,10 @@
         item.appendChild(desc);
         container.appendChild(item);
       });
+      setupDhatuSearch();
     }
 
     window.addEventListener('load', renderGanas);
-    // setup search — defined below; called after render completes
 
     function setupDhatuSearch() {
       const input = document.getElementById('dhatuSearch');
@@ -327,23 +327,60 @@
         }
       }
 
-      // build searchable index on all rows
-      const rows = Array.from(container.querySelectorAll('.dhatu-table tbody tr'));
-      rows.forEach(row => {
-        const cells = Array.from(row.querySelectorAll('td'));
-        const texts = cells.slice(1,7).map(td => td.textContent || td.innerText || '').join(' | '); // dhatuId..English
-        row.dataset.search = normalizeForSearch(texts);
+      // build searchable index on all rows grouped by card
+      const cards = Array.from(container.querySelectorAll('.sutra-item'));
+      cards.forEach(card => {
+        const rows = Array.from(card.querySelectorAll('.dhatu-table tbody tr'));
+        rows.forEach(row => {
+          const cells = Array.from(row.querySelectorAll('td'));
+          if (cells.length > 1) {
+            // Index cells 1 to 6: dhatuId, muladhatu, dhatu, meaning, Hindi, English
+            const texts = cells.slice(1, 7).map(td => td.textContent || td.innerText || '').join(' | ');
+            row.dataset.search = normalizeForSearch(texts);
+          }
+        });
       });
 
       input.addEventListener('input', (ev) => {
         const q = normalizeForSearch(ev.target.value || '');
-        if (!q) {
-          rows.forEach(r => r.style.display = '');
-          return;
-        }
-        rows.forEach(r => {
-          const hay = r.dataset.search || '';
-          r.style.display = hay.includes(q) ? '' : 'none';
+        
+        cards.forEach(card => {
+          const rows = Array.from(card.querySelectorAll('.dhatu-table tbody tr'));
+          const header = card.querySelector('.sutra-card-header');
+          
+          if (!q) {
+            card.style.display = '';
+            card.classList.remove('active');
+            if (header) header.setAttribute('aria-expanded', 'false');
+            rows.forEach(r => {
+              r.style.display = '';
+              r.classList.remove('match');
+            });
+            return;
+          }
+
+          let matchCount = 0;
+          rows.forEach(r => {
+            const hay = r.dataset.search || '';
+            if (hay.includes(q)) {
+              r.style.display = '';
+              r.classList.add('match');
+              matchCount++;
+            } else {
+              r.style.display = 'none';
+              r.classList.remove('match');
+            }
+          });
+
+          if (matchCount > 0) {
+            card.style.display = '';
+            card.classList.add('active');
+            if (header) header.setAttribute('aria-expanded', 'true');
+          } else {
+            card.style.display = 'none';
+            card.classList.remove('active');
+            if (header) header.setAttribute('aria-expanded', 'false');
+          }
         });
       });
     }
