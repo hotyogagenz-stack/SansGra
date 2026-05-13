@@ -2443,9 +2443,10 @@ body {
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
-        padding: 10px 16px !important;
+        padding: 10px 8px !important;
         height: 64px !important;
         box-sizing: border-box !important;
+        gap: 6px !important;
     }
     
     /* Hide the cluttered top bar controls and switches on mobile */
@@ -2456,7 +2457,10 @@ body {
     .mini-header .header-nav-group {
         display: flex !important;
         align-items: center;
-        gap: 6px;
+        gap: 4px !important;
+        margin-right: 0 !important;
+        margin-left: 6px !important;
+        flex-shrink: 0 !important;
     }
     
     /* Show settings inside the expanded dropdown menu on mobile instead */
@@ -2467,14 +2471,23 @@ body {
     .mini-brand {
         display: flex !important;
         align-items: center !important;
-        gap: 12px !important;
+        gap: 6px !important;
         margin-right: auto !important;
-        font-size: 20px !important;
+        font-size: clamp(14px, 4.5vw, 19px) !important;
+        flex-shrink: 1 !important;
+        min-width: 0 !important;
+    }
+    
+    .mini-brand span {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
     }
     
     .mini-brand svg {
-        width: 40px !important;
-        height: 40px !important;
+        width: 32px !important;
+        height: 32px !important;
+        flex-shrink: 0 !important;
     }
 
     body {
