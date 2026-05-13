@@ -1094,7 +1094,7 @@ function setupSuggestionListeners() {
 
     // Close dropdowns when clicking outside
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.input-group')) {
+        if (!e.target.closest('.input-group') && !e.target.closest('input[type="text"]') && !e.target.closest('.suggestion-dropdown')) {
             closeAllSuggestions();
         }
     });
@@ -1391,7 +1391,10 @@ function selectSuggestion(id, value) {
     const inputMap = {
         'upaSuggestions': 'upasarga',
         'dhatuSuggestions': 'dhatu',
-        'pratSuggestions': 'pratyaya'
+        'pratSuggestions': 'pratyaya',
+        'upasarga': 'upasarga',
+        'dhatu': 'dhatu',
+        'pratyaya': 'pratyaya'
     };
     const inputId = inputMap[id] || (id.endsWith('Suggestions') ? id.replace('Suggestions', '') : id);
     const input = document.getElementById(inputId);
@@ -1401,7 +1404,7 @@ function selectSuggestion(id, value) {
         input.dispatchEvent(new Event('input', { bubbles: true }));
     }
 
-    closeAllSuggestions();
+    document.querySelectorAll('.suggestion-dropdown, .dropdown').forEach(el => el.classList.remove('show', 'open'));
 }
 
 function handleKeydown(e, type, dropdownId) {
@@ -2483,16 +2486,22 @@ function highlightMatch(text, query) {
     return text.replace(regex, '<span class="match-highlight">$1</span>');
 }
 
-function selectSuggestion(inputId, value) {
+function selectSuggestion(id, value) {
+    const inputMap = {
+        'upaSuggestions': 'upasarga',
+        'dhatuSuggestions': 'dhatu',
+        'pratSuggestions': 'pratyaya',
+        'upasarga': 'upasarga',
+        'dhatu': 'dhatu',
+        'pratyaya': 'pratyaya'
+    };
+    const inputId = inputMap[id] || (id.endsWith('Suggestions') ? id.replace('Suggestions', '') : id);
     const input = document.getElementById(inputId);
     if (input) {
         input.value = value;
         input.focus();
         input.dispatchEvent(new Event('input', { bubbles: true }));
     }
-    const dropdownId = inputId === 'upasarga' ? 'upaSuggestions' : (inputId === 'dhatu' ? 'dhatuSuggestions' : 'pratSuggestions');
-    const dd = document.getElementById(dropdownId);
-    if (dd) dd.classList.remove('show');
     document.querySelectorAll('.suggestion-dropdown, .dropdown').forEach(el => el.classList.remove('show', 'open'));
 }
 
