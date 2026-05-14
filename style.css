@@ -2458,8 +2458,8 @@ body {
         display: flex !important;
         align-items: center;
         gap: 4px !important;
-        margin-right: 0 !important;
-        margin-left: 6px !important;
+        margin-right: 6px !important;
+        margin-left: 0 !important;
         flex-shrink: 0 !important;
     }
     

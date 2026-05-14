@@ -2643,6 +2643,7 @@ function makeTaddhit() {
 function togglePrakriya() {
     const box = document.getElementById('prakriyaBox');
     if(!box) return;
+    box.classList.toggle('show');
     box.classList.toggle('visible');
 }
 

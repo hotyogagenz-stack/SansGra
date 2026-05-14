@@ -1,6 +1,94 @@
 document.addEventListener('DOMContentLoaded', () => {
     initFloatingSanskrit();
+    initTypingPlaceholder();
 });
+
+const SEARCH_PLACEHOLDERS = {
+    hi: [
+        "उदाहरण खोजें...",
+        "कृदन्त खोजें...",
+        "तिङन्त खोजें...",
+        "तद्धितान्त खोजें...",
+        "सुबन्त खोजें...",
+        "सूत्र खोजें...",
+        "धातु खोजें...",
+        "शब्दरूप खोजें...",
+        "धातुरूप खोजें...",
+        "प्रश्नोत्तरी AI से पूछें..."
+    ],
+    sa: [
+        "उदाहरणम् अन्वेषय...",
+        "कृदन्तम् अन्वेषय...",
+        "तिङन्तम् अन्वेषय...",
+        "तद्धितान्तम् अन्वेषय...",
+        "सुबन्तम् अन्वेषय...",
+        "सूत्राणि अन्वेषय...",
+        "धातून् अन्वेषय...",
+        "शब्दरूपाणि अन्वेषय...",
+        "धातुरूपाणि अन्वेषय...",
+        "प्रश्नोत्तरी AI पृच्छ..."
+    ],
+    en: [
+        "Search Examples...",
+        "Search Kridanta...",
+        "Search Tinnanta...",
+        "Search Taddhitanta...",
+        "Search Subanta...",
+        "Search Sutras...",
+        "Search Dhatus...",
+        "Search Shabda Rupa...",
+        "Search Dhatu Rupa...",
+        "Ask Q&A AI..."
+    ]
+};
+
+function initTypingPlaceholder() {
+    const searchInput = document.getElementById('searchInput');
+    if (!searchInput) return;
+
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let typingSpeed = 80;
+
+    function type() {
+        const inputEl = document.getElementById('searchInput');
+        if (!inputEl) return;
+        const lang = localStorage.getItem('siteLang') || 'hi';
+        const phrases = SEARCH_PLACEHOLDERS[lang] || SEARCH_PLACEHOLDERS['hi'];
+        
+        if (phraseIndex >= phrases.length) {
+            phraseIndex = 0;
+        }
+
+        const currentPhrase = phrases[phraseIndex];
+
+        if (isDeleting) {
+            inputEl.setAttribute('placeholder', currentPhrase.substring(0, charIndex));
+            charIndex--;
+            typingSpeed = 35;
+        } else {
+            inputEl.setAttribute('placeholder', currentPhrase.substring(0, charIndex + 1));
+            charIndex++;
+            typingSpeed = 75;
+        }
+
+        let delay = typingSpeed;
+
+        if (!isDeleting && charIndex === currentPhrase.length) {
+            delay = 2200; // Pause when phrase is fully typed
+            isDeleting = true;
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            phraseIndex = (phraseIndex + 1) % phrases.length;
+            delay = 400; // Pause before typing next phrase
+        }
+
+        setTimeout(type, delay);
+    }
+
+    setTimeout(type, 600);
+}
 
 function initFloatingSanskrit() {
     const container = document.getElementById('floating-sanskrit-container');

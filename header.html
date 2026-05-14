@@ -1,5 +1,13 @@
 <!-- Shared header fragment: mini-header only -->
 <div class="mini-header">
+    <div class="header-nav-group" style="display: flex; gap: 8px; margin-right: 12px; flex-shrink: 0;">
+        <button class="nav-btn" onclick="history.back()" title="Go Back">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+        <button class="nav-btn" onclick="history.forward()" title="Go Forward">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+    </div>
     <a id="miniBrand" class="mini-brand sanskrit-text" href="index.html" onclick="closeMobileMenu()">
         <!-- Beautiful SVG Tree of Life Logo with Book roots -->
         <svg class="header-logo" viewBox="0 0 100 100" width="36" height="36" style="flex-shrink:0; fill: #fcd34d; margin-right: 2px;">
@@ -80,13 +88,5 @@
                 <a href="about.html" class="mini-menu-item" data-i18n="about" onclick="closeMobileMenu()">About Us</a>
             </div>
         </div>
-    </div>
-    <div class="header-nav-group" style="display: flex; gap: 8px; margin-left: 12px; flex-shrink: 0;">
-        <button class="nav-btn" onclick="history.back()" title="Go Back">
-            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-        </button>
-        <button class="nav-btn" onclick="history.forward()" title="Go Forward">
-            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </button>
     </div>
 </div>

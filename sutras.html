@@ -81,7 +81,52 @@
       });
 
   let firstPopulatedHtml = null;
-  for(let a=1; a<=8; a++) {
+
+      const pratyaharaSutras = [
+        { name: "अइउण् (अ, इ, उ, ण्)", desc: "अइउण् इति प्रथमं माहेश्वरसूत्रम्। अत्र 'अ', 'इ', 'उ' इति त्रयः स्वराः सन्ति, 'ण्' इत्संज्ञकः अस्ति। अनेन 'अण्' प्रत्याहारः सिद्ध्यति। उदाहरणम्: अण्-प्रत्याहारे अ, इ, उ वर्णाः अन्तर्भवन्ति।" },
+        { name: "ऋऌक् (ऋ, ऌ, क्)", desc: "ऋऌक् इति द्वितीयं सूत्रम्। अत्र 'ऋ', 'ऌ' इति द्वौ स्वरौ, 'क्' इत्संज्ञकः। अनेन 'अक्', 'इक्', 'उक्' इत्यादयः प्रत्याहाराः सिद्ध्यन्ति। उदाहरणम्: अक्-प्रत्याहारे अ, इ, उ, ऋ, ऌ अन्तर्भवन्ति।" },
+        { name: "एओङ् (ए, ओ, ङ्)", desc: "एओङ् इति तृतीयं सूत्रम्। अत्र 'ए', 'ओ' इति संयुक्तस्वरौ, 'ङ्' इत्संज्ञकः। अनेन 'एङ्' प्रत्याहारः सिद्ध्यति। उदाहरणम्: एङ्-प्रत्याहारे ए, ओ अन्तर्भवतः।" },
+        { name: "ऐऔच् (ऐ, औ, च्)", desc: "ऐऔच् इति चतुर्थं सूत्रम्। अत्र 'ऐ', 'औ' इति स्वरौ, 'च्' इत्संज्ञकः। अनेन 'अच्', 'इच्', 'एच्', 'ऐच्' प्रत्याहाराः सिद्ध्यन्ति। उदाहरणम्: अच्-प्रत्याहारे सर्वे स्वराः गृह्यन्ते।" },
+        { name: "हयवरट् (ह, य, व, र, ट्)", desc: "हयवरट् इति पञ्चमं सूत्रम्। अत्र 'ह', 'य', 'व', 'र' इति व्यञ्जनानि, 'ट्' इत्संज्ञकः। अत्र 'ह' कारस्य उपदेशः विशेषार्थः।" },
+        { name: "लण् (ल, ण्)", desc: "लण् इति षष्ठं सूत्रम्। अत्र 'ल' कारः, 'ण्' इत्संज्ञकः। 'हयवरट्' तथा 'लण्' इत्यनयोः मेलनेन 'यण्' प्रत्याहारः सिद्ध्यति। उदाहरणम्: यण्-प्रत्याहारे य, व, र, ल अन्तर्भवन्ति।" },
+        { name: "ञमङणनम् (ञ, म, ङ, ण, न, म्)", desc: "ञमङणनम् इति सप्तमं सूत्रम्। अत्र वर्गाणां पञ्चमाक्षराणि (अनुनासिकाः) सन्ति, 'म्' इत्संज्ञकः। अनेन 'ञम्', 'अम्' इत्यादयः प्रत्याहाराः।" },
+        { name: "झभञ् (झ, भ, ञ्)", desc: "झभञ् इति अष्टमं सूत्रम्। अत्र वर्गाणां चतुर्थाक्षरे 'झ', 'भ' स्तः, 'ञ्' इत्संज्ञकः। अनेन 'यञ्' प्रत्याहारः सिद्ध्यति।" },
+        { name: "घढधष् (घ, ढ, ध, ष्)", desc: "घढधष् इति नवमं सूत्रम्। अत्र वर्गाणां चतुर्थाक्षराणि 'घ', 'ढ', 'ध' सन्ति, 'ष्' इत्संज्ञकः। अनेन 'झष्', 'भष्' प्रत्याहारौ।" },
+        { name: "जबगडदश् (ज, ब, ग, ड, द, श्)", desc: "जबगडदश् इति दशमं सूत्रम्। अत्र वर्गाणां तृतीयाक्षराणि 'ज', 'ब', 'ग', 'ड', 'द' सन्ति, 'श्' इत्संज्ञकः। अनेन 'जश्' प्रत्याहारः सिद्ध्यति।" },
+        { name: "खफछठथचटतव् (ख, फ, छ, ठ, थ, च, ट, त, व्)", desc: "खफछठथचटतव् इति एकादशं सूत्रम्। अत्र वर्गाणां द्वितीयाक्षराणि तथा प्रथमाक्षराणि सन्ति, 'व्' इत्संज्ञकः।" },
+        { name: "कपय् (क, प, य्)", desc: "कपय् इति द्वादशं सूत्रम्। अत्र 'क', 'प' इति प्रथमाक्षरे, 'य्' इत्संज्ञकः। अनेन 'खय्', 'चय्', 'मय्' प्रत्याहाराः।" },
+        { name: "शषसर् (श, ष, स, र्)", desc: "शषसर् इति त्रयोदशं सूत्रम्। अत्र 'श', 'ष', 'स' इति ऊष्मवर्णाः, 'र्' इत्संज्ञकः। अनेन 'झर्', 'खर्', 'शर्' प्रत्याहाराः।" },
+        { name: "हल् (ह, ल्)", desc: "हल् इति चतुर्दशं सूत्रम्। अत्र 'ह' कारः, 'ल्' इत्संज्ञकः। अनेन 'हल्' प्रत्याहारेण सर्वाणि व्यञ्जनानि संगृहीतानि भवन्ति।" }
+      ];
+
+      const pratCard = document.createElement('div');
+      pratCard.className = 'sutra-card';
+      const pratHeader = document.createElement('div');
+      pratHeader.className = 'sutra-card-header sanskrit-text';
+      pratHeader.innerHTML = '<span style="background-color: #16a34a; color: white; padding: 4px 12px; border-radius: 6px; font-weight: bold; display: inline-block;">प्रत्याहार-सूत्राणि</span>';
+      
+      const pratDesc = document.createElement('div');
+      pratDesc.className = 'sutra-card-desc';
+      
+      pratyaharaSutras.forEach(s => {
+        const sutraItem = document.createElement('div');
+        sutraItem.className = 'sutra-item sutra-card sub-card';
+        const sHeader = document.createElement('div');
+        sHeader.className = 'sutra-card-header sanskrit-text';
+        sHeader.innerHTML = `<div style="display:flex; align-items:center; gap:8px;"><span class="sutra-name">${s.name}</span></div>`;
+        const sDesc = document.createElement('div');
+        sDesc.className = 'sutra-card-desc sanskrit-text';
+        sDesc.textContent = s.desc;
+
+        sutraItem.appendChild(sHeader);
+        sutraItem.appendChild(sDesc);
+        pratDesc.appendChild(sutraItem);
+      });
+      pratCard.appendChild(pratHeader);
+      pratCard.appendChild(pratDesc);
+      container.appendChild(pratCard);
+
+      for(let a=1; a<=8; a++) {
         const adhyayaCard = document.createElement('div');
         adhyayaCard.className = 'sutra-card';
         const aHeader = document.createElement('div');
