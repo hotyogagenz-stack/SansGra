@@ -1636,7 +1636,7 @@ const TRANSLATIONS = {
         
         // Homepage specific
         hero_tagline: '॥ वन्दे संस्कृतम् ॥',
-        hero_search_placeholder: 'शिक्षापत्री खोजें...',
+        hero_search_placeholder: 'शब्द खोजें...',
         hero_search_subtext: 'धातु, प्रत्यय या सूत्र संख्या से खोजें (उदा: 1.1.1)',
         section_granthas: '॥ ग्रन्थाः ॥',
         book_examples: '॥ उदाहरणम् ॥',
@@ -1777,7 +1777,7 @@ const TRANSLATIONS = {
         
         // Homepage specific
         hero_tagline: '॥ वन्दे संस्कृतम् ॥',
-        hero_search_placeholder: 'शिक्षापत्रीम् अन्वेषय...',
+        hero_search_placeholder: 'शब्दम् अन्वेषय...',
         hero_search_subtext: 'धातु, प्रत्यय वा सूत्रसङ्ख्यायाः अन्वेषणम् (उदा: 1.1.1)',
         section_granthas: '॥ ग्रन्थाः ॥',
         book_examples: '॥ उदाहरणम् ॥',
