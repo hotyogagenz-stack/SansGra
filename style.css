@@ -1722,18 +1722,95 @@ body.dark .modal-content .search-results {
 }
 
 .search-results {
-    max-height: 300px;
+    max-height: 550px;
     overflow-y: auto;
+    padding: 10px;
+    margin-top: 25px !important;
+    scrollbar-width: thin;
+    scrollbar-color: #701c1c transparent;
+}
+
+.search-results::-webkit-scrollbar {
+    width: 6px;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+    background-color: #701c1c;
+    border-radius: 10px;
+}
+
+.search-section-header {
+    margin: 25px 0 12px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #701c1c;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: left;
+}
+
+.search-section-header::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(112, 28, 28, 0.3), transparent);
 }
 
 .result-card {
-    background: var(--bg-light);
-    border-left: 4px solid #b45309;
-    padding: 12px;
-    margin-bottom: 10px;
-    border-radius: 6px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-left: 6px solid #701c1c;
+    padding: 22px;
+    margin-bottom: 18px;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.02);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-align: left;
+    position: relative;
+    overflow: hidden;
 }
+
+.result-card:hover {
+    transform: translateY(-5px) scale(1.005);
+    box-shadow: 0 20px 40px rgba(112, 28, 28, 0.12);
+    background: #ffffff;
+    border-left-width: 10px;
+}
+
+.result-card .ex-text {
+    font-size: 1.45rem;
+    font-weight: 800;
+    color: #4a1010;
+    margin-bottom: 10px;
+    font-family: 'Tiro Devanagari Sanskrit', serif;
+    line-height: 1.3;
+}
+
+.result-card .su-text {
+    font-size: 1rem;
+    color: #9a3412;
+    margin-bottom: 8px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.result-card .desc-text {
+    font-size: 0.95rem;
+    color: #57534e;
+    line-height: 1.7;
+    font-style: italic;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    padding-top: 10px;
+    margin-top: 5px;
+}
+
 
 .ex-text {
     font-size: 1.2em;
@@ -1846,22 +1923,30 @@ body.dark .glass-hero p {
    ========================================= */
 .suggestion-dropdown {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 8px);
     left: 0;
     right: 0;
-    background: #fdf6e3;
-    border: 2px solid #ca8a04;
-    border-radius: 12px;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.3);
+    background: rgba(253, 246, 227, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(202, 138, 4, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(69, 26, 3, 0.15);
     z-index: 2000;
-    max-height: 350px;
+    max-height: 400px;
     overflow-y: auto;
     display: none;
-    margin-top: 8px;
     scrollbar-width: thin;
     scrollbar-color: #ca8a04 transparent;
-    padding: 8px 0;
+    padding: 10px 0;
+    animation: slideDownFade 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
+@keyframes slideDownFade {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 
 body.dark .suggestion-dropdown {
     background: #1e1e2f;
@@ -1875,14 +1960,15 @@ body.dark .suggestion-dropdown {
 }
 
 .suggestion-item {
-    padding: 12px 18px;
+    padding: 14px 20px;
     cursor: pointer;
-    border-bottom: 1px solid rgba(202, 138, 4, 0.1);
+    border-bottom: 1px solid rgba(202, 138, 4, 0.05);
     transition: all 0.2s ease;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
+
 
 .suggestion-item:last-child {
     border-bottom: none;
@@ -1937,11 +2023,14 @@ body.dark .suggestion-meaning {
 }
 
 .match-highlight {
-    background: #fef08a;
-    color: #000;
-    border-radius: 2px;
-    padding: 0 2px;
+    background: linear-gradient(120deg, #fef08a 0%, #fde047 100%);
+    color: #1c1917;
+    border-radius: 4px;
+    padding: 1px 4px;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(254, 240, 138, 0.3);
 }
+
 
 .suggestion-kbd-hint {
     padding: 8px 18px;

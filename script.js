@@ -2164,7 +2164,7 @@ function performSearch() {
             if (!qf) continue;
             const regex = new RegExp(escapeRegex(qf), 'g');
             out = out.replace(regex,
-                `<span style="background-color:#fbbf24; color:#1e293b; border-radius:2px; padding:0 2px; font-weight:bold;">$&</span>`);
+                `<span class="match-highlight">$&</span>`);
         }
         return out;
     }
@@ -2248,39 +2248,55 @@ function performSearch() {
     }
 
     function sectionHeader(title, count) {
-        return `<div style="margin:12px 0 6px; font-weight:800; color: var(--text-dark);">${title} <span style="opacity:0.7; font-weight:700;">(${count})</span></div>`;
+        return `<div class="search-section-header">${title} <span>(${count})</span></div>`;
     }
 
     let htmlOutput = "";
 
     if (matchedExamples.length) {
-        htmlOutput += sectionHeader("Examples", matchedExamples.length);
+        htmlOutput += sectionHeader('<i class="fa-solid fa-wand-magic-sparkles"></i> Examples', matchedExamples.length);
         matchedExamples.forEach(match => {
             const sutraInfo = getSutraDetails(match.sutra);
             const highlightedEx = highlightText(match.ex);
-            htmlOutput += `<div class="result-card"><div class="ex-text sanskrit-text">${highlightedEx}</div><div class="su-text sanskrit-text"><b>सूत्र:</b> [${match.sutra}] ${highlightText(sutraInfo.name || "")}</div><div class="desc-text sanskrit-text">${highlightText(sutraInfo.desc || "")}</div></div>`;
+            htmlOutput += `
+                <div class="result-card">
+                    <div class="ex-text sanskrit-text">${highlightedEx}</div>
+                    <div class="su-text sanskrit-text">
+                        <i class="fa-solid fa-scroll"></i>
+                        <span><b>सूत्र:</b> [${match.sutra}] ${highlightText(sutraInfo.name || "")}</span>
+                    </div>
+                    <div class="desc-text sanskrit-text">${highlightText(sutraInfo.desc || "")}</div>
+                </div>`;
         });
     }
 
     if (matchedSutras.length) {
-        htmlOutput += sectionHeader("Sutras", matchedSutras.length);
+        htmlOutput += sectionHeader('<i class="fa-solid fa-book-open"></i> Sutras', matchedSutras.length);
         matchedSutras.forEach(s => {
             const title = `${s.id ? `[${s.id}] ` : ''}${s.name || ''}`.trim();
-            htmlOutput += `<div class="result-card"><div class="ex-text sanskrit-text">${highlightText(title)}</div><div class="desc-text sanskrit-text">${highlightText(s.desc || "")}</div></div>`;
+            htmlOutput += `
+                <div class="result-card">
+                    <div class="ex-text sanskrit-text">${highlightText(title)}</div>
+                    <div class="desc-text sanskrit-text">${highlightText(s.desc || "")}</div>
+                </div>`;
         });
     }
 
     if (matchedDhatus.length) {
-        htmlOutput += sectionHeader("Dhatus", matchedDhatus.length);
+        htmlOutput += sectionHeader('<i class="fa-solid fa-seedling"></i> Dhatus', matchedDhatus.length);
         matchedDhatus.forEach(({ key, data }) => {
             const title = `${key}`.trim();
             const desc = (data && data.label) ? data.label : "";
-            htmlOutput += `<div class="result-card"><div class="ex-text sanskrit-text">${highlightText(title)}</div><div class="desc-text sanskrit-text">${highlightText(desc)}</div></div>`;
+            htmlOutput += `
+                <div class="result-card">
+                    <div class="ex-text sanskrit-text">${highlightText(title)}</div>
+                    <div class="desc-text sanskrit-text">${highlightText(desc)}</div>
+                </div>`;
         });
     }
 
     if (matchedPratyayas.length) {
-        htmlOutput += sectionHeader("Pratyayas", matchedPratyayas.length);
+        htmlOutput += sectionHeader('<i class="fa-solid fa-puzzle-piece"></i> Pratyayas', matchedPratyayas.length);
         matchedPratyayas.forEach(({ key, data }) => {
             const title = `${key}`.trim();
             const descParts = [];
@@ -2288,16 +2304,24 @@ function performSearch() {
             if (data?.type) descParts.push(`type: ${data.type}`);
             if (data?.lopa) descParts.push(`it-lopa: ${data.lopa}`);
             const desc = descParts.join(" | ");
-            htmlOutput += `<div class="result-card"><div class="ex-text sanskrit-text">${highlightText(title)}</div><div class="desc-text sanskrit-text">${highlightText(desc)}</div></div>`;
+            htmlOutput += `
+                <div class="result-card">
+                    <div class="ex-text sanskrit-text">${highlightText(title)}</div>
+                    <div class="desc-text sanskrit-text">${highlightText(desc)}</div>
+                </div>`;
         });
     }
 
     if (matchedUpasargas.length) {
-        htmlOutput += sectionHeader("Upasargas", matchedUpasargas.length);
+        htmlOutput += sectionHeader('<i class="fa-solid fa-plus-minus"></i> Upasargas', matchedUpasargas.length);
         matchedUpasargas.forEach(u => {
             const title = `${u.id || ""}`.trim();
             const desc = u.label || "";
-            htmlOutput += `<div class="result-card"><div class="ex-text sanskrit-text">${highlightText(title)}</div><div class="desc-text sanskrit-text">${highlightText(desc)}</div></div>`;
+            htmlOutput += `
+                <div class="result-card">
+                    <div class="ex-text sanskrit-text">${highlightText(title)}</div>
+                    <div class="desc-text sanskrit-text">${highlightText(desc)}</div>
+                </div>`;
         });
     }
     resultsDiv.innerHTML = htmlOutput;
