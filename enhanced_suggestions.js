@@ -95,6 +95,19 @@ function fuzzyMatchScore(text, query) {
 function generatePhoneticVariants(query) {
     const variants = [query];
     
+    // If Devanagari, add normalization variants
+    if (typeof hasDevanagari !== 'undefined' && hasDevanagari(query)) {
+        if (typeof devanagariAnusvaraToNasalClusters !== 'undefined') {
+            const v1 = devanagariAnusvaraToNasalClusters(query);
+            if (v1 !== query) variants.push(v1);
+        }
+        if (typeof devanagariNasalClustersToAnusvara !== 'undefined') {
+            const v2 = devanagariNasalClustersToAnusvara(query);
+            if (v2 !== query) variants.push(v2);
+        }
+        return [...new Set(variants)];
+    }
+    
     // Common Hinglish spelling variations
     const replacements = [
         ['sh', 's'], ['sh', 'shh'], ['ch', 'c'], ['ch', 'chh'],
@@ -138,31 +151,56 @@ function generatePhoneticVariants(query) {
  * Highlight matched text in Devanagari
  */
 function highlightMatch(text, query, matchIndex) {
-    if (!text || !query || matchIndex < 0) return text;
+    if (!text || !query) return text;
     
     const queryLower = query.toLowerCase();
     const phoneticVariants = generatePhoneticVariants(queryLower);
     
-    // Find the actual matched substring
-    let matchLength = query.length;
-    let actualIndex = matchIndex;
+    // If Devanagari, sort variants by length to match longest first
+    if (typeof hasDevanagari !== 'undefined' && hasDevanagari(query)) {
+        phoneticVariants.sort((a, b) => b.length - a.length);
+    }
     
-    // Check for phonetic variant matches
+    let highlightedText = text;
+    
+    // Use a temporary map to prevent double-highlighting
+    const matches = [];
+    
     for (const variant of phoneticVariants) {
-        const idx = text.toLowerCase().indexOf(variant);
-        if (idx >= 0) {
-            actualIndex = idx;
-            matchLength = variant.length;
-            break;
+        if (variant.length < 1) continue;
+        
+        let startIdx = 0;
+        const variantLower = variant.toLowerCase();
+        
+        while ((startIdx = text.toLowerCase().indexOf(variantLower, startIdx)) > -1) {
+            // Check if this range is already covered
+            const isCovered = matches.some(m => 
+                (startIdx >= m.start && startIdx < m.end) || 
+                (startIdx + variant.length > m.start && startIdx + variant.length <= m.end)
+            );
+            
+            if (!isCovered) {
+                matches.push({
+                    start: startIdx,
+                    end: startIdx + variant.length,
+                    text: text.substring(startIdx, startIdx + variant.length)
+                });
+            }
+            startIdx += variant.length;
         }
     }
     
-    // Create highlighted version
-    const before = text.substring(0, actualIndex);
-    const matched = text.substring(actualIndex, actualIndex + matchLength);
-    const after = text.substring(actualIndex + matchLength);
+    // Sort matches by start index descending to replace from end to start
+    matches.sort((a, b) => b.start - a.start);
     
-    return `${before}<span class="match-highlight">${matched}</span>${after}`;
+    for (const m of matches) {
+        const before = highlightedText.substring(0, m.start);
+        const matched = highlightedText.substring(m.start, m.end);
+        const after = highlightedText.substring(m.end);
+        highlightedText = `${before}<span class="match-highlight">${matched}</span>${after}`;
+    }
+    
+    return highlightedText;
 }
 
 /**

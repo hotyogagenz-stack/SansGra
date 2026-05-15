@@ -706,9 +706,26 @@ function normalizeRomanForSearch(text) {
 
 function devanagariNasalClustersToAnusvara(text) {
     if (!text) return "";
-    // Convert nasal conjuncts like "न्त/ङ्क/म्प" to anusvara forms like "ंत/ंक/ंप"
-    // Helps Hinglish users who type "shant" expecting "शांत" etc.
     return text.replace(/[ङञणनम]\u094d(?=[क-ह])/g, 'ं');
+}
+
+function devanagariAnusvaraToNasalClusters(text) {
+    if (!text) return "";
+    // This is a simplified version, as true conversion depends on the following consonant's varga
+    // but it helps in many common cases.
+    let out = text;
+    const vargas = {
+        'क': 'ङ्', 'ख': 'ङ्', 'ग': 'ङ्', 'घ': 'ङ्', 'ङ': 'ङ्',
+        'च': 'ञ्', 'छ': 'ञ्', 'ज': 'ञ्', 'झ': 'ञ्', 'ञ': 'ञ्',
+        'ट': 'ण्', 'ठ': 'ण्', 'ड': 'ण्', 'ढ': 'ण्', 'ण': 'ण्',
+        'त': 'न्', 'थ': 'न्', 'द': 'न्', 'ध': 'न्', 'न': 'न्',
+        'प': 'म्', 'फ': 'म्', 'ब': 'म्', 'भ': 'म्', 'म': 'म्'
+    };
+    for (let [cons, nasal] of Object.entries(vargas)) {
+        const regex = new RegExp('ं(?=' + cons + ')', 'g');
+        out = out.replace(regex, nasal);
+    }
+    return out;
 }
 
 function generateRomanVariantsForSearch(tokenLower) {
@@ -1215,6 +1232,10 @@ function handleInput(input, type, dropdownId) {
 
     // If input is empty, show a helpful list of suggestions so users know what to add
     if (query.length === 0) {
+        // Clear results div if it exists (on homepage)
+        const resultsDiv = document.getElementById("searchResults");
+        if (resultsDiv) resultsDiv.innerHTML = "";
+
         // If database not ready, show a loading / hint state
         if (!sanskritDatabase) {
             dropdown.innerHTML = '<div class="no-suggestions">\u0921\u0947\u091f\u093e\u092c\u0947\u0938 \u0932\u094b\u0921 \u0939\u094b \u0930\u0939\u093e \u0939\u0948...</div>';
@@ -2121,6 +2142,10 @@ function performSearch() {
 
         if (hasDevanagari(t)) {
             devForms.push(t);
+            const v1 = devanagariAnusvaraToNasalClusters(t);
+            const v2 = devanagariNasalClustersToAnusvara(t);
+            if (v1 !== t) devForms.push(v1);
+            if (v2 !== t) devForms.push(v2);
         } else {
             const tl = t.toLowerCase();
             const devSet = new Set();
@@ -2150,7 +2175,7 @@ function performSearch() {
             raw: t,
             devForms: [...new Set(devForms.filter(Boolean))],
             romanForms: [...new Set(romanForms.filter(Boolean))],
-            highlightForms: [...new Set(devForms.filter(v => (v || "").length >= 2))]
+            highlightForms: [...new Set(devForms.filter(v => (v || "").length >= 1))] // Allow single char highlighting for Devanagari
         };
     }
 
@@ -2169,71 +2194,88 @@ function performSearch() {
         return out;
     }
 
-    function recordMatches(record, matcher) {
-        if (!record) return false;
-        if (matcher.type === 'sutra') {
-            return (record.sutraId || "").startsWith(matcher.raw);
+    function calculateRelevance(itemText, matchers) {
+        if (!itemText || !matchers.length) return 0;
+        const text = itemText.toLowerCase();
+        let totalScore = 0;
+        
+        for (const m of matchers) {
+            let tokenScore = 0;
+            const raw = m.raw.toLowerCase();
+            
+            // Priority 1: Exact match or starts with raw query
+            if (text === raw) tokenScore = 100;
+            else if (text.startsWith(raw)) tokenScore = 80;
+            else if (text.includes(raw)) tokenScore = 40;
+            
+            // Priority 2: Check Devanagari variants
+            for (const dev of m.devForms) {
+                if (text === dev) tokenScore = Math.max(tokenScore, 95);
+                else if (text.startsWith(dev)) tokenScore = Math.max(tokenScore, 75);
+                else if (text.includes(dev)) tokenScore = Math.max(tokenScore, 35);
+            }
+            
+            totalScore += tokenScore;
         }
-        const dev = record.dev || "";
-        for (const d of matcher.devForms) {
-            if (d && dev.includes(d)) return true;
-        }
-        const romanNorm = record.romanNorm || "";
-        for (const r of matcher.romanForms) {
-            if (r && romanNorm.includes(r)) return true;
-        }
-        return false;
+        return totalScore / matchers.length;
     }
 
-    const MAX_PER_SECTION = 20;
+    const MAX_PER_SECTION = 15;
+    const RELEVANCE_THRESHOLD = 30; // Filter out low-relevance matches
 
     // 1) Examples
     const matchedExamples = (sanskritDatabase.examples || [])
-        .filter(item => matchers.every(m => recordMatches({
-            sutraId: item?.sutra || "",
-            dev: item?.ex || "",
-            romanNorm: item?._exRomanNorm || ""
-        }, m)))
+        .map(item => {
+            const score = calculateRelevance(`${item.ex} ${item.sutra}`, matchers);
+            return { ...item, _score: score };
+        })
+        .filter(item => item._score >= RELEVANCE_THRESHOLD)
+        .sort((a, b) => b._score - a._score)
         .slice(0, MAX_PER_SECTION);
 
-    // 2) Sutras (full sutra database)
+    // 2) Sutras
     const sutraList = sanskritDatabase._sutraList || [];
     const matchedSutras = sutraList
-        .filter(s => matchers.every(m => recordMatches({
-            sutraId: s?.id || "",
-            dev: s?._searchDev || `${s?.id || ''} ${s?.name || ''} ${s?.desc || ''}`.trim(),
-            romanNorm: s?._searchRomanNorm || ""
-        }, m)))
+        .map(s => {
+            const score = calculateRelevance(`${s.id} ${s.name} ${s.desc}`, matchers);
+            return { ...s, _score: score };
+        })
+        .filter(s => s._score >= RELEVANCE_THRESHOLD)
+        .sort((a, b) => b._score - a._score)
         .slice(0, MAX_PER_SECTION);
 
     // 3) Dhatus
     const dhatuList = sanskritDatabase._dhatuList || [];
     const matchedDhatus = dhatuList
-        .filter(({ key, data }) => matchers.every(m => recordMatches({
-            sutraId: "",
-            dev: data?._searchDev || `${key || ''} ${data?.label || ''} ${data?.clean || ''}`.trim(),
-            romanNorm: data?._searchRomanNorm || ""
-        }, m)))
+        .map(({ key, data }) => {
+            const score = calculateRelevance(`${key} ${data.label} ${data.clean}`, matchers);
+            return { key, data, _score: score };
+        })
+        .filter(d => d._score >= RELEVANCE_THRESHOLD)
+        .sort((a, b) => b._score - a._score)
         .slice(0, MAX_PER_SECTION);
 
     // 4) Pratyayas
     const pratyayaList = sanskritDatabase._pratyayaList || [];
     const matchedPratyayas = pratyayaList
-        .filter(({ key, data }) => matchers.every(m => recordMatches({
-            sutraId: "",
-            dev: data?._searchDev || `${key || ''} ${data?.real || ''} ${data?.type || ''} ${data?.lopa || ''}`.trim(),
-            romanNorm: data?._searchRomanNorm || ""
-        }, m)))
+        .map(({ key, data }) => {
+            const desc = `${data.real || ''} ${data.type || ''} ${data.lopa || ''}`;
+            const score = calculateRelevance(`${key} ${desc}`, matchers);
+            return { key, data, _score: score };
+        })
+        .filter(p => p._score >= RELEVANCE_THRESHOLD)
+        .sort((a, b) => b._score - a._score)
         .slice(0, MAX_PER_SECTION);
 
     // 5) Upasargas
     const upaList = sanskritDatabase._upasargaList || [];
     const matchedUpasargas = upaList
-        .filter(u => matchers.every(m => recordMatches({
-            sutraId: "",
-            dev: u?._searchDev || `${u?.id || ''} ${u?.label || ''}`.trim(),
-            romanNorm: u?._searchRomanNorm || ""
-        }, m)))
+        .map(u => {
+            const score = calculateRelevance(`${u.id} ${u.label}`, matchers);
+            return { ...u, _score: score };
+        })
+        .filter(u => u._score >= RELEVANCE_THRESHOLD)
+        .sort((a, b) => b._score - a._score)
         .slice(0, MAX_PER_SECTION);
 
     if (
@@ -2243,7 +2285,7 @@ function performSearch() {
         matchedPratyayas.length === 0 &&
         matchedUpasargas.length === 0
     ) {
-        resultsDiv.innerHTML = `<p style="color:red; text-align:center; margin-top:20px;">कोई परिणाम नहीं मिला।</p>`;
+        resultsDiv.innerHTML = `<p style="color:#701c1c; text-align:center; margin-top:20px; font-weight:700;">कोई सटीक परिणाम नहीं मिला।</p>`;
         return;
     }
 
@@ -2395,6 +2437,10 @@ function setupAutocomplete(inputId, dropdownId, type) {
         
         // If input is empty, show a helpful list of suggestions so users know what to add
         if (value.length === 0) {
+            // Clear results div if it exists (on homepage)
+            const resultsDiv = document.getElementById("searchResults");
+            if (resultsDiv) resultsDiv.innerHTML = "";
+
             // If database not ready, show a loading / hint state
             if (!sanskritDatabase) {
                 dropdown.innerHTML = '<div class="no-suggestions">\u0921\u0947\u091f\u093e\u092c\u0947\u0938 \u0932\u094b\u0921 \u0939\u094b \u0930\u0939\u093e \u0939\u0948...</div>';
@@ -2439,12 +2485,10 @@ function setupAutocomplete(inputId, dropdownId, type) {
 
     // Show all suggestions on focus/click
     input.addEventListener('focus', () => {
-        // Trigger input event to show all suggestions when empty
         input.dispatchEvent(new Event('input'));
     });
 
     input.addEventListener('click', () => {
-        // Trigger input event to show all suggestions when empty
         input.dispatchEvent(new Event('input'));
     });
 
