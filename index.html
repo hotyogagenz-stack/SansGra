@@ -35,10 +35,19 @@
     <!-- New Central Search Hero (Ancient Aesthetic) -->
     <section class="central-hero">
         <h1 class="hero-tagline" data-i18n="hero_tagline">॥ वन्दे संस्कृतम ॥</h1>
-        <div class="hero-search-container">
-            <input type="text" id="searchInput" class="hero-search-bar sanskrit-text" placeholder="शिक्षापत्रीम् अन्वेषय..." onkeydown="if(event.key==='Enter'){ performSearch(); }">
-            <input type="text" id="searchInput" class="hero-search-bar sanskrit-text" data-i18n-placeholder="hero_search_placeholder" placeholder="कृदन्तरूपम् अन्वेषय..." onkeydown="if(event.key==='Enter'){ performSearch(); }">
-            <button class="hero-search-btn" onclick="performSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
+        <div class="hero-search-dual">
+            <div class="search-field-wrap">
+                <i class="fa-solid fa-feather-pointed"></i>
+                <input type="text" id="searchInput1" class="sanskrit-text" placeholder="कृदन्तम् अन्वेषय..." onkeydown="if(event.key==='Enter'){ performSearch(); }">
+            </div>
+            <div class="search-field-divider"></div>
+            <div class="search-field-wrap">
+                <i class="fa-solid fa-scroll"></i>
+                <input type="text" id="searchInput2" class="sanskrit-text" placeholder="शब्दम् अन्वेषय..." onkeydown="if(event.key==='Enter'){ performSearch(); }">
+            </div>
+            <button class="hero-search-btn-dual" onclick="performSearch()">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
         </div>
         <div id="searchResults" class="search-results" style="max-width:900px;margin:18px auto 0;">
             <!-- Inline search results will appear here when searching from the homepage -->
