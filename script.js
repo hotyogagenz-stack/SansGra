@@ -2,8 +2,10 @@ let sanskritDatabase = {};
 let pratyayaDB = {}; 
 
 // Responsive menu toggle (for .hamburger and .menu-mini-btn)
-document.addEventListener('DOMContentLoaded', () => {
-    function toggleResponsiveNav() {
+document.addEventListener('click', (ev) => {
+    const btn = ev.target.closest('.hamburger, .menu-mini-btn');
+    if (btn) {
+        ev.preventDefault();
         const header = document.querySelector('header');
         if (!header) return;
         header.classList.toggle('nav-open');
@@ -11,13 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const nav = header.querySelector('nav');
         if (nav) nav.classList.toggle('show-mobile');
     }
-
-    document.querySelectorAll('.hamburger, .menu-mini-btn').forEach(btn => {
-        btn.addEventListener('click', (ev) => {
-            ev.preventDefault();
-            toggleResponsiveNav();
-        });
-    });
 });
 
 // Hinglish/common word mappings - for casual English spellings of Hindi/Sanskrit words

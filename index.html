@@ -36,10 +36,7 @@
     <section class="central-hero">
         <h1 class="hero-tagline" data-i18n="hero_tagline">॥ वन्दे संस्कृतम ॥</h1>
         <div class="hero-search-container">
-            <input type="text" id="searchInput" class="hero-search-bar sanskrit-text" data-i18n-placeholder="hero_search_placeholder" placeholder="कृदन्तरूपम् अन्वेषय..." onkeydown="if(event.key==='Enter'){ performSearch(); }">
-=======
             <input type="text" id="searchInput" class="hero-search-bar sanskrit-text" data-i18n-placeholder="hero_search_placeholder" placeholder="कृदन्तरूपम् अन्वेषय..." onkeydown="if(event.key==='Enter'){ performSearch(); }" oninput="performSearch()">
->>>>>>> kritika
             <button class="hero-search-btn" onclick="performSearch()"><i class="fa-solid fa-magnifying-glass"></i></button>
         </div>
         <div id="searchResults" class="search-results" style="max-width:900px;margin:18px auto 0;">
@@ -50,7 +47,7 @@
 
     <!-- 3D book navigation under the scroll image (Ancient Granthas) -->
     <div class="main-nav-container granthas-container" style="background: transparent; box-shadow: none; padding: 20px 0 40px; backdrop-filter: none;">
-        <h2 class="section-title granthas-title" data-i18n="section_granthas" style="text-align: center; font-family: 'Tiro Devanagari Sanskrit', serif; color: #581818; margin-bottom: 30px; font-weight: 900; letter-spacing: 2px; width: auto; display: table; margin: 0 auto 10px;">॥ ग्रन्थाः ॥</h2>
+        <h2 class="section-title granthas-title" data-i18n="section_granthas">॥ ग्रन्थाः ॥</h2>
         <div class="section-divider"></div>
         <div class="book-nav" id="nav-menu">
             <!-- 1. Examples -->

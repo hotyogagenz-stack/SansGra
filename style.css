@@ -43,6 +43,7 @@ html {
 
 body {
     background: var(--bg-light);
+    background-image: radial-gradient(circle at center, var(--bg-light) 0%, #e8e0d5 100%);
     color: var(--text-light);
     transition: background 0.3s, color 0.3s;
     min-height: 100vh;
@@ -55,6 +56,7 @@ body {
 
 body.dark {
     background: var(--bg-dark);
+    background-image: radial-gradient(circle at center, var(--bg-dark) 0%, #0a0a12 100%);
     color: var(--text-dark);
     --color-upa-bg: rgba(180, 83, 9, 0.1);
     --color-dhatu-bg: rgba(153, 27, 27, 0.1);
@@ -555,12 +557,13 @@ body.dark .sutras-page button:hover {
     padding: 14px 16px;
     margin: 6px 0;
     border: 1px solid var(--border-light);
-    transition: transform 180ms ease, box-shadow 180ms ease;
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1), border-color 300ms;
 }
 
 .sutra-card:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-hover);
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 15px 35px rgba(112, 28, 28, 0.12), 0 0 15px rgba(202, 138, 4, 0.15);
+    border-color: rgba(202, 138, 4, 0.4);
 }
 
 .sutra-card-header {
@@ -810,6 +813,30 @@ body.dark .sutra-note-title {
     z-index: 10;
     padding: 60px 20px 20px;
     text-align: center;
+    background: radial-gradient(circle at center, rgba(202, 138, 4, 0.08) 0%, transparent 60%);
+}
+
+.central-hero::before {
+    content: '☸';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 80vh;
+    color: rgba(202, 138, 4, 0.08);
+    z-index: -1;
+    animation: slowSpin 60s linear infinite;
+    pointer-events: none;
+    line-height: 1;
+}
+
+body.dark .central-hero::before {
+    color: rgba(252, 211, 77, 0.08);
+}
+
+@keyframes slowSpin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 /* --- BOOK GRID / 3D BOOK TILES (homepage) --- */
@@ -835,8 +862,12 @@ body.dark .sutra-note-title {
 }
 .book-item .book-cover { border-radius: 12px; }
 .book-item:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow: 0 18px 45px rgba(69,26,3,0.18);
+    transform: translateY(-10px) scale(1.05) perspective(1000px) rotateX(8deg) rotateY(-6deg);
+    box-shadow: 0 25px 50px rgba(112, 28, 28, 0.25), 0 0 25px rgba(202, 138, 4, 0.4);
+    z-index: 10;
+}
+.book-item:hover .book-cover {
+    filter: brightness(1.1) contrast(1.05);
 }
 .book-item .book-text {
     display: inline-block;
@@ -880,12 +911,29 @@ body.dark .sutra-note-title {
 
 .hero-tagline {
     font-family: 'Tiro Devanagari Sanskrit', serif;
-    color: #701c1c;
-    font-size: clamp(2rem, 6vw, 3.5rem);
-    margin-bottom: 30px;
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    margin-bottom: 40px;
     font-weight: 900;
-    text-shadow: 0 2px 10px rgba(112, 28, 28, 0.1);
+    text-transform: uppercase;
+    background: linear-gradient(to bottom, #fde047 0%, #d97706 45%, #78350f 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 4px 12px rgba(112, 28, 28, 0.25));
     animation: fadeInUp 1s ease-out;
+    position: relative;
+    display: inline-block;
+}
+
+.hero-tagline::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #ca8a04, transparent);
+    border-radius: 50%;
 }
 
 .hero-search-container {
@@ -908,15 +956,40 @@ body.dark .sutra-note-title {
     color: #374151;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     outline: none;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(15px);
+    background: rgba(255, 255, 255, 0.7);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+.hero-search-container::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 14px;
+    background: linear-gradient(45deg, #701c1c, #ca8a04, #701c1c);
+    z-index: -1;
+    opacity: 0.3;
+    filter: blur(10px);
+    transition: 0.4s;
+    animation: pulseGlow 3s infinite alternate;
 }
 
 .hero-search-bar:focus {
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(112, 28, 28, 0.1);
-    border-color: #701c1c;
-    background: #ffffff;
+    box-shadow: 0 10px 40px rgba(112, 28, 28, 0.15);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.hero-search-container:focus-within::before {
+    opacity: 0.8;
+    filter: blur(15px);
+}
+
+@keyframes pulseGlow {
+    0% { opacity: 0.2; transform: scale(0.98); }
+    100% { opacity: 0.5; transform: scale(1.02); }
 }
 
 .hero-search-btn {
@@ -927,7 +1000,8 @@ body.dark .sutra-note-title {
     width: 42px;
     height: 42px;
     border-radius: 8px;
-    background: #701c1c;
+    background: linear-gradient(135deg, #ca8a04, #9a3412);
+    box-shadow: 0 4px 10px rgba(154, 52, 18, 0.3);
     color: #fff;
     border: none;
     cursor: pointer;
@@ -939,8 +1013,9 @@ body.dark .sutra-note-title {
 }
 
 .hero-search-btn:hover {
-    background: #4a1010;
+    background: linear-gradient(135deg, #eab308, #b45309);
     transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 6px 14px rgba(154, 52, 18, 0.4);
 }
 
 .hero-subtext {
@@ -1858,14 +1933,13 @@ body.dark .modal-content .search-results {
 .floating-word {
     position: absolute;
     font-family: 'Tiro Devanagari Sanskrit', serif;
-    color: #8a614d;
-    /* Matches the brown parchment theme */
-    opacity: 0.25;
+    color: #ca8a04;
+    opacity: 0.15;
     font-weight: 800;
     user-select: none;
     animation: float3D 20s infinite linear;
     transform-style: preserve-3d;
-    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.05));
+    filter: drop-shadow(0 4px 6px rgba(202, 138, 4, 0.15));
 }
 
 body.dark .floating-word {
@@ -2473,22 +2547,29 @@ body {
 
 .granthas-title {
     position: relative;
-    display: inline-block;
-    margin: 0 auto 40px;
-    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin: 0 auto 30px;
+    padding: 0 20px;
+    font-family: 'Tiro Devanagari Sanskrit', serif;
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #701c1c 0%, #ca8a04 50%, #701c1c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
 .granthas-title::before, .granthas-title::after {
-    content: '◈';
+    content: '✦';
+    font-size: 32px;
+    -webkit-text-fill-color: initial;
     color: #ca8a04;
-    font-size: 24px;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    filter: drop-shadow(0 2px 6px rgba(202, 138, 4, 0.4));
 }
-
-.granthas-title::before { left: 0; }
-.granthas-title::after { right: 0; }
 
 .section-divider {
     height: 2px;
